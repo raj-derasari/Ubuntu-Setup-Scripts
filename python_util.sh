@@ -10,7 +10,7 @@ ERROR="Python: ERROR: "
 DEBUG="DEBUG: "
 log()
 {
-	echo -e "[${USER}]\t[`date`]\t${*}" >> ${LOGGER}
+	echo -e "[${USER}]\t[`date`]\t${*}" >> "${LOGGER}"
 }
 #debug mode variable
 export DEBUGMODE=0

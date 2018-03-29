@@ -10,7 +10,7 @@ ERROR="Master: ERROR: "
 DEBUG="DEBUG: "
 log()
 {
-	echo -e "[${USER}]\t[`date`]\t${*}" >> ${LOGGER}
+	echo -e "[${USER}]\t[`date`]\t${*}" >> "${LOGGER}"
 }
 
 PYTHON_DEBUG_MODE=0
@@ -57,12 +57,12 @@ EOT
 fi
 
 ### Variables to set-up installation of Applications, Bloatware and whatnot
-Do_AptGetUpgradeLast=0
-Do_CleanupAfterExec=0
+Do_AptGetUpgradeLast=1
+Do_CleanupAfterExec=1
 
-Master_Dependencies=0
-Master_RemoveBloatware=0
-Master_Software=0
+Master_Dependencies=1
+Master_RemoveBloatware=1
+Master_Software=1
 Master_Python=1
 
 # strongly recommended packages
@@ -120,7 +120,7 @@ export Setup_Python_Dev=1
 export Setup_VirtualEnv=1
 
 ## python stuff will be installed in a virtual env, name here
-export VirtualEnv_Name="mars"
+export VirtualEnv_Name="seas"
 export VirtualEnv_Directory=~/.virtualenvs/$VirtualEnv_Name
 
 # set one value from 2 and 3
@@ -131,8 +131,8 @@ export Python_InstallJupyter=1
 export Python_InstallMachineLearningTools=1     # Must set to 1 if you want to install tensorflow!
 export Python_InstallComputerGraphicsTools=0    ## TODO, not implemented
 export Python_InstallNLTK=1
-export Python_Compile_Tensorflow=1
-export Python_Tensorflow_CPUOnly=1
+export Python_Compile_Tensorflow=0
+export Python_Tensorflow_CPUOnly=0
 export Python_Tensorflow_GPU=0
 export Python_Tensorflow_MKL=0
 

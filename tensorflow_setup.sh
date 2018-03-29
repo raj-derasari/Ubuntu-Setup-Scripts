@@ -10,7 +10,7 @@ ERROR="TF: ERROR: "
 DEBUG="DEBUG: "
 log()
 {
-	echo -e "[${USER}]\t[`date`]\t${*}" >> ${LOGGER}
+	echo -e "[${USER}]\t[`date`]\t${*}" >> "${LOGGER}"
 }
 ## Variables that control program flow
 if [[ -z $DEBUGMODE ]]; then

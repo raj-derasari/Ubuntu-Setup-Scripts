@@ -10,7 +10,7 @@ ERROR="LibsDeps: ERROR: "
 DEBUG="DEBUG: "
 log()
 {
-	echo -e "[${USER}]\t[`date`]\t${*}" >> ${LOGGER}
+	echo -e "[${USER}]\t[`date`]\t${*}" >> "${LOGGER}"
 }
 
 log $INFO "Adding default ubuntu repositories!"

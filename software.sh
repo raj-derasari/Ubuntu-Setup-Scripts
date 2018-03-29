@@ -10,7 +10,7 @@ ERROR="Software: ERROR: "
 DEBUG="DEBUG: "
 log()
 {
-	echo -e "[${USER}]\t[`date`]\t${*}" >> ${LOGGER}
+	echo -e "[${USER}]\t[`date`]\t${*}" >> "${LOGGER}"
 }
 log $INFO "Begin"
 if [ $Install_Flux -eq 1 ]; then
@@ -55,7 +55,7 @@ if [ $Install_GoogleChrome -eq 1 ]; then
 	echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list
 fi
 
-sudo sudo apt-key update && sudo apt-get update 1>/dev/null 2>>$LOGGER
+sudo sudo apt-key update && sudo apt-get update #>&/dev/null
 
 #Zshell extension for bourne shell which is default = This allows for some better scripting
 # Also adding intel-microcode

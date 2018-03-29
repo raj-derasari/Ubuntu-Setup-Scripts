@@ -10,7 +10,7 @@ ERROR="Bloatremove: ERROR: "
 DEBUG="DEBUG: "
 log()
 {
-	echo -e "[${USER}]\t[`date`]\t${*}" >> ${LOGGER}
+	echo -e "[${USER}]\t[`date`]\t${*}" >> "${LOGGER}"
 }
 log $INFO "some bloat"
 sudo apt-get purge -y gbrainy brltty landscape-common mcp-account-manager-uoa mono-common
@@ -59,7 +59,7 @@ log $INFO "<LUBUNTU>"
 sudo apt-get purge -y gpicview leafpad pidgin* simple-scan mtpaint mtr-tiny mtools sylpheed* transmission* emacsen-common abiword* gnumeric* alsa* audacious* gnome-disk-utility gnome-mplayer guvcview xfburn ubuntu-release-upgrader-gtk
 
 log $INFO "stage 2: autoremove"
-sudo apt autoremove
+sudo apt -y autoremove
 # these did not work at all: package did not exist : hence keeping these lines commented
 #log $INFO "beagle:"
 sudo apt-get purge -y libbeagle1
