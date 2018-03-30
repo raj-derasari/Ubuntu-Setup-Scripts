@@ -34,7 +34,7 @@ if [[ ! -z $checkBash ]]; then
 else
 	cat <<EOT >> ~/.bashrc
 venvwrap="virtualenvwrapper.sh"
-/usr/bin/which -a \$venvwrap
+# /usr/bin/which -a \$venvwrap
 if [ \$? -eq 0 ]; then
 venvwrap=\`/usr/bin/which \$venvwrap\`
 source \$venvwrap
