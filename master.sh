@@ -17,7 +17,7 @@ PYTHON_DEBUG_MODE=0
 
 ##begin
 export startDir=`pwd`
-export ERRORFILE=log_errors.log
+export ERRORFILE=`pwd`/log_errors.log
 
 if test "$1" = "--clear-logs"; then
 	echo "Clear Logs!"
