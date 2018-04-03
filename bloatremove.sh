@@ -13,13 +13,13 @@ log()
 	echo -e "[${USER}]\t[`date`]\t${*}" >> "${LOGGER}"
 }
 log $INFO "some bloat"
-sudo apt-get purge -y gbrainy brltty landscape-common mcp-account-manager-uoa mono-common
+sudo apt-get purge -y gbrainy landscape-common mcp-account-manager-uoa mono-common
 log $INFO "literally spam content"
 sudo apt-get purge -y example-content diveintopython nautilus-sendto-empathy python3-uno sane-utils
 log $INFO "games, gnome spam"
 sudo apt-get purge -y aisleriot gnomine gnome-contacts gnome-mahjongg gnome-mines gnome-orca gnome-screensaver gnome-games gnome-cards-data gnome-sudoku gnome-video-effects
 log $INFO "accessibility:"
-sudo apt-get purge -y gnome-orca brltty brltty-x11 gnome-accessibility-themes # gnome-mag libgnome-mag2
+sudo apt-get purge -y gnome-orca brltty brltty-x11 # gnome-accessibility-themes # gnome-mag libgnome-mag2
 log $INFO "account bs"
 sudo apt-get purge -y account-plugin-aim account-plugin-facebook account-plugin-flickr account-plugin-jabber account-plugin-salut account-plugin-twitter account-plugin-windows-live account-plugin-yahoo
 #log $INFO "asian fonts:";

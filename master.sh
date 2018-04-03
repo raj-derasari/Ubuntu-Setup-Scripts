@@ -145,21 +145,21 @@ sudo apt-key update && sudo apt-get update > /dev/null
 
 if [ $Master_Dependencies -eq 1 ]; then
 	log $INFO "Setting up lib* and dependencies"
-	bash libsdeps.sh 2>>$ERRORFILE
+	bash libsdeps.sh 2>>"$ERRORFILE"
 else
 	log $INFO "NOT setting up lib* and dependencies"
 fi
 
 if [ $Master_RemoveBloatware -eq 1 ]; then
 	log $INFO "Setting up bloatware removal"
-	bash bloatremove.sh 2>>$ERRORFILE
+	bash bloatremove.sh 2>>"$ERRORFILE"
 else
 	log $INFO "NOT setting up bloatware removal"
 fi
 
 if [ $Master_Software -eq 1 ]; then
 	log $INFO "Setting up software"
-	bash software.sh 2>>$ERRORFILE
+	bash software.sh 2>>"$ERRORFILE"
 else
 	log $INFO "NOT setting up software"
 fi
@@ -167,10 +167,10 @@ fi
 if [ $Master_Python -eq 1 ]; then
 	if [ $PYTHON_DEBUG_MODE -eq 1 ]; then
 		log $INFO "DRY RUN python - debug mode"
-		bash python_util.sh --debug $Python_PreferredVersion $VirtualEnv_Name 2>>$ERRORFILE
+		bash python_util.sh --debug $Python_PreferredVersion $VirtualEnv_Name 2>>"$ERRORFILE"
 	else
 		log $INFO "Setting up python"
-		bash python_util.sh $Python_PreferredVersion $VirtualEnv_Name 2>>$ERRORFILE
+		bash python_util.sh $Python_PreferredVersion $VirtualEnv_Name 2>>"$ERRORFILE"
 	fi
 else
 	log $INFO "NOT setting up python"
@@ -179,24 +179,24 @@ fi
 # Cleanup
 if [ $Do_CleanupAfterExec -eq 1 ]; then
 	log $INFO "Cleaning up cached, tmp, deb files"
-	sudo apt-get install -fy 2>>$ERRORFILE # fix dependencies
-	sudo apt -y autoclean 2>>$ERRORFILE # removes extra cache files
-	sudo apt -y autoremove 2>>$ERRORFILE # removes deb packages but not all of them sadly
-	rm -rfd ~/.cache/pip 2>>$ERRORFILE # removes pip packages
+	sudo apt-get install -fy 2>>"$ERRORFILE" # fix dependencies
+	sudo apt -y autoclean 2>>"$ERRORFILE" # removes extra cache files
+	sudo apt -y autoremove 2>>"$ERRORFILE" # removes deb packages but not all of them sadly
+	rm -rfd ~/.cache/pip 2>>"$ERRORFILE" # removes pip packages
 	rm -rfd /tmp/ 2>/dev/null # removes temp files not made by user
 	sudo rm -f /var/cache/apt/archives/*.deb   # removes deb files apt cache
 fi
 
 if [ $Do_AptGetUpgradeLast -eq 1 ]; then
 	log $INFO "apt-get upgrade before exit"
-	sudo apt-get upgrade -y 2>>$ERRORFILE # fix dependencies
-	sudo apt -y autoremove 2>>$ERRORFILE # removes packages
+	sudo apt-get upgrade -y 2>>"$ERRORFILE" # fix dependencies
+	sudo apt -y autoremove 2>>"$ERRORFILE" # removes packages
 	
 	#Cleanup after upgrade
 	log $INFO "Cleanup cache tmp and deb -- after upgrade"
 	rm -rfd /tmp/ 2>/dev/null
-	sudo apt -y autoclean 2>>$ERRORFILE # removes extra cache files
-	sudo rm /var/cache/apt/archives/*.deb 2>>$ERRORFILE
+	sudo apt -y autoclean 2">>$ERRORFILE" # removes extra cache files
+	sudo rm /var/cache/apt/archives/*.deb 2>>"$ERRORFILE"
 	echo "It is recommended to restart your computer now."
 	echo -e "Enter y to restart, or anything else to exit.\n"
 	read shut
