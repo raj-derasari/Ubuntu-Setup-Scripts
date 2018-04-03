@@ -75,6 +75,7 @@ export Install_IntelFirmware=1
 export Install_P7Zip=1
 export Install_QBitTorrent=1
 export Install_QPDFView=1
+export Install_UGET=1
 export Install_VLCMediaPlayer=1
 export Install_ZSH=1
 
@@ -83,6 +84,10 @@ export Install_Chromium=1
 export Install_GoogleChrome=1
 export Install_MozillaFirefox=1
 export Install_Vivaldi=1
+
+# audacity audio editing application
+export Install_Audacity=1
+export Install_WinFF=1
 
 ## other packages: editors/programming, remoting, password mgmt, office tools
 export Install_Docker=1

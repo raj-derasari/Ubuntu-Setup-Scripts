@@ -24,8 +24,14 @@ if [ $Install_OracleJava8 -eq 1 ]; then
 	sudo add-apt-repository -y ppa:webupd8team/java
 	echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | sudo /usr/bin/debconf-set-selections
 fi
+if [ $Install_UGET -eq 1 ]; then
+	sudo add-apt-repository ppa:plushuang-tw/uget-stable
+fi
 if [ $Install_QPDFView -eq 1 ]; then
 	sudo add-apt-repository -y ppa:adamreichold/qpdfview-dailydeb
+fi
+if [ $Install_Octave -eq 1 ]; then
+	sudo add-apt-repository -y ppa:nilarimogard/webupd8
 fi
 if [ $Install_QBitTorrent -eq 1 ]; then
 	sudo add-apt-repository -y ppa:qbittorrent-team/qbittorrent-stable
@@ -54,7 +60,6 @@ if [ $Install_GoogleChrome -eq 1 ]; then
 	curl https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
 	echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list
 fi
-
 sudo sudo apt-key update && sudo apt-get update #>&/dev/null
 
 #Zshell extension for bourne shell which is default = This allows for some better scripting
@@ -106,7 +111,7 @@ fi
 
 if [ $Install_MozillaFirefox -eq 1 ]; then
 	log $INFO "install firefox"
-	sudo apt-get install -y firefox firefox-locale-en
+	sudo apt-get install -y--install-recommends firefox firefox-locale-en
 fi
 
 if [ $Install_Vivaldi -eq 1 ]; then
@@ -154,11 +159,17 @@ if [ $Install_GParted -eq 1 ]; then
 	sudo apt-get install -y --install-recommends -y gparted
 fi
 
+if [ $Install_Audacity -eq 1 ]; then
+	sudo add-apt-repository -y ppa:ubuntuhandbook1/audacity
+fi
 #octave
 if [ $Install_Octave -eq 1 ]; then
 	log $INFO "install octave"
-	sudo add-apt-repository -y ppa:nilarimogard/webupd8
 	sudo apt-get install -y --install-recommends liboctave-dev octave
+fi
+
+if [ $Install_UGET -eq 1 ]; then
+	sudo apt install -y uget
 fi
 
 #okular
@@ -194,6 +205,14 @@ fi
 if [ $Install_Grive_GoogleDrive -eq 1 ]; then
 	log $INFO "install grive"
 	sudo apt-get install -y grive
+fi
+#audacity audio editor
+if [ $Install_Audacity -eq 1 ]; then
+	sudo apt-get install -y audacity
+fi
+#winff audio conversion
+if [ $Install_WinFF -eq 1 ]; then
+	sudo apt-get install winff libavcodec-extra
 fi
 # tilda and tumix, for terminal
 if [ $Install_TildaTmux -eq 1 ]; then
