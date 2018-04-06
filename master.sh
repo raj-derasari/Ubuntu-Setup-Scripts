@@ -118,8 +118,8 @@ export LibreOffice_Writer=1
 export Install_TeamViewer=1
 #TODO
 #export Install_RealVNC_Server=1
-#export Install_RealVNC_Viewer=1
-#export Install_PyCharm=1
+export Install_RealVNC_Viewer=1
+export Install_PyCharm=1
 
 export Setup_Python_Dev=1
 export Setup_VirtualEnv=1

@@ -16,6 +16,16 @@ log $INFO "Begin"
 if [ $Install_Flux -eq 1 ]; then
 	sudo add-apt-repository -y ppa:nathan-renniewaldock/flux
 fi
+
+if [ $Install_PyCharm -eq 1 ]; then
+	echo "deb http://archive.getdeb.net/ubuntu $(lsb_release -cs)-getdeb apps" | sudo tee /etc/apt/sources.list.d/getdeb-apps.list
+	wget -q -O- http://archive.getdeb.net/getdeb-archive.key | sudo apt-key add -
+fi
+
+if [ $Install_VLCMediaPlayer -eq 1 ]; then
+	sudo add-apt-repository -y ppa:strukturag/libde265
+fi
+
 if [ $Install_Grive_GoogleDrive -eq 1 ]; then
 	sudo add-apt-repository -y ppa:nilarimogard/webupd8
 fi
@@ -25,7 +35,7 @@ if [ $Install_OracleJava8 -eq 1 ]; then
 	echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | sudo /usr/bin/debconf-set-selections
 fi
 if [ $Install_UGET -eq 1 ]; then
-	sudo add-apt-repository ppa:plushuang-tw/uget-stable
+	sudo add-apt-repository -y ppa:plushuang-tw/uget-stable
 fi
 if [ $Install_QPDFView -eq 1 ]; then
 	sudo add-apt-repository -y ppa:adamreichold/qpdfview-dailydeb
@@ -111,7 +121,7 @@ fi
 
 if [ $Install_MozillaFirefox -eq 1 ]; then
 	log $INFO "install firefox"
-	sudo apt-get install -y--install-recommends firefox firefox-locale-en
+	sudo apt-get install -y --install-recommends firefox firefox-locale-en
 fi
 
 if [ $Install_Vivaldi -eq 1 ]; then
@@ -122,6 +132,12 @@ if [ $Install_GEdit -eq 1 ]; then
 	log $INFO "install gedit"
 	sudo apt-get install -y gedit
 fi
+
+if [ $Install_PyCharm -eq 1 ]; then
+	log $INFO "install Pycharm"
+	sudo apt-get install -y pycharm
+fi
+	
 
 # exfat
 if [ $Install_EXFatUtils -eq 1 ]; then
@@ -212,7 +228,7 @@ if [ $Install_Audacity -eq 1 ]; then
 fi
 #winff audio conversion
 if [ $Install_WinFF -eq 1 ]; then
-	sudo apt-get install winff libavcodec-extra
+	sudo apt-get install -y winff libavcodec-extra
 fi
 # tilda and tumix, for terminal
 if [ $Install_TildaTmux -eq 1 ]; then
