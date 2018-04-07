@@ -74,13 +74,12 @@ sudo sudo apt-key update && sudo apt-get update #>&/dev/null
 
 #Zshell extension for bourne shell which is default = This allows for some better scripting
 # Also adding intel-microcode
-log $INFO "install zsh and intel microcode"
-
 if [ $Install_ZSH -eq 1 ]; then
 	log $INFO "install zsh"
 	sudo apt-get install -y zsh
 fi
 
+# TODO: Make this automated
 if [ $Install_IntelFirmware -eq 1 ]; then
 	log $INFO "install intel-microcode"
 	sudo apt-get install -y intel-microcode
