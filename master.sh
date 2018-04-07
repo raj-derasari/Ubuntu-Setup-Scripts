@@ -1,5 +1,4 @@
-#!/bin/bash 
-source `which virtualenvwrapper.sh`
+#!/bin/bash
 echo "----------------------------------------------------------------------------"
 echo "                        Ubuntu Master Script"
 echo "----------------------------------------------------------------------------"
@@ -21,10 +20,10 @@ export ERRORFILE=`pwd`/log_errors.log
 
 if test "$1" = "--clear-logs"; then
 	echo "Clear Logs!"
-	rm *.log 2>/dev/null
+	rm *.log 2>&1 > /dev/null
 	log $INFO "cleared all logs"
 elif [[ ! -z "$1" ]]; then
-	echo "Did not understand command-line argument. Did you perhaps mean \"--clear-logs\"?"
+	echo "Did not understand command-line argument. Did you mean \"--clear-logs\"?"
 	exit
 fi
 
@@ -74,9 +73,9 @@ export Install_ZSH=1
 
 # choose a web browser
 export Install_Chromium=1
-export Install_GoogleChrome=0
+export Install_GoogleChrome=1
 export Install_MozillaFirefox=1
-export Install_Vivaldi=0
+export Install_Vivaldi=1
 
 # audacity audio editing application
 export Install_Audacity=1
@@ -95,8 +94,8 @@ export Install_TildaTmux=1  # terminal client/replacement for ctrl+alt+t
 export Install_TexStudio=1
 
 #Java
-export Remove_OpenJDK=0
-export Install_OracleJava8=0
+export Remove_OpenJDK=1
+export Install_OracleJava8=1
 
 export Install_Atom=0
 export Install_SublimeText=1
@@ -112,7 +111,6 @@ export LibreOffice_Writer=1
 export Install_TeamViewer=1
 #TODO
 #export Install_RealVNC_Server=1
-export Install_RealVNC_Viewer=1
 export Install_PyCharm=1
 
 export Setup_Python_Dev=1
