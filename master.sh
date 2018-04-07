@@ -41,7 +41,7 @@ source \$venvwrap
 fi
 alias brc="sudo nano ~/.bashrc"
 alias sbrc="source ~/.bashrc"
-alias sau="sudo apt-key update;sudo apt-get update"
+alias sau="sudo apt-key update && sudo apt-get update"
 alias sai="sudo apt-get install"
 alias saiy="sudo apt-get -y install"
 alias aptgetupgrade="sudo apt-get upgrade"
@@ -71,7 +71,6 @@ export Install_Flux=1
 export Install_GEdit=1
 export Install_Git=1
 export Install_GParted=1
-export Install_IntelFirmware=1
 export Install_P7Zip=1
 export Install_QBitTorrent=1
 export Install_QPDFView=1
@@ -81,9 +80,9 @@ export Install_ZSH=1
 
 # choose a web browser
 export Install_Chromium=1
-export Install_GoogleChrome=1
+export Install_GoogleChrome=0
 export Install_MozillaFirefox=1
-export Install_Vivaldi=1
+export Install_Vivaldi=0
 
 # audacity audio editing application
 export Install_Audacity=1
@@ -91,8 +90,9 @@ export Install_WinFF=1
 
 ## other packages: editors/programming, remoting, password mgmt, office tools
 export Install_Docker=1
+export Docker_Remove_SUDO=1
 export Install_Grive_GoogleDrive=1
-export Install_KeepassPasswordManager=1
+export Install_KeepassPasswordManager=0
 export Install_Octave=1
 export Install_Okular=1
 export Install_TildaTmux=1  # terminal client/replacement for ctrl+alt+t

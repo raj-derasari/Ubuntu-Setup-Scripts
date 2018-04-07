@@ -15,4 +15,17 @@ sudo add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/u
 sudo apt-get update
 sudo apt-get install -y docker docker-compose docker-ce docker-doc docker-registry 2>>"${LOGGER}"
 echo -e "Testing Docker\n"
-sudo docker run hello-world
+
+if [ $Docker_Remove_SUDO -eq 1 ]; then
+	sudo groupadd docker
+	sudo gpasswd -a $USER docker
+	docker run hello-world
+	if [  $? -eq 0 ]; then
+		echo "Docker installed fine!"
+	fi
+else
+	sudo docker run hello-world
+	if [  $? -eq 0 ]; then
+		echo "Docker installed fine!"
+	fi
+fi

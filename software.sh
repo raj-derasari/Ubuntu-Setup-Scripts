@@ -72,17 +72,25 @@ if [ $Install_GoogleChrome -eq 1 ]; then
 fi
 sudo sudo apt-key update && sudo apt-get update #>&/dev/null
 
+# First things first: Check if install AMD or Intel microcode:
+sudo lshw -c CPU | grep -i intel
+if [ $? -eq 0 ]; then 
+	log $INFO "install intel microcode"
+	sudo apt-get install -y microcode.ctl intel-microcode
+else
+	sudo lshw -c CPU | grep -i amd
+	if [ $? -eq 0 ]; then
+		log $INFO "install amd microcode"
+		sudo apt-get install -y microcode.ctl amd64-microcode
+	else
+		echo "Your processor platform (Intel/AMD) could not be determined!"
+	fi
+fi
+
 #Zshell extension for bourne shell which is default = This allows for some better scripting
-# Also adding intel-microcode
 if [ $Install_ZSH -eq 1 ]; then
 	log $INFO "install zsh"
 	sudo apt-get install -y zsh
-fi
-
-# TODO: Make this automated
-if [ $Install_IntelFirmware -eq 1 ]; then
-	log $INFO "install intel-microcode"
-	sudo apt-get install -y intel-microcode
 fi
 
 # git and vcsh - vcsh allows you to manage multiple git repos in one directory
