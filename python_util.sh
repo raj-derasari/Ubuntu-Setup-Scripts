@@ -18,37 +18,42 @@ export DEBUGMODE=0
 #base/Initial variables
 venv_prefix="sudo -H " # this is used if NOT using virtualenv, else replaced with ""
 
-
-## Help Message (Tensorflow/Python
-HELP="
+## Prints Help Message for command line (Tensorflow/Python)
+_help_() {
+echo "
 bash python_util.sh --help
 Prints this message.
 
-Usage: bash python_util.sh <preferred_python_version> <debug_mode> <virtualenv name>;
+Usage: bash python_util.sh <debug_mode> <preferred_python_version> <virtualenv name>;
+	*. <debug_mode>:: Optional, pass \"--debug\" - To run in Debug Mode
 	1. preferred_python_version: takes value either \"2\" or \"3\"]
-	2. <debug_mode>:: Optional, pass \"--debug\" To run in Debug Mode
-	3. virtualenv_name: OPTIONAL: string argument that defines \"What environment to work in.\"
+	2. virtualenv_name: OPTIONAL: string argument that defines \"What environment to work in.\"
 	   If nothing is passed, I work on global/system level without creating environment
 	   Pass NULL as a virtualenv if you want to run in debug mode
 "
+}
+
 if test "$1" = "--debug";  then
 	export DEBUGMODE=1;
 	shift
 fi
 
 if test "$1" = "--help"; then
-	echo "$HELP"
+	_help_
 	exit
 elif [ -z $1 ]; then
-	echo "Incorrect usage."
-	echo "$HELP"
+	echo "Incorrect usage"
+	_help_
 	exit
 elif [ ! $1 -eq 2 ] && [ ! $1 -eq 3 ]; then
 	log $INFO "FATAL: python version unknown. entered value: "$1
 	echo "python version entered is not 2 or 3"
 	exit
 elif [ -z $2 ]; then
+	## seems like arg1 is fine, set the python version
+	Python_PreferredVersion="$1"
 	if [ -z $VirtualEnv_Name ]; then
+		log $INFO "NOT run via Master-Script"
 		log $INFO "NOT working in virtualenv"
 		echo "No virtualenv specified, working on global level"
 		use_virtualenv=0
@@ -57,12 +62,16 @@ elif [ -z $2 ]; then
 		echo "working on virtualenv "$VirtualEnv_Name
 		venv_prefix=""
 		use_virtualenv=1
-		if [[ -z "$VirtualEnv_Directory" ]]; then
+		if [[ -z "${VirtualEnv_Directory}" ]]; then
 			log $INFO "Virtual environment directory: set as default to ~/.virtualenvs/$VirtualEnv_Name"
 			VirtualEnv_Directory=~/.virtualenvs/$VirtualEnv_Name
 		fi
 	fi
-elif [ ! -z $2 ]; then
+else
+	# case where $1 is a good argument, and, $2 is also passed as a parameter
+	## seems like arg1 is fine, set the python version
+	Python_PreferredVersion="$1"
+	
 	log $INFO "Virtual env specified in commandline: "$2
 	echo "Overwriting master virtualenv, and working on virtualenv "$2
 	venv_prefix=""
@@ -71,10 +80,8 @@ elif [ ! -z $2 ]; then
 		log $INFO "Virtual environment directory: set as default to ~/.virtualenvs/$2"
 		VirtualEnv_Directory=~/.virtualenvs/$2
 	fi
-	VirtualEnv_Name=$2	
+	VirtualEnv_Name=$2
 fi
-
-Python_PreferredVersion="$1"
 
 if [ -z $Setup_Python_Dev ]; then
 	log $INFO "Called from terminal"

@@ -117,6 +117,13 @@ if [ $Install_Chromium -eq 1 ]; then
 fi
 
 if [ $Install_TexStudio -eq 1 ]; then
+	checkBash="`grep \"alias clean=\" ~/.bashrc`"
+	if [[ ! -z $checkBash ]]; then
+		log $INFO "Clean alias already exists"
+	else
+		log $INFO "Setting up clean alias for latex"
+		alias clean="rm *.aux *.bbl *.syn* *.toc *.blg *.log *.out" >> ~/.bashrc
+	fi
 	log $INFO "install LaTeX"
 	sudo apt-get install -y texlive-latex-base texlive-latex-extra texlive-science texlive-lang-english texstudio texlive-publishers
 fi
@@ -226,6 +233,15 @@ if [ $Install_SublimeText -eq 1 ]; then
 fi
 #google drive (3rd party)
 if [ $Install_Grive_GoogleDrive -eq 1 ]; then
+	checkBash="`grep \"alias fetchd=\" ~/.bashrc`"
+	if [[ ! -z $checkBash ]]; then
+		log $INFO "grive aliases already exist"
+	else
+		log $INFO "Setting up grive aliases"
+		alias fetchd="grive -f --dry-run"
+		alias fetch="grive -f"
+		alias uploadall="grive -u"
+	fi
 	log $INFO "install grive"
 	sudo apt-get install -y grive
 fi
@@ -250,7 +266,7 @@ fi
 
 if [ $Install_Docker -eq 1 ]; then
 	log $INFO "install docker"
-	bash docker.sh 2>>"log_docker.log"
+	bash docker.sh
 fi
 
 if [ $Install_LibreOffice -eq 1 ]; then
