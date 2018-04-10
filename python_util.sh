@@ -142,12 +142,11 @@ if [ $DEBUGMODE -eq 0 ]; then
 		python-pkg-resources \
 		python-tk
 		
-#	log $INFO "Upgrade pip (globally)"
-#	pip$Python_PreferredVersion install --upgrade pip
+	log $INFO "Upgrade pip (globally)"
+	pip$Python_PreferredVersion install --upgrade pip
+else
+	echo "I install apt packages and pip install --upgrade pip now"
 fi
-
-log $INFO "Upgrade PIP"
-pip$Python_PreferredVersion install --upgrade pip
 
 if [ $Python_InstallBasics -eq 1 ]; then
 	log $INFO "Requests, matplotlib, pandas, h5py"

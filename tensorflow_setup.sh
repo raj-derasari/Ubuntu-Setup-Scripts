@@ -12,17 +12,22 @@ log()
 {
 	echo -e "[${USER}]\t[`date`]\t${*}" >> "${LOGGER}"
 }
+# CUDA COMPUTE CAPABILITY of your GPU must be enterred -- IF you are building for NVIDIA GPU
+export TF_CUDA_COMPUTE_CAPABILITIES=0
+
+
 ## Variables that control program flow
 if [[ -z $DEBUGMODE ]]; then
-	DEBUGMODE=0	
+ 	DEBUGMODE=0	
 fi
 
 ## Variables to use while setting up tensorflow
 venv_prefix="sudo -H " # this is used if NOT using virtualenv, else replaced with ""
 export startDir=`pwd`
 
-## Help Message (Tensorflow/Python
-HELP="
+## Help Message (Tensorflow/Python)
+_help_() {
+echo "
 Usage:
 bash tensorflow_setup.sh --help
 Prints this message.
@@ -51,9 +56,8 @@ bash tensorflow_setup.sh <python_version> <gpu/mkl/cpu> <mode> <unattended> <vir
 5. virtualenv_name: string argument, target virtualenv to install tensorflow in
    If nothing is passed, will install tensorflow on global level [requires sudo]
 "
-
-_bazel_build()
-{
+}
+_bazel_build() {
 	if [[ $Python_Tensorflow_GPU -eq 1 ]]; then
 		log $INFO "start bazel build for GPU"
 		bazel build --config=opt --config=cuda --verbose_failures //tensorflow/tools/pip_package:build_pip_package
@@ -65,9 +69,6 @@ _bazel_build()
 		bazel build --config=opt --verbose_failures //tensorflow/tools/pip_package:build_pip_package
 	fi
 }
-
-# CUDA COMPUTE CAPABILITY of your GPU must be enterred -- IF you are building for NVIDIA GPU
-export TF_CUDA_COMPUTE_CAPABILITIES=0
 
 tfGitRoot=~/tfSource # path where tensorflow is downloaded from github
 ## best use an absolute/complete path here, like I did! 
@@ -100,7 +101,7 @@ if test $2 = "gpu"; then
 	else
 		if [ -z `which nvcc` ]; then
 			log $ERROR "FATAL: Cannot build for GPU, CUDA Toolkit is not installed."
-			echo -e "FATAL ERROR: CUDA Toolkit not installed!\nTry running \"nvidia_setup_cuda.sh\""
+			echo -e "FATAL ERROR: CUDA Toolkit not installed!\nPerhaps try running \"nvidia_setup_cuda.sh\"?"
 			echo -e "Download CUDA: https://developer.nvidia.com/cuda-downloads \nDownload CUDNN: https://developer.nvidia.com/cudnn"
 			echo "Fatal errors encountered while installing tensorflow"
 			exit
@@ -137,7 +138,7 @@ elif test $4 = "-n"; then
 	log $INFO "Tensorflow in interactive install mode:"
 	AUTOMODE=""
 else
-	echo "Second argument not understood. Please enter \"-y\" or \"-n\""
+	echo "Argument #4 not understood. Please enter \"-y\" or \"-n\""
 	exit
 fi
 
@@ -148,12 +149,12 @@ if [[ ! -z "$VirtualEnv_Name" ]]; then
 	workon $VirtualEnv_Name
 	venv_prefix=""
 elif [[ ! -z "$5" ]]; then
-		use_virtualenv=1
-		VirtualEnv_Name="$5"
-		log $INFO "Set virtual environment from console: "$5
-		echo "Working in virtual environment $VirtualEnv_Name"
-		workon $VirtualEnv_Name
-		venv_prefix=""
+	use_virtualenv=1
+	VirtualEnv_Name=$5
+	log $INFO "Set virtual environment from console: "$5
+	echo "Working in virtual environment $VirtualEnv_Name"
+	workon $VirtualEnv_Name
+	venv_prefix=""
 else
 	use_virtualenv=0
 	echo "Installing Tensorflow in system, NOT in VirtualEnvironment"
@@ -167,7 +168,7 @@ else
 	#echo "Configuration you have asked for: "
 	#echo "Python version: $1, TF Compile: $2"
 	echo "Steps that will be executed now:"
-	echo "Download dependencies via apt-get; Clone TF from Github; Compile from there; and execution mode $3"
+	echo "Download dependencies via apt-get; Clone TF from Github; Compile from there; and execution mode: $3"
 	read -p "Press (y) or Enter to continue setting up, or anything else to exit." exitQn
 fi
 
@@ -181,7 +182,6 @@ elif [[ ! -z "$exitQn" ]]; then ## if anything beside y/Y/enter is pressed
 fi
 
 # fulfil dependencies and build tools
-
 if [ $DEBUGMODE -eq 0 ]; then
 	log $INFO "Bazel and build tools"
 	echo "Setting up bazel and build tools"
@@ -241,8 +241,8 @@ else
 	log $INFO "sys python lib path: "$PYTHON_LIB_PATH
 fi
 
-export PYTHONPATH=${TF_ROOT}/lib
-export PYTHON_ARG=${TF_ROOT}/lib
+export PYTHONPATH="${TF_ROOT}"/lib
+export PYTHON_ARG="${TF_ROOT}"/lib
 export GCC_HOST_COMPILER_PATH=$(which gcc)
 export CC_OPT_FLAGS="-march=native"
 
