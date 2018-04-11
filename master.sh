@@ -108,7 +108,7 @@ export LibreOffice_Impress=1
 export LibreOffice_Math=1
 export LibreOffice_Writer=1
 
-export Install_TeamViewer=0
+export Install_TeamViewer=1
 export Install_PyCharm=0
 
 export Setup_Python_Dev=1
