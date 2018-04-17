@@ -84,14 +84,14 @@ export Install_WinFF=1
 ## other packages: editors/programming, remoting, password mgmt, office tools
 export Install_Docker=1
 export Docker_Remove_SUDO=1
-export Install_Grive_GoogleDrive=0
-export Install_KeepassPasswordManager=0
+export Install_Grive_GoogleDrive=1
+export Install_KeepassPasswordManager=1
 export Install_Octave=0
 export Install_Okular=0
 export Install_TildaTmux=0  # terminal client/replacement for ctrl+alt+t
 
 #TexStudio
-export Install_TexStudio=0
+export Install_TexStudio=1
 
 #Java
 export Remove_OpenJDK=0
@@ -101,7 +101,7 @@ export Install_Atom=0
 export Install_SublimeText=1
 export Install_VisualStudioCode=1
 
-export Install_LibreOffice=0
+export Install_LibreOffice=1
 export LibreOffice_Base=1
 export LibreOffice_Draw=1
 export LibreOffice_Impress=1
@@ -112,7 +112,7 @@ export Install_TeamViewer=1
 export Install_PyCharm=0
 
 export Setup_Python_Dev=1
-export Setup_VirtualEnv=0
+export Setup_VirtualEnv=1
 
 ## python stuff will be installed in a virtual env, name here
 export VirtualEnv_Name="seas"
