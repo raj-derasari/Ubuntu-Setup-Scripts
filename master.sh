@@ -54,7 +54,7 @@ Do_AptGetUpgradeLast=1
 Do_CleanupAfterExec=1
 
 Master_Dependencies=1
-Master_RemoveBloatware=1
+Master_RemoveBloatware=0
 Master_Software=1
 Master_Python=1
 
