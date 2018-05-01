@@ -54,9 +54,9 @@ log $INFO "unity"
 sudo apt-get purge -y unity-scope-audacious unity-scope-chromiumbookmarks unity-scope-clementine unity-scope-colourlovers unity-scope-devhelp unity-scope-firefoxbookmarks unity-scope-gdrive unity-scope-gmusicbrowser unity-scope-gourmet unity-scope-manpages unity-scope-musicstores unity-scope-musique unity-scope-openclipart unity-scope-texdoc unity-scope-tomboy unity-scope-video-remote unity-scope-virtualbox unity-scope-yelp unity-scope-zotero unity-webapps-*
 log $INFO "wallpapers and stuff:"
 sudo apt-get purge -y ubuntu-wallpapers-xenial ubuntu-touch-sounds ubuntu-software ubuntu-artwork ubuntu-desktop*
-
-log $INFO "<LUBUNTU>"
-sudo apt-get purge -y gpicview leafpad pidgin* simple-scan mtpaint mtr-tiny mtools sylpheed* transmission* emacsen-common abiword* gnumeric* alsa* audacious* gnome-disk-utility gnome-mplayer guvcview xfburn ubuntu-release-upgrader-gtk
+#
+#log $INFO "<LUBUNTU>"
+##sudo apt-get purge -y gpicview leafpad pidgin* simple-scan mtpaint mtr-tiny mtools sylpheed* transmission* emacsen-common abiword* gnumeric* alsa* audacious* gnome-disk-utility gnome-mplayer guvcview xfburn ubuntu-release-upgrader-gtk
 
 log $INFO "<dpkg conf>"
 sudo dpkg --configure -a
