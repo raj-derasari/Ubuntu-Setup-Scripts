@@ -54,14 +54,14 @@ Do_AptGetUpgradeLast=1
 Do_CleanupAfterExec=1
 
 Master_Dependencies=1
-Master_RemoveBloatware=0
+Master_RemoveBloatware=1
 Master_Software=1
 Master_Python=1
 
 # strongly recommended packages
 export Install_EXFatUtils=1
 export Install_Flux=1
-export Install_GEdit=0
+export Install_GEdit=1
 export Install_Git=1
 export Install_GParted=1
 export Install_P7Zip=1
@@ -72,10 +72,10 @@ export Install_VLCMediaPlayer=1
 export Install_ZSH=1
 
 # choose a web browser
-export Install_Chromium=0
+export Install_Chromium=1
 export Install_GoogleChrome=1
 export Install_MozillaFirefox=1
-export Install_Vivaldi=0
+export Install_Vivaldi=1
 
 # audacity audio editing application
 export Install_Audacity=1
@@ -86,18 +86,18 @@ export Install_Docker=1
 export Docker_Remove_SUDO=1
 export Install_Grive_GoogleDrive=1
 export Install_KeepassPasswordManager=1
-export Install_Octave=0
-export Install_Okular=0
+export Install_Octave=1
+export Install_Okular=1
 export Install_TildaTmux=0  # terminal client/replacement for ctrl+alt+t
 
 #TexStudio
 export Install_TexStudio=1
 
 #Java
-export Remove_OpenJDK=0
-export Install_OracleJava8=0
+export Remove_OpenJDK=1
+export Install_OracleJava8=1
 
-export Install_Atom=0
+export Install_Atom=1
 export Install_SublimeText=1
 export Install_VisualStudioCode=1
 
@@ -109,7 +109,7 @@ export LibreOffice_Math=1
 export LibreOffice_Writer=1
 
 export Install_TeamViewer=1
-export Install_PyCharm=0
+export Install_PyCharm=1
 
 export Setup_Python_Dev=1
 export Setup_VirtualEnv=1
@@ -123,7 +123,7 @@ export Python_PreferredVersion=2
 export Python_InstallBasics=1
 export Python_InstallWebDevelopmentTools=1
 export Python_InstallJupyter=1
-export Python_InstallMachineLearningTools=1     # Must set to 1 if you want to install tensorflow!
+export Python_InstallMachineLearningTools=0     # Must set to 1 if you want to install tensorflow!
 export Python_InstallComputerGraphicsTools=0    ## TODO, not implemented
 export Python_InstallNLTK=1
 export Python_Compile_Tensorflow=0
