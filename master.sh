@@ -2,6 +2,7 @@
 echo "----------------------------------------------------------------------------"
 echo "                        Ubuntu Master Script"
 echo "----------------------------------------------------------------------------"
+echo " TODO: check out apt-get install byobu"
 #logging/utils/help
 LOGGER=`pwd`/log_master.log
 INFO="Master: INFO: "
@@ -215,3 +216,4 @@ if [ $Do_AptGetUpgradeLast -eq 1 ]; then
 	fi
 fi
 exit
+
