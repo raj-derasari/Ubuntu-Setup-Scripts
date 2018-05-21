@@ -74,20 +74,20 @@ export Install_ZSH=1
 
 # choose a web browser
 export Install_Chromium=1
-export Install_GoogleChrome=1
+export Install_GoogleChrome=0
 export Install_MozillaFirefox=1
-export Install_Vivaldi=1
+export Install_Vivaldi=0
 
 # audacity audio editing application
-export Install_Audacity=1
-export Install_WinFF=1
+export Install_Audacity=0
+export Install_WinFF=0
 
 ## other packages: editors/programming, remoting, password mgmt, office tools
-export Install_Docker=1
-export Docker_Remove_SUDO=1
-export Install_Grive_GoogleDrive=1
-export Install_KeepassPasswordManager=1
-export Install_Octave=1
+export Install_Docker=0
+export Docker_Remove_SUDO=0
+export Install_Grive_GoogleDrive=0
+export Install_KeepassPasswordManager=0
+export Install_Octave=0
 export Install_Okular=1
 export Install_TildaTmux=0  # terminal client/replacement for ctrl+alt+t
 
@@ -95,10 +95,10 @@ export Install_TildaTmux=0  # terminal client/replacement for ctrl+alt+t
 export Install_TexStudio=1
 
 #Java
-export Remove_OpenJDK=1
-export Install_OracleJava8=1
+export Remove_OpenJDK=0
+export Install_OracleJava8=0
 
-export Install_Atom=1
+export Install_Atom=0
 export Install_SublimeText=1
 export Install_VisualStudioCode=1
 
@@ -110,7 +110,7 @@ export LibreOffice_Math=1
 export LibreOffice_Writer=1
 
 export Install_TeamViewer=1
-export Install_PyCharm=1
+export Install_PyCharm=0
 
 export Setup_Python_Dev=1
 export Setup_VirtualEnv=1
