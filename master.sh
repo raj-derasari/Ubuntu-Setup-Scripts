@@ -73,20 +73,20 @@ export Install_VLCMediaPlayer=1
 export Install_ZSH=1
 
 # choose a web browser
-export Install_Chromium=1
+export Install_Chromium=0
 export Install_GoogleChrome=0
 export Install_MozillaFirefox=1
 export Install_Vivaldi=0
 
 # audacity audio editing application
-export Install_Audacity=0
-export Install_WinFF=0
+export Install_Audacity=1
+export Install_WinFF=1
 
 ## other packages: editors/programming, remoting, password mgmt, office tools
 export Install_Docker=0
 export Docker_Remove_SUDO=0
-export Install_Grive_GoogleDrive=0
-export Install_KeepassPasswordManager=0
+export Install_Grive_GoogleDrive=1
+export Install_KeepassPasswordManager=1
 export Install_Octave=0
 export Install_Okular=1
 export Install_TildaTmux=0  # terminal client/replacement for ctrl+alt+t
@@ -116,7 +116,7 @@ export Setup_Python_Dev=1
 export Setup_VirtualEnv=1
 
 ## python stuff will be installed in a virtual env, name here
-export VirtualEnv_Name="seas"
+export VirtualEnv_Name="venv1"
 export VirtualEnv_Directory=~/.virtualenvs/$VirtualEnv_Name
 
 # set one value from 2 and 3
@@ -126,7 +126,7 @@ export Python_InstallWebDevelopmentTools=1
 export Python_InstallJupyter=1
 export Python_InstallMachineLearningTools=0     # Must set to 1 if you want to install tensorflow!
 export Python_InstallComputerGraphicsTools=0    ## TODO, not implemented
-export Python_InstallNLTK=1
+export Python_InstallNLTK=0
 export Python_Compile_Tensorflow=0
 export Python_Tensorflow_CPUOnly=0
 export Python_Tensorflow_GPU=0

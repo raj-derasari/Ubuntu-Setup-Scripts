@@ -77,6 +77,7 @@ if [ $Setup_VirtualEnv -eq 1 ]; then
 		sudo apt-get install -y virtualenv python3-virtualenv virtualenvwrapper
 	fi
 	pip$Python_PreferredVersion install virtualenvwrapper
+	workon
 else
 	log $INFO "Not setting up virtualenv"
 fi
