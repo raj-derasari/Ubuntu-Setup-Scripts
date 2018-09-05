@@ -1,4 +1,7 @@
 #!/bin/bash
+export XDG_CURRENT_DESKTOP=GNOME
+# Possible values: 
+# Unity,GNOME,XFCE,KDE,LXDE,Pantheon
 
 ## you can set up your own variables, values here:
 export BF=~/.bashrc ## your bashrc profile file
@@ -15,7 +18,6 @@ Master_Python=1
 # debugging some stuff
 PYTHON_DEBUG_MODE=0
 MASTER_DEBUG_MODE=0
-
 
 # strongly recommended packages
 export Install_EXFatUtils=1
@@ -197,8 +199,14 @@ if [ $Master_RemoveBloatware -eq 1 ]; then
 	echo " ------------------------------------------ "
 	echo "      Bloatware removal"
 	echo " ------------------------------------------ "
-	log $INFO "Setting up bloatware removal"
-	bash bloatremove.sh 2>>"${ERRORFILE}"
+	echo "      Detected Desktop Environment: " $XDG_CURRENT_DESKTOP
+	echo " ------------------------------------------ "
+	log $INFO "Bloatremove: Detected Desktop:" ${XDG_CURRENT_DESKTOP}
+	case $XDG_CURRENT_DESKTOP in
+		Unity|LXDE|GNOME) #|XFCE|KDE|Pantheon)  # have to work on the rest
+		echo "Running bloatremove for ${XDG_CURRENT_DESKTOP}" && bash BR,SWC_${XDG_CURRENT_DESKTOP}.sh 2>>"${ERRORFILE}";
+	;;
+esac
 else
 	log $INFO "NOT setting up bloatware removal"
 fi

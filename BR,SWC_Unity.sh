@@ -55,8 +55,6 @@ sudo apt-get purge -y unity-scope-audacious unity-scope-chromiumbookmarks unity-
 log $INFO "wallpapers and stuff:"
 sudo apt-get purge -y ubuntu-wallpapers-xenial ubuntu-touch-sounds ubuntu-software ubuntu-artwork ubuntu-desktop*
 #
-log $INFO "<LUBUNTU>"
-sudo apt-get purge -y gpicview leafpad pidgin* simple-scan mtpaint mtr-tiny mtools sylpheed* transmission* abiword* gnumeric* alsa* audacious* gnome-disk-utility gnome-mplayer guvcview xfburn ubuntu-release-upgrader-gtk
 
 log $INFO "<dpkg conf>"
 sudo dpkg --configure -a
@@ -65,9 +63,9 @@ log $INFO "stage 2: autoremove"
 sudo apt -y autoremove
 # these did not work at all: package did not exist : hence keeping these lines commented
 #log $INFO "beagle:"
-sudo apt-get purge -y libbeagle1
+#sudo apt-get purge -y libbeagle1
 #log $INFO "contact bs:"
-sudo apt-get purge -y contact-lookup-applet
+#sudo apt-get purge -y contact-lookup-applet
 #log $INFO "openoffice:"
 #sudo apt-get purge -y openoffice.org-calc openoffice.org-draw openoffice.org-impress openoffice.org-writer openoffice.org-base-core
 
