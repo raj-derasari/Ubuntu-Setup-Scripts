@@ -4,7 +4,7 @@
 export BF=~/.bashrc ## your bashrc profile file
 
 ### Variables to set-up installation of Applications, Bloatware and whatnot
-Do_AptGetUpgradeLast=0
+Do_AptGetUpgradeLast=1
 Do_CleanupAfterExec=1
 
 Master_Dependencies=1
@@ -18,58 +18,58 @@ MASTER_DEBUG_MODE=0
 
 
 # strongly recommended packages
-export Install_EXFatUtils=0
-export Install_Flux=0
-export Install_Git=0
-export Install_GParted=0
-export Install_P7Zip=0
-export Install_QBitTorrent=0
-export Install_QPDFView=0
-export Install_UGET=0
+export Install_EXFatUtils=1
+export Install_Flux=1
+export Install_Git=1
+export Install_GParted=1
+export Install_P7Zip=1
+export Install_QBitTorrent=1
+export Install_QPDFView=1
+export Install_UGET=1
 export Install_VLCMediaPlayer=1
-export Install_ZSH=0
+export Install_ZSH=1
 
 # choose a web browser
-export Install_Chromium=0
+export Install_Chromium=1
 export Install_GoogleChrome=0
 export Install_MozillaFirefox=1
 export Install_Vivaldi=0
 
 # audacity audio editing application
-export Install_Audacity=0
-export Install_WinFF=0
+export Install_Audacity=1
+export Install_WinFF=1
 
 ## other packages: editors/programming, remoting, password mgmt, office tools
 export Install_Docker=1
 export Docker_Remove_SUDO=1
-export Install_Grive_GoogleDrive=0
-export Install_KeepassPasswordManager=0
-export Install_Octave=0
-export Install_Okular=0
-export Install_TildaTmux=0  # terminal client/replacement for ctrl+alt+t
+export Install_Grive_GoogleDrive=1
+export Install_KeepassPasswordManager=1
+export Install_Octave=1
+export Install_Okular=1
+export Install_TildaTmux=1  # terminal client/replacement for ctrl+alt+t
 
 #TexStudio
-export Install_TexStudio=0
+export Install_TexStudio=1
 
 #Java
-export Remove_OpenJDK=0
-export Install_OracleJava8=0 
+export Remove_OpenJDK=1
+export Install_OracleJava8=0;
 export Install_OracleJava10=1;  ## todo, not implemented
 
 # Gedit is a regular text editor but can be quite handy
-export Install_GEdit=0
+export Install_GEdit=1
 export Install_Atom=0
 export Install_SublimeText=1
 export Install_VisualStudioCode=1
 
-export Install_LibreOffice=0
-export LibreOffice_Base=0
-export LibreOffice_Draw=0
-export LibreOffice_Impress=0
-export LibreOffice_Math=0
-export LibreOffice_Writer=0
+export Install_LibreOffice=1
+export LibreOffice_Base=1
+export LibreOffice_Draw=1
+export LibreOffice_Impress=1
+export LibreOffice_Math=1
+export LibreOffice_Writer=1
 
-export Install_TeamViewer=0
+export Install_TeamViewer=1
 export Install_PyCharm=0
 
 # setting up python for developers
@@ -92,7 +92,7 @@ export Python_InstallDjango=1
 export Python_InstallJupyter=1
 export Python_InstallMachineLearningTools=1     # Must set to 1 if you want to install tensorflow!
 export Python_InstallComputerGraphicsTools=0    ## TODO, not implemented
-export Python_InstallNLTK=0
+export Python_InstallNLTK=1
 export Python_Compile_Tensorflow=0
 export Python_Tensorflow_CPUOnly=1
 export Python_Tensorflow_GPU=0
