@@ -190,7 +190,8 @@ if [ $DEBUGMODE -eq 0 ]; then
 		log $INFO "bazel: Installing from this script"
 		echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
 		curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
-		sudo apt-key update && sudo apt-get update > /dev/null
+		#sudo apt-key update && 
+		sudo apt-get update > /dev/null
 		sudo apt-get -o Dpkg::Options::="--force-overwrite" install -y openjdk-9-jdk
 		sudo apt-get install -y bazel
 	else

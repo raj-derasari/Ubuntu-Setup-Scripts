@@ -70,7 +70,8 @@ if [ $Install_GoogleChrome -eq 1 ]; then
 	curl https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
 	echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list
 fi
-sudo sudo apt-key update && sudo apt-get update #>&/dev/null
+#sudo sudo apt-key update && 
+sudo apt-get update #>&/dev/null
 
 # First things first: Check if install AMD or Intel microcode:
 sudo lshw -c CPU | grep -i intel

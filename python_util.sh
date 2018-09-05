@@ -16,7 +16,7 @@ log()
 export DEBUGMODE=0
 
 #base/Initial variables
-venv_prefix="sudo -H " # this is used if NOT using virtualenv, else replaced with ""
+venv_prefix="sudo -H python$Python_PreferredVersion -m " # this is used if NOT using virtualenv, else replaced with ""
 
 ## Prints Help Message for command line (Tensorflow/Python)
 _help_() {
@@ -60,7 +60,7 @@ elif [ -z $2 ]; then
 	else
 		log $INFO "Virtual env specified in Master: " $VirtualEnv_Name
 		echo "working on virtualenv "$VirtualEnv_Name
-		venv_prefix=""
+		venv_prefix="python$Python_PreferredVersion -m "
 		use_virtualenv=1
 		if [[ -z "${VirtualEnv_Directory}" ]]; then
 			log $INFO "Virtual environment directory: set as default to ~/.virtualenvs/$VirtualEnv_Name"
@@ -73,8 +73,8 @@ else
 	Python_PreferredVersion="$1"
 	
 	log $INFO "Virtual env specified in commandline: "$2
-	echo "Overwriting master virtualenv, and working on virtualenv "$2
-	venv_prefix=""
+	echo "Working with virtualenv "$2
+	venv_prefix="python$Python_PreferredVersion -m "
 	use_virtualenv=1
 	if [[ -z "$VirtualEnv_Directory" ]]; then
 		log $INFO "Virtual environment directory: set as default to ~/.virtualenvs/$2"
@@ -87,8 +87,12 @@ if [ -z $Setup_Python_Dev ]; then
 	log $INFO "Called from terminal"
 	echo "Looks like this script was run from the terminal (as a master variable is unset)."
 	echo "Parameters are set up in this section! (lines 48 onwards)"
+	## your bashrc profile/main profile file.
+	BF=~/.bashrc
+	
 	Python_InstallBasics=1
 	Python_InstallWebDevelopmentTools=0
+	Python_InstallDjango=0
 	Python_InstallJupyter=0
 	Python_InstallMachineLearningTools=0
 	Python_InstallNLTK=0
@@ -117,7 +121,7 @@ if [ $DEBUGMODE -eq 0 ]; then
 		if [ ! -e  $VirtualEnv_Directory/bin/activate ]; then
 			log $INFO "Creating virtualenv $VirtualEnv_Name"
 			echo "Creating virtualenv $VirtualEnv_Name!"
-			virtualenv --system-site-packages -p python2 $VirtualEnv_Directory
+			virtualenv --system-site-packages -p python$Python_PreferredVersion $VirtualEnv_Directory
 		fi
 		source $VirtualEnv_Directory/bin/activate
 	fi
@@ -127,10 +131,10 @@ else
 		if [ ! -e  $VirtualEnv_Directory/bin/activate ]; then
 			log $INFO "Required: Creating virtualenv $VirtualEnv_Name"
 			echo "Creating virtualenv $VirtualEnv_Name!"
-			virtualenv --system-site-packages -p python2 $VirtualEnv_Directory
+			virtualenv --system-site-packages -p python$Python_PreferredVersion $VirtualEnv_Directory
 		fi
 		source $VirtualEnv_Directory/bin/activate
-		venv_prefix=""
+		venv_prefix="python$Python_PreferredVersion -m "
 	fi
 fi
 
@@ -143,7 +147,7 @@ if [ $DEBUGMODE -eq 0 ]; then
 		python-tk
 		
 	log $INFO "Upgrade pip (globally)"
-	pip$Python_PreferredVersion install --upgrade pip
+	$venv_prefix pip install --user --upgrade pip
 else
 	echo "I install apt packages and pip install --upgrade pip now"
 fi
@@ -151,54 +155,91 @@ fi
 if [ $Python_InstallBasics -eq 1 ]; then
 	log $INFO "Requests, matplotlib, pandas, h5py"
 	if [ $DEBUGMODE -eq 1 ]; then
-		echo $INFO $DEBUG $venv_prefix "pip$Python_PreferredVersion install Requests"
+		echo $INFO $DEBUG $venv_prefix "pip install --user Requests"
 	else
-		$venv_prefix pip$Python_PreferredVersion install Requests
-		$venv_prefix pip$Python_PreferredVersion install matplotlib
-		$venv_prefix pip$Python_PreferredVersion install pandas
-		$venv_prefix pip$Python_PreferredVersion install h5py
+		$venv_prefix pip install --user Requests
+		$venv_prefix pip install --user scipy ## also installs numpy
+		$venv_prefix pip install --user sklearn
+		#echo "$venv_prefix pip install --user Requests"
+		$venv_prefix pip install --user matplotlib
+		$venv_prefix pip install --user pandas
+		$venv_prefix pip install --user h5py
+	# $venv_prefix pip install --user Requests
+	# echo "$venv_prefix pip install --user Requests"
+	# $venv_prefix pip install --user matplotlib
+	# $venv_prefix pip install --user pandas
+	# $venv_prefix pip install --user h5py
 	fi
 fi
+
+if [ $Python_InstallDjango -eq 1 ]; then
+	log $INFO "Django"
+	if [ $DEBUGMODE -eq 1 ]; then
+		echo $INFO $DEBUG $venv_prefix "pip install --user django"
+	else
+		$venv_prefix pip install --user django
+		## setup aliases
+		checkBash="`grep \"alias django_runserver=\" $BF`"
+		if [[ ! -z $checkBash ]]; then
+			log $INFO "common-aliases - Seems like aliases are already setup. Not modifying $BF"
+		else
+			cat <<EOT >> $BF
+
+alias django_migrate="python manage.py migrate "
+alias django_runserver="python manage.py runserver "
+EOT
+		fi
+	fi
+fi
+
 
 if [ $Python_InstallWebDevelopmentTools -eq 1 ]; then
 	log $INFO "flask, BeautifulSoup, Twisted"
 	if [ $DEBUGMODE -eq 1 ]; then
-		echo $INFO $DEBUG $venv_prefix "pip$Python_PreferredVersion install flask"
+		echo $INFO $DEBUG $venv_prefix "pip install --user flask"
 	else
-	$venv_prefix pip$Python_PreferredVersion install flask
-	$venv_prefix pip$Python_PreferredVersion install BeautifulSoup
-	$venv_prefix pip$Python_PreferredVersion install Twisted
+	$venv_prefix pip install --user flask
+
+	## python2
+	if [ $Python_PreferredVersion -eq 2 ]; then 
+		$venv_prefix pip install --user BeautifulSoup
+	elif [ $Python_PreferredVersion -eq 3 ]; then 
+		## python3.5 and above?
+		$venv_prefix pip install --user BeautifulSoup4
+	fi	
+	
+	$venv_prefix pip install --user Twisted
 	fi
 fi
 
 if [ $Python_InstallJupyter -eq 1 ]; then
 	log $INFO "IPython and Jupyter-Notebook"
 	if [ $DEBUGMODE -eq 1 ]; then
-		echo $INFO $DEBUG $venv_prefix "pip$Python_PreferredVersion install IPython"
+		echo $INFO $DEBUG $venv_prefix "pip install --user IPython"
 	else
 		# Please Note ipython 6.x wont work with python2, needs python 3 - This is automated though
-		$venv_prefix pip$Python_PreferredVersion install IPython
-		$venv_prefix pip$Python_PreferredVersion install jupyter
+		$venv_prefix pip install --user IPython
+		$venv_prefix pip install --user jupyter
 	fi
 fi
 
 if [ $Python_InstallNLTK -eq 1 ]; then
 	log $INFO "NLTK"
 	if [ $DEBUGMODE -eq 1 ]; then
-		echo $INFO $DEBUG $venv_prefix "pip$Python_PreferredVersion install nltk"
+		echo $INFO $DEBUG $venv_prefix "pip install --user nltk"
 	else
-		$venv_prefix pip$Python_PreferredVersion install nltk
+		$venv_prefix pip install --user nltk
 	fi
 fi
 
 if [ $Python_InstallMachineLearningTools -eq 1 ]; then
 	log $INFO "ML-Scipy-Scikit_learn-TF-Theano-Keras"
 	if [ $DEBUGMODE -eq 1 ]; then
-		echo $INFO $DEBUG $venv_prefix "pip$Python_PreferredVersion install scipy sklearn tensorflow keras"
-		echo $INFO $DEBUG $venv_prefix "pip$Python_PreferredVersion install tensorflow theano"
+		echo $INFO $DEBUG $venv_prefix "pip install --user scipy sklearn tensorflow keras"
+		echo $INFO $DEBUG $venv_prefix "pip install --user tensorflow theano"
 	else
-		$venv_prefix pip$Python_PreferredVersion install scipy ## also installs numpy
-		$venv_prefix pip$Python_PreferredVersion install sklearn
+		$venv_prefix pip install --user scipy ## also installs numpy
+		$venv_prefix pip install --user sklearn
 	fi
 	if [ $Python_Compile_Tensorflow -eq 1 ]; then
 		if [ $Python_Tensorflow_GPU -eq 1 ]; then
@@ -213,7 +254,7 @@ if [ $Python_InstallMachineLearningTools -eq 1 ]; then
 		fi
 	else
 		log $INFO "Not compiling tensorflow, installing from pip"
-		$venv_prefix pip$Python_PreferredVersion install tensorflow theano keras
+		$venv_prefix pip install --user tensorflow theano keras
 	fi
 fi
 exit

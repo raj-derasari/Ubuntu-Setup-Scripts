@@ -17,7 +17,8 @@ log $INFO "Adding default ubuntu repositories!"
 sudo add-apt-repository universe
 sudo add-apt-repository restricted
 sudo add-apt-repository multiverse
-sudo apt-key update && sudo apt-get update >/dev/null
+#sudo apt-key update && 
+sudo apt-get update >/dev/null
 
 # get ifconfig working on Ubuntu Unity/Budgie/gnome
 log $INFO "IFCONFIG"
@@ -64,6 +65,16 @@ if [ $Setup_Python_Dev -eq 1 ]; then
 		sudo apt install -y python-pip --install-recommends
 	elif [ $Python_PreferredVersion -eq 3 ]; then
 		sudo apt install -y python3-pip --install-recommends
+		
+		checkBash="`grep \"alias python=python3\" ~/.bashrc`"
+		if [[ ! -z $checkBash ]]; then
+			echo "\"python3\" is already linked to \"python\" in this ubuntu installation"
+			log $INFO "python3 is already linked as python for console"
+		else
+			echo "alias python=python3" >> ~/.bashrc
+			echo "Alias for making python3 as python setup"
+			log $INFO "Make python3 default python in bashrc"
+		fi
 	fi
 else
 	log $INFO "Not installing pip!"
@@ -72,12 +83,14 @@ fi
 if [ $Setup_VirtualEnv -eq 1 ]; then 
 	log $INFO "installing virtualenv for python"
 	if [ $Python_PreferredVersion -eq 2 ]; then
-		sudo apt-get install -y virtualenv python-virtualenv virtualenvwrapper
+		sudo apt-get install -y virtualenv python-venv python-virtualenv virtualenvwrapper
 	elif [ $Python_PreferredVersion -eq 3 ]; then
-		sudo apt-get install -y virtualenv python3-virtualenv virtualenvwrapper
+		sudo apt-get install -y virtualenv python3-venv python3-virtualenv virtualenvwrapper
 	fi
-	pip$Python_PreferredVersion install virtualenvwrapper
-	workon
+	
+
+	# pip$Python_PreferredVersion install virtualenvwrapper
+#	export
 else
 	log $INFO "Not setting up virtualenv"
 fi
