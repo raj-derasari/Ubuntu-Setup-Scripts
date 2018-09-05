@@ -16,8 +16,8 @@ Master_Software=1
 Master_Python=1
 
 # debugging some stuff
-PYTHON_DEBUG_MODE=0
-MASTER_DEBUG_MODE=0
+PYTHON_DEBUG_MODE=1
+MASTER_DEBUG_MODE=0;  ## todo, this one has not been implemented
 
 # strongly recommended packages
 export Install_EXFatUtils=1
