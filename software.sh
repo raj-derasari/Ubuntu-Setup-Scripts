@@ -163,7 +163,8 @@ fi
 # vlc
 if [ $Install_VLCMediaPlayer -eq 1 ]; then
 	log $INFO "install vlc"
-	sudo apt-get install -y --install-recommends vlc browser-plugin-vlc vlc-plugin-libde265
+	sudo apt-get install -y --install-recommends vlc browser-plugin-vlc libde265-0
+	#sudo apt-get install -y --install-recommends vlc-plugin-libde265 
 fi
 
 # 7z
