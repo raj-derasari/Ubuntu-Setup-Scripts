@@ -99,12 +99,6 @@ if [ $Install_ZSH -eq 1 ]; then
 	sudo apt-get install -y zsh
 fi
 
-# git and vcsh - vcsh allows you to manage multiple git repos in one directory
-if [ $Install_Git -eq 1 ]; then
-	log $INFO "install Git"
-	sudo apt-get install -y vcsh git
-fi
-
 if [ $Install_Flux -eq 1 ]; then
 	log $INFO "install Flux"
 	sudo apt-get install -y fluxgui
