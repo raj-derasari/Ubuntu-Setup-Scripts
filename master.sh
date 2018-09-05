@@ -16,13 +16,17 @@ Master_Software=1
 Master_Python=1
 
 # debugging some stuff
-PYTHON_DEBUG_MODE=0
-MASTER_DEBUG_MODE=0
+PYTHON_DEBUG_MODE=1
+MASTER_DEBUG_MODE=0;  ## todo, this one has not been implemented
+
+# git
+export Install_Git=1
+export Install_Git_SSHKeys=1   # IF you set this as 1, you will have to enter your email in Git_Email
+export Git_Email="raj.derasari@gmail.com" # remember to unset this to some random values, or delete this file when done
 
 # strongly recommended packages
 export Install_EXFatUtils=1
 export Install_Flux=1
-export Install_Git=1
 export Install_GParted=1
 export Install_P7Zip=1
 export Install_QBitTorrent=1
@@ -174,6 +178,19 @@ if [ \$? -eq 0 ]; then
 	source \$venvwrap
 fi
 EOT
+fi
+
+# git and vcsh - vcsh allows you to manage multiple git repos in one directory
+if [ $Install_Git -eq 1 ]; then
+	log $INFO "install Git"
+	sudo apt-get install -y vcsh git
+	if [ $Install_Git_SSHKeys -eq 1 ]; then
+		ssh-keygen -t rsa -b 4096 -C "${Git_Email}" -f ~/.ssh/github_key
+		cat "Visit https://github.com/settings/keys and add this key in your SSH keys: " > ~/Desktop/Git_PublicKey.txt
+		cat ~/.ssh/github_key.pub >> ~/Desktop/Git_PublicKey.txt && echo "You can copypasta your Github key from your Desktop"
+		eval "$(ssh-agent -s)"
+		ssh-add ~/.ssh/github_key
+	fi
 fi
 
 ## libsdeps
