@@ -34,6 +34,11 @@ if [ $Install_OracleJava8 -eq 1 ]; then
 	sudo add-apt-repository -y ppa:webupd8team/java
 	echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | sudo /usr/bin/debconf-set-selections
 fi
+if [ $Install_OracleJava10 -eq 1 ]; then
+	#echo '' >> install_log.txt
+	sudo add-apt-repository -y ppa:linuxuprising/java
+	echo "oracle-java10-installer shared/accepted-oracle-license-v1-1 select true" | sudo /usr/bin/debconf-set-selections
+fi
 if [ $Install_UGET -eq 1 ]; then
 	sudo add-apt-repository -y ppa:plushuang-tw/uget-stable
 fi
@@ -219,6 +224,16 @@ if [ $Install_OracleJava8 -eq 1 ]; then
 	log $INFO "install oraclejava"
 	sudo apt-get install -y oracle-java8-installer
 	sudo apt-get install -y oracle-java8-set-default
+fi
+# java 10
+if [ $Install_OracleJava10 -eq 1 ]; then 
+	if [ $Remove_OpenJDK -eq 1 ]; then
+		log $INFO "PURGE OpenJDK"
+		sudo apt-get purge -y openjdk-\*
+	fi
+	log $INFO "install oraclejava"
+	sudo apt-get install -y oracle-java10-installer
+	sudo apt-get install -y oracle-java10-set-default
 fi
 
 #coding ide

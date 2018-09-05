@@ -8,9 +8,9 @@ Do_AptGetUpgradeLast=0
 Do_CleanupAfterExec=1
 
 Master_Dependencies=1
-Master_RemoveBloatware=0
+Master_RemoveBloatware=1
 Master_Software=1
-Master_Python=0
+Master_Python=1
 
 # debugging some stuff
 PYTHON_DEBUG_MODE=0
@@ -54,7 +54,7 @@ export Install_TexStudio=0
 #Java
 export Remove_OpenJDK=0
 export Install_OracleJava8=0 
-export Install_OracleJava9=0;  ## todo, not implemented
+export Install_OracleJava10=1;  ## todo, not implemented
 
 # Gedit is a regular text editor but can be quite handy
 export Install_GEdit=0
