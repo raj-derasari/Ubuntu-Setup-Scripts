@@ -1,4 +1,13 @@
 #bloatware removal script
+. util.sh
+DRY_RUN=0
+dry_echo=""
+DEBUG=0
+
+if test "$1" = "-D"; then
+	DRY_RUN=1
+	dry_echo="echo "
+fi
 
 if [ -z $Master_RemoveBloatware ]; then
 	## variable wasn't defined
@@ -32,7 +41,7 @@ transmission*
 "
 echo $help
 
-sudo apt-get purge -y \
+$dry_echo sudo apt-get purge -y \
 gnome-disk-utility \
 gnome-mplayer \
 gnome-mpv \
@@ -46,7 +55,7 @@ simple-scan \
 ubuntu-release-upgrader-gtk \
 xfburn
 
-sudo apt-get purge -y  \
+$dry_echo sudo apt-get purge -y  \
 abiword* \
 alsa* \
 audacious* \
@@ -55,8 +64,8 @@ pidgin* \
 sylpheed* \
 transmission*
 
-sudo apt-get install -fy
+$dry_echo sudo apt-get install -fy
 # to fix mute button problems
-sudo apt-get install alsa-utils
+$dry_echo sudo apt-get install alsa-utils
 sed -i 's/amixer -q sset Master toggle/amixer -D pulse set Master toggle/g' ~/.config/openbox/lubuntu-rc.xml && openbox --reconfigure
 

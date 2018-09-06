@@ -3,7 +3,6 @@ set -o errexit -o pipefail -o noclobber #-o nounset
 ## get util functions loaded
 . util.sh
 
-
 # use the display function to print this
 disp "Ubuntu Master Script"
 
@@ -19,12 +18,19 @@ export ERRORFILE=`pwd`/log_errors.log
 ### TODOS
 ## check out apt-get install byobu"
 
+DRY_RUN=0
+DEBUG=0
 echo "Parsing command line parameters:"
 while true; do
     case "$1" in
     	-h|--help)
-			echo "TODO: print help message for master.sh"
+			echo "master script made by Raj D."
+			echo "Usage: "
+			echo " -f <configuration script> : Uses specified script in setup, defaults to config_recommended.sh"
+			echo " -D : Dry-run the script, doesn't have any user prompt, displays commands that will be executed."
+			echo " There are other parameters which I will detail laters"
 			shift
+			exit 0
 			;;
         -C|--clear-logs)
 			echo "Clearing log files."
@@ -38,9 +44,10 @@ while true; do
 			;;
 		-f|--file)
 			CustomConfig=1
+			CONFIG_FILE="$2"
 			echo "Loading configuration from input file."
 			log $INFO "exec custom config file"
-			shift
+			shift 2
 			;;
 		-v|--verbose)
 			VERBOSE=1
@@ -55,7 +62,9 @@ while true; do
 			shift
 			;;
 		-D|--dry-run)
-			DRY_RUN="echo "
+			DRY_RUN=1
+			dry_echo="echo "
+			DRYFLAG=" -D "
 			echo "Dry-Run: No commands will be executed"
 			log $INFO $DEBUG "Running in debug mode"
 			shift
@@ -71,12 +80,18 @@ while true; do
     esac
 done
 
+if [ $DRY_RUN -eq 1 ]; then
+	dry_echo="echo "
+	DRYFLAG=" -D "
+else
+	dry_echo=""
+	DRYFLAG=""
+fi
+
+
 if [ -z $CustomConfig ]; then
 	echo "Executing with the default Configuration-File: config_recommended.sh"
-	CONFIG_FILE=config_recommended.sh
-else
-	echo "Executing with custom Configuration-File:" $1
-	CONFIG_FILE=$1
+	CONFIG_FILE=./configs/config_recommended.sh
 fi
 
 . "${CONFIG_FILE}" && echo "Loading Configuration!"
@@ -91,7 +106,8 @@ if [ $? -ne 0 ]; then
 fi
 
 ## Configuration loaded, run apt-get update first things first
-echo "Running sudo apt-get update" && log $INFO "first run of apt-get update in masterscript" && $DEDE sudo apt-get update
+echo "Running sudo apt-get update"
+log $INFO "first run of apt-get update in masterscript" && $dry_echo sudo apt-get update
 
 ## ALIAS SETUP
 checkBash="`grep \"alias brc=\" $BF`"
@@ -143,9 +159,9 @@ fi
 EOT
 	fi
 	if [ $Python_PreferredVersion -eq 2 ]; then
-		sudo apt-get install -y virtualenv python-virtualenv virtualenvwrapper
+		$dry_echo sudo apt-get install -y virtualenv python-virtualenv virtualenvwrapper
 	elif [ $Python_PreferredVersion -eq 3 ]; then
-		sudo apt-get install -y virtualenv python3-virtualenv virtualenvwrapper
+		$dry_echo sudo apt-get install -y virtualenv python3-virtualenv virtualenvwrapper
 	fi
 else
 	log $INFO "Not setting up virtualenv"
@@ -168,7 +184,7 @@ fi
 if [ $Install_Git -eq 1 ]; then
 	disp "Git Setup"
 	log $INFO "install Git"
-	sudo apt-get install -y vcsh git
+	$dry_echo sudo apt-get install -y vcsh git
 	if [ $Install_Git_SSHKeys -eq 1 ]; then
 		if [ -e ${Github_SSH_File} ]; then
     		echo "you have already generated the ssh-key, displaying Pub-Key:"
@@ -195,10 +211,7 @@ if [ $Master_Dependencies -eq 1 ]; then
 	#sudo apt-key update && 
 	disp "Master - Executing Dependencies Install"
 	log $INFO "Setting up lib* and dependencies"
-	bash libsdeps.sh 2>>"${ERRORFILE}"
-	#if [ $Setup_VirtualEnv -eq 1 ]; then
-		#source $BF
-	#fi
+	bash libsdeps.sh $DRYFLAG 2>>"${ERRORFILE}"
 else
 	log $INFO "NOT setting up lib* and dependencies"
 fi
@@ -211,7 +224,8 @@ if [ $Master_RemoveBloatware -eq 1 ]; then
 	log $INFO "Bloatremove: Detected Desktop:" ${XDG_CURRENT_DESKTOP}
 	case $XDG_CURRENT_DESKTOP in
 		Unity|LXDE|GNOME) #|XFCE|KDE|Pantheon)  # have to work on the rest
-		echo "Running bloatremove for ${XDG_CURRENT_DESKTOP}" && bash BR,SWC_${XDG_CURRENT_DESKTOP}.sh 2>>"${ERRORFILE}";
+		echo "Running bloatremove for ${XDG_CURRENT_DESKTOP}"
+		bash ./BR/BR,SWC_${XDG_CURRENT_DESKTOP}.sh $DRYFLAG 2>>"${ERRORFILE}";
 	;;
 	esac
 else
@@ -223,10 +237,10 @@ source $BF && log $INFO "Updated .bashrc profile and loaded in bash"
 ## softwares
 if [ $Master_Software -eq 1 ]; then
 	#sudo apt-key update && 
-	echo "Running sudo apt-get update" && log $INFO "APT-GET-UPDATE - before Software Script" && $DEDE sudo apt-get update
+	echo "Running sudo apt-get update" && log $INFO "APT-GET-UPDATE - before Software Script" &&  $dry_echo  sudo apt-get update
 	disp "Master - Executing Software Installation"
 	log $INFO "Setting up software"
-	bash software.sh 2>>"${ERRORFILE}"
+	bash software.sh $DRYFLAG 2>>"${ERRORFILE}"
 else
 	log $INFO "NOT setting up software"
 fi
@@ -234,16 +248,9 @@ fi
 ## python
 if [ $Master_Python -eq 1 ]; then
 	#sudo apt-key update && 
-	echo "Running sudo apt-get update" && log $INFO "APT-GET-UPDATE - before Python Script" && $DEDE sudo apt-get update
-	if [ $PYTHON_DEBUG_MODE -eq 1 ]; then
-		disp "Master - Executing Python-Debug-Mode"
-		log $INFO "DRY RUN python - debug mode"
-		bash python_util.sh --debug $Python_PreferredVersion $VirtualEnv_Name 2>>"${ERRORFILE}"
-	else
-		disp "Master - Executing Python"
-		log $INFO "Setting up python"
-		bash python_util.sh $Python_PreferredVersion $VirtualEnv_Name 2>>"${ERRORFILE}"
-	fi
+	echo "Running sudo apt-get update" && log $INFO "APT-GET-UPDATE - before Python Script" &&  $dry_echo  sudo apt-get update
+	log $INFO "Setting up python"
+	bash python_util.sh $DRYFLAG -p $Python_PreferredVersion -v $VirtualEnv_Name 
 else
 	log $INFO "NOT setting up python"
 fi
@@ -253,20 +260,20 @@ fi
 if [ $Do_AptGetUpgradeLast -eq 1 ]; then
 	log $INFO "apt-get upgrade before exit"
 	#sudo apt-key update && 
-	sudo apt-get update > /dev/null
-	sudo apt-get upgrade -y 2>>"${ERRORFILE}"; # fix dependencies
-	sudo apt -y autoremove 2>>"${ERRORFILE}"; # removes packages
+	$dry_echo sudo apt-get update # > /dev/null
+	$dry_echo sudo apt-get upgrade -y # 2>>"${ERRORFILE}"; # fix dependencies
+	$dry_echo sudo apt -y autoremove # 2>>"${ERRORFILE}"; # removes packages
 fi
 #  ------------------------------------------
 ##                    CLEANUP
 if [ $Do_CleanupAfterExec -eq 1 ]; then
 	log $INFO "Cleaning up ~/.cache/pip, tmp, deb files"
 	disp "Cleaning up ~/.cache/pip, /tmp, .deb files"
-	sudo apt-get install -fy 2>>"${ERRORFILE}"; # fix dependencies, install/uninstall stuff
-	sudo apt -y autoclean > /dev/null 2>>"${ERRORFILE}"; # removes extra cache files
-	sudo apt -y autoremove 2>>"${ERRORFILE}"; # removes deb packages but not all of them sadly
-	rm -rfd ~/.cache/pip > /dev/null  2>>"${ERRORFILE}"; # removes pip packages
-	rm -rfd /tmp/ 2>&1 > /dev/null; # removes temp files made only by the user, keeps system etc. files
+	$dry_echo sudo apt-get install -fy # 2>>"${ERRORFILE}"; # fix dependencies, install/uninstall stuff
+	$dry_echo sudo apt -y autoclean #> /dev/null 2>>"${ERRORFILE}"; # removes extra cache files
+	$dry_echo sudo apt -y autoremove #2>>"${ERRORFILE}"; # removes deb packages but not all of them sadly
+	$dry_echo rm -rfd ~/.cache/pip #> /dev/null  2>>"${ERRORFILE}"; # removes pip packages
+	$dry_echo rm -rfd /tmp/ #2>&1 > /dev/null; # removes temp files made only by the user, keeps system etc. files
 	## Todo: This is safe to execute - I know that from results - but do i keep this
 	# sudo rm -f /var/cache/apt/archives/*.deb   # removes deb files apt cache
 fi
@@ -276,7 +283,7 @@ echo "It is highly recommended to restart your computer now."
 read -p "Press Enter, or y/Y to restart right now, or anything else to exit. - " shut
 if test "$shut" = "y" -o "$shut" = "Y" -o "$shut" = ""; then
 	log $INFO "Finish_With_Reboot" && echo "REBOOTING"
-	sudo shutdown -r 0
+	$dry_echo sudo shutdown -r 0
 else
 	log $INFO "Finish_No_Reboot"
 	echo "Not restarting your computer."

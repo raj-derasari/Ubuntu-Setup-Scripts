@@ -28,7 +28,7 @@ export BF=~/.bashrc
 ### 1. GITHUB
 ## -------------------------------------------------------------------------------------------------------------------
 # Github setup - This is independent of every other installation given above
-export Install_Git=0
+export Install_Git=1
 # IF you set this as 1, you will have to enter your email and name in Git_Email and Git_YourName
 export Install_Git_SSHKeys=1
 # Remember to unset this to some random values, or delete this file when done (If you create a pull request, to save your data)
@@ -49,7 +49,7 @@ export VirtualEnv_Directory=~/.virtualenvs/$VirtualEnv_Name
 ### 3. MASTER SETUP - REQUIRED TO SET EITHER 1 OR 0 HERE
 ## -------------------------------------------------------------------------------------------------------------------
 # Dependencies and Libraries - Highly recommended keep this as 1
-export Master_Dependencies=0
+export Master_Dependencies=1
 # Bloatware removal script that checks your Desktop Environment and uninstalls bloatware based on that
 export Master_RemoveBloatware=0
 # Software setup script - Common Software, Java, Programming Tools, etc.
@@ -57,9 +57,9 @@ export Master_Software=1
 # Python Libraries setup - For Python 2/3 Development, Both are supported.
 export Master_Python=1
 # Executes sudo apt-get upgrade after installing software
-export Do_AptGetUpgradeLast=0
+export Do_AptGetUpgradeLast=1
 # cleans up your /tmp, pip cache and 
-export Do_CleanupAfterExec=0
+export Do_CleanupAfterExec=1
 
 ### 4. SOFTWARE TOOLS SETUP - RECOMMENDED UTILITIES
 ## -------------------------------------------------------------------------------------------------------------------
@@ -162,7 +162,7 @@ export Purge_OpenJDK=1
 export Install_GEdit=1
 # Atom is one of the programming tools I provide - Handy IDE
 # From my experience, apt-install atom will be a PRETTY SLOW DOWNLOAD
-export Install_Atom=1
+export Install_Atom=0
 # Lightweight alternative to Atom - Sublime Text (Free Edition)
 export Install_SublimeText=1
 # VS Code is also a great programming IDE
