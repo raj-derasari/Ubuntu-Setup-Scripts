@@ -1,113 +1,142 @@
-#!/bin/bash 
-source `which virtualenvwrapper.sh`
-echo "----------------------------------------------------------------------------"
-echo "                        Ubuntu Python Script"
-echo "----------------------------------------------------------------------------"
+#!/bin/bash
+set -o errexit -o pipefail -o noclobber #-o nounset
+## get util functions loaded
+. util.sh
+. `which virtualenvwrapper.sh`
+#. $BF
+
+# use the display function to print this
+disp "Ubuntu Python Script"
+if [ -z $Setup_Python_Dev ]; then
+	log $INFO "Called from terminal"
+	echo "Looks like this script was run from the terminal (as a master variable is unset)."
+	echo "Parameters are now loaded from config file"
+	## your bashrc profile/main profile file.
+	BF=~/.bashrc
+	## Python installation params
+	Python_InstallBasics=1
+	Python_InstallWebDevelopmentTools=1
+	Python_InstallDjango=1
+	Python_InstallJupyter=1
+	Python_InstallMachineLearningTools=1
+	Python_InstallNLTK=1
+	Python_Compile_Tensorflow=1
+	Python_Tensorflow_GPU=1
+	Python_Tensorflow_MKL=0
+	Python_Tensorflow_CPUOnly=0
+fi
+
 #logging/utils/help
-LOGGER=`pwd`/log_python.log
-INFO="Python: INFO: "
-ERROR="Python: ERROR: "
-DEBUG="DEBUG: "
-log()
-{
-	echo -e "[${USER}]\t[`date`]\t${*}" >> "${LOGGER}"
-}
-#debug mode variable
-export DEBUGMODE=0
+INFO="Py: INFO: "
+ERROR="Py: ERROR: "
 
 #base/Initial variables
-venv_prefix="sudo -H python$Python_PreferredVersion -m " # this is used if NOT using virtualenv, else replaced with ""
+use_virtualenv=0
+venv_prefix="sudo -H python3 -m pip install --user --upgrade" # this is used if NOT using virtualenv, else replaced with ""
 
 ## Prints Help Message for command line (Tensorflow/Python)
 _help_() {
 echo "
-bash python_util.sh --help
-Prints this message.
-
-Usage: bash python_util.sh <debug_mode> <preferred_python_version> <virtualenv name>;
-	*. <debug_mode>:: Optional, pass \"--debug\" - To run in Debug Mode
-	1. preferred_python_version: takes value either \"2\" or \"3\"]
-	2. virtualenv_name: OPTIONAL: string argument that defines \"What environment to work in.\"
-	   If nothing is passed, I work on global/system level without creating environment
-	   Pass NULL as a virtualenv if you want to run in debug mode
-"
+Usage: bash python_util.sh <arguments>
+-h  or  --help               |  Print this message
+-D  or  --dry-run            |  Dry-run
+-d  or  --debug-mode         |  To run in debug mode
+-v  or  --virtual-env        |  Virtual Environment to use. [If no argument is passed, system-wide installation]
+-p  or  --preferred-version  |  Python Version [accepted values: 2, 3]
+"; exit 0
 }
 
-if test "$1" = "--debug";  then
-	export DEBUGMODE=1;
-	shift
-fi
+DRY_RUN=0
+DEBUG=0
+echo "Parsing command line parameters."
+while true; do
+    case "$1" in
+        -h|--help) _help_
+			shift
+			;;
+        -D|--dry-run)
+			DRY_RUN=1
+			#set -v
+			echo "In dry-run mode"
+			shift
+			;;
+        -d|--debug-mode)
+			DEBUG=1
+			echo "In debug mode"
+			shift
+			;;
+        -v|--virtual-env)
+			use_virtualenv=1
+			VE="$2"
+			shift 2
+			;;
+        -p|--preferred-version)
+			PV="$2"
+			shift 2
+			;;
+        --)
+            shift
+            break
+            ;;
+        *)
+            echo "Programming error"
+            exit 126
+            ;;
+    esac
+done
 
-if test "$1" = "--help"; then
-	_help_
-	exit
-elif [ -z $1 ]; then
-	echo "Incorrect usage"
-	_help_
-	exit
-elif [ ! $1 -eq 2 ] && [ ! $1 -eq 3 ]; then
-	log $INFO "FATAL: python version unknown. entered value: "$1
-	echo "python version entered is not 2 or 3"
-	exit
-elif [ -z $2 ]; then
-	## seems like arg1 is fine, set the python version
-	Python_PreferredVersion="$1"
-	if [ -z $VirtualEnv_Name ]; then
-		log $INFO "NOT run via Master-Script"
-		log $INFO "NOT working in virtualenv"
-		echo "No virtualenv specified, working on global level"
-		use_virtualenv=0
-	else
-		log $INFO "Virtual env specified in Master: " $VirtualEnv_Name
-		echo "working on virtualenv "$VirtualEnv_Name
-		venv_prefix="python$Python_PreferredVersion -m "
-		use_virtualenv=1
-		if [[ -z "${VirtualEnv_Directory}" ]]; then
-			log $INFO "Virtual environment directory: set as default to ~/.virtualenvs/$VirtualEnv_Name"
-			VirtualEnv_Directory=~/.virtualenvs/$VirtualEnv_Name
-		fi
-	fi
+if [ $DRY_RUN -eq 1 ]; then
+	dry_echo="echo "
 else
-	# case where $1 is a good argument, and, $2 is also passed as a parameter
-	## seems like arg1 is fine, set the python version
-	Python_PreferredVersion="$1"
-	
-	log $INFO "Virtual env specified in commandline: "$2
-	echo "Working with virtualenv "$2
-	venv_prefix="python$Python_PreferredVersion -m "
-	use_virtualenv=1
-	if [[ -z "$VirtualEnv_Directory" ]]; then
-		log $INFO "Virtual environment directory: set as default to ~/.virtualenvs/$2"
-		VirtualEnv_Directory=~/.virtualenvs/$2
-	fi
-	VirtualEnv_Name=$2
+	dry_echo=" "
 fi
 
-if [ -z $Setup_Python_Dev ]; then
-	log $INFO "Called from terminal"
-	echo "Looks like this script was run from the terminal (as a master variable is unset)."
-	echo "Parameters are set up in this section! (lines 48 onwards)"
-	## your bashrc profile/main profile file.
-	BF=~/.bashrc
-	
-	Python_InstallBasics=1
-	Python_InstallWebDevelopmentTools=0
-	Python_InstallDjango=0
-	Python_InstallJupyter=0
-	Python_InstallMachineLearningTools=0
-	Python_InstallNLTK=0
-	Python_Compile_Tensorflow=0
-	Python_Tensorflow_GPU=0
-	Python_Tensorflow_MKL=0
-	Python_Tensorflow_CPUOnly=0
-	if [ $DEBUGMODE -eq 1 ]; then
-		echo $DEBUG "Will NOT install, but ONLY dry-run"
-		log $INFO $DEBUG "Working in debug mode"
+## at this point, PV and VE are confidently known - VE can be null or valued, or from master script. PV is Fix
+if [[ -z $PV ]]; then
+	echo "Python Version argument not passed!"
+	_help_
+	exit 127
+elif [ ! $PV -eq 2 ] && [ ! $PV -eq 3 ]; then
+	if [[ ! -z $Python_Version ]]; then
+		echo "Master Script has set Python_Version as "$Python_Version
+		echo "Using master-script python version!"
+		PV=$Python_Version
 	else
-		echo "Preparing..."
-		log $INFO "Working in installation mode"
+		log $INFO "FATAL: python version unknown. entered value: "$1
+		echo "Python version entered is not 2 or 3!"
+		_help_
+		exit 127
 	fi
 fi
+
+# check if run from master script
+if [[ ! -z $Setup_VirtualEnv ]]; then
+	# yes, run from master script and venv is already provided
+	if [ $Setup_VirtualEnv -eq 1 ]; then
+		echo "VirtualEnv present in master script, using these details"
+		use_virtualenv=1
+		VE=$VirtualEnv_Name
+		venv_prefix="python$PV -m pip install --user --upgrade "
+	# no, dont run venv according to master-script
+	else
+		# master says, dont use venv
+		use_virtualenv=0
+		venv_prefix="sudo -H python$PV -m pip install --user --upgrade "
+	fi
+# not run from master script
+else
+	# check only VE - if NOT null, USE venv - BUT - also set path
+	if [[ ! -z $VE ]]; then
+		use_virtualenv=1
+		venv_prefix="python$PV -m pip install --user --upgrade "
+		VirtualEnv_Directory=~/.virtualenvs/$VE
+	# else, DONT use venv
+	else
+		use_virtualenv=0
+		venv_prefix="sudo -H python$PV -m pip install --user --upgrade "
+	fi
+fi
+# ------------------------------------------------------------------------------------------------------------------
 
 #mkvirtualenv $VirtualEnv_Name
 #workon $VirtualEnv_Name
@@ -115,146 +144,106 @@ fi
 #virtualenv --system-site-packages -p python2 ~/.virtualenvs/$VirtualEnv_Name
 ## workon $ENV$ can be replaced with
 #source /$VENV_PATH$/$ENV$/bin/activate
-
-if [ $DEBUGMODE -eq 0 ]; then
-	if [ $use_virtualenv -eq 1 ]; then
-		if [ ! -e  $VirtualEnv_Directory/bin/activate ]; then
-			log $INFO "Creating virtualenv $VirtualEnv_Name"
-			echo "Creating virtualenv $VirtualEnv_Name!"
-			virtualenv --system-site-packages -p python$Python_PreferredVersion $VirtualEnv_Directory
-		fi
-		source $VirtualEnv_Directory/bin/activate
+if [ $use_virtualenv -eq 1 ]; then
+	if [ ! -e  $VirtualEnv_Directory/bin/activate ]; then
+		log $INFO "Creating virtualenv $VirtualEnv_Name"
+		echo "Creating virtualenv $VE!"
+		$dry_echo virtualenv --system-site-packages -p python$PV $VirtualEnv_Directory
 	fi
-else
-	if [ $use_virtualenv -eq 1 ]; then
-		echo $INFO "Activating virtualenv $VirtualEnv_Name"
-		if [ ! -e  $VirtualEnv_Directory/bin/activate ]; then
-			log $INFO "Required: Creating virtualenv $VirtualEnv_Name"
-			echo "Creating virtualenv $VirtualEnv_Name!"
-			virtualenv --system-site-packages -p python$Python_PreferredVersion $VirtualEnv_Directory
-		fi
-		source $VirtualEnv_Directory/bin/activate
-		venv_prefix="python$Python_PreferredVersion -m "
-	fi
+	$dry_echo source $VirtualEnv_Directory/bin/activate
 fi
 
-if [ $DEBUGMODE -eq 0 ]; then
-	log $INFO "Setting up apt"
-	sudo apt install -y --install-recommends python-genshi \
-		python-colorama \
-		python-distlib \
-		python-pkg-resources \
-		python-tk
-		
-	log $INFO "Upgrade pip (globally)"
-	$venv_prefix pip install --user --upgrade pip
-else
-	echo "I install apt packages and pip install --upgrade pip now"
+$dry_echo sudo apt install -y --install-recommends \
+	python-genshi \
+	python-colorama \
+	python-distlib \
+	python-pkg-resources \
+	python-tk
+
+if [ $PV -eq 2 ]; then
+	$dry_echo sudo apt install -y python-pip --install-recommends
+elif [ $PV -eq 3 ]; then
+	$dry_echo sudo apt install -y python3-pip --install-recommends
+fi
+
+log $INFO "Upgrade pip (globally)"
+$dry_echo $venv_prefix pip
+
+if [ $use_virtualenv -eq 1 ]; then
+	log $INFO "Install virtualenvwrapper"
+	$dry_echo $venv_prefix virtualenvwrapper
 fi
 
 if [ $Python_InstallBasics -eq 1 ]; then
 	log $INFO "Requests, matplotlib, pandas, h5py"
-	if [ $DEBUGMODE -eq 1 ]; then
-		echo $INFO $DEBUG $venv_prefix "pip install --user Requests"
-	else
-		$venv_prefix pip install --user Requests
-		$venv_prefix pip install --user scipy ## also installs numpy
-		$venv_prefix pip install --user sklearn
-		#echo "$venv_prefix pip install --user Requests"
-		$venv_prefix pip install --user matplotlib
-		$venv_prefix pip install --user pandas
-		$venv_prefix pip install --user h5py
-	# $venv_prefix pip install --user Requests
-	# echo "$venv_prefix pip install --user Requests"
-	# $venv_prefix pip install --user matplotlib
-	# $venv_prefix pip install --user pandas
-	# $venv_prefix pip install --user h5py
-	fi
+	$dry_echo $venv_prefix Requests
+	$dry_echo $venv_prefix scipy
+	$dry_echo $venv_prefix sklearn
+	$dry_echo $venv_prefix matplotlib
+	$dry_echo $venv_prefix pandas
+	$dry_echo $venv_prefix h5py
 fi
 
 if [ $Python_InstallDjango -eq 1 ]; then
 	log $INFO "Django"
-	if [ $DEBUGMODE -eq 1 ]; then
-		echo $INFO $DEBUG $venv_prefix "pip install --user django"
+	$dry_echo $venv_prefix django
+	$dry_echo $venv_prefix geoip2
+	## setup aliases
+	checkBash="`grep \"alias django_runserver=\" $BF`"
+	if [[ ! -z $checkBash ]]; then
+		log $INFO "Django-aliases - Seems like aliases are already setup. Not modifying $BF"
 	else
-		$venv_prefix pip install --user django
-		## setup aliases
-		checkBash="`grep \"alias django_runserver=\" $BF`"
-		if [[ ! -z $checkBash ]]; then
-			log $INFO "common-aliases - Seems like aliases are already setup. Not modifying $BF"
-		else
-			cat <<EOT >> $BF
-
+		cat <<EOT >> $BF
+# -------------------------------------
+# Django aliases
+alias django_makemigrations="python manage.py makemigrations "
 alias django_migrate="python manage.py migrate "
 alias django_runserver="python manage.py runserver "
 EOT
-		fi
 	fi
 fi
 
-
 if [ $Python_InstallWebDevelopmentTools -eq 1 ]; then
 	log $INFO "flask, BeautifulSoup, Twisted"
-	if [ $DEBUGMODE -eq 1 ]; then
-		echo $INFO $DEBUG $venv_prefix "pip install --user flask"
-	else
-	$venv_prefix pip install --user flask
-
-	## python2
-	if [ $Python_PreferredVersion -eq 2 ]; then 
-		$venv_prefix pip install --user BeautifulSoup
-	elif [ $Python_PreferredVersion -eq 3 ]; then 
-		## python3.5 and above?
-		$venv_prefix pip install --user BeautifulSoup4
+	$dry_echo $venv_prefix flask
+	$dry_echo $venv_prefix Twisted
+	if [ $PV -eq 2 ]; then 
+		$dry_echo $venv_prefix BeautifulSoup
+	elif [ $PV -eq 3 ]; then 
+		$dry_echo $venv_prefix BeautifulSoup4
 	fi	
-	
-	$venv_prefix pip install --user Twisted
-	fi
 fi
 
 if [ $Python_InstallJupyter -eq 1 ]; then
 	log $INFO "IPython and Jupyter-Notebook"
-	if [ $DEBUGMODE -eq 1 ]; then
-		echo $INFO $DEBUG $venv_prefix "pip install --user IPython"
-	else
-		# Please Note ipython 6.x wont work with python2, needs python 3 - This is automated though
-		$venv_prefix pip install --user IPython
-		$venv_prefix pip install --user jupyter
-	fi
+	# Please Note ipython 6.x wont work with python2, needs python 3 - This is automated though
+	$dry_echo $venv_prefix IPython
+	$dry_echo $venv_prefix jupyter
 fi
 
 if [ $Python_InstallNLTK -eq 1 ]; then
 	log $INFO "NLTK"
-	if [ $DEBUGMODE -eq 1 ]; then
-		echo $INFO $DEBUG $venv_prefix "pip install --user nltk"
-	else
-		$venv_prefix pip install --user nltk
-	fi
+	$dry_echo $venv_prefix nltk
 fi
 
 if [ $Python_InstallMachineLearningTools -eq 1 ]; then
-	log $INFO "ML-Scipy-Scikit_learn-TF-Theano-Keras"
-	if [ $DEBUGMODE -eq 1 ]; then
-		echo $INFO $DEBUG $venv_prefix "pip install --user scipy sklearn tensorflow keras"
-		echo $INFO $DEBUG $venv_prefix "pip install --user tensorflow theano"
-	else
-		$venv_prefix pip install --user scipy ## also installs numpy
-		$venv_prefix pip install --user sklearn
-	fi
+	log $INFO "ML-Tools: TF-Theano-Keras"
 	if [ $Python_Compile_Tensorflow -eq 1 ]; then
 		if [ $Python_Tensorflow_GPU -eq 1 ]; then
 			log $INFO "Compiling Tensorflow - GPU"
-			bash tensorflow_setup.sh $Python_PreferredVersion "gpu" "--all" "-y" $VirtualEnv_Name 
+			$dry_echo bash tensorflow_setup.sh $PV "gpu" "--all" "-y" $VE
 		elif [ $Python_Tensorflow_MKL -eq 1 ]; then
 			log $INFO "Compiling Tensorflow - MKL"
-			bash tensorflow_setup.sh $Python_PreferredVersion "mkl" "--all" "-y" $VirtualEnv_Name 
+			$dry_echo bash tensorflow_setup.sh $PV "mkl" "--all" "-y" $VE
 		elif [ $Python_Tensorflow_CPUOnly -eq 1 ]; then
 			log $INFO "Compiling Tensorflow - CPU"
-			bash tensorflow_setup.sh $Python_PreferredVersion "cpu" "--all" "-y" $VirtualEnv_Name 
+			$dry_echo bash tensorflow_setup.sh $PV "cpu" "--all" "-y" $VE
 		fi
 	else
 		log $INFO "Not compiling tensorflow, installing from pip"
-		$venv_prefix pip install --user tensorflow theano keras
+		$dry_echo $venv_prefix tensorflow
 	fi
+	$dry_echo $venv_prefix theano
+	$dry_echo $venv_prefix keras
 fi
 exit

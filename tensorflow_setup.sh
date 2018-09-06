@@ -1,62 +1,53 @@
-#!/bin/bash 
-source `which virtualenvwrapper.sh`
-echo "----------------------------------------------------------------------------"
-echo "                        Ubuntu Tensorflow Script"
-echo "----------------------------------------------------------------------------"
+#!/bin/bash
+set -o errexit -o pipefail -o noclobber #-o nounset
+## get util functions loaded
+. util.sh
+. `which virtualenvwrapper.sh`
+
+# use the display function to print this
+disp "Ubuntu Python Tensorflow Compile/Install Script"
+
 #logging/utils/help
-LOGGER=`pwd`/log_tensorflow.log
-INFO="TF: INFO: "
-ERROR="TF: ERROR: "
-DEBUG="DEBUG: "
-log()
-{
-	echo -e "[${USER}]\t[`date`]\t${*}" >> "${LOGGER}"
-}
-# CUDA COMPUTE CAPABILITY of your GPU must be enterred -- IF you are building for NVIDIA GPU
-export TF_CUDA_COMPUTE_CAPABILITIES=0
-
-
-## Variables that control program flow
-if [[ -z $DEBUGMODE ]]; then
- 	DEBUGMODE=0	
-fi
+INFO="Py: INFO: "
+ERROR="Py: ERROR: "
 
 ## Variables to use while setting up tensorflow
-venv_prefix="sudo -H " # this is used if NOT using virtualenv, else replaced with ""
-export startDir=`pwd`
+venv_prefix="sudo -H python -m " # this is used if NOT using virtualenv, else replaced with ""
+startDir=`pwd`
 
 ## Help Message (Tensorflow/Python)
 _help_() {
 echo "
-Usage:
-bash tensorflow_setup.sh --help
-Prints this message.
+	Usage:
+	bash tensorflow_setup.sh --help
+	Prints this message.
 
-bash tensorflow_setup.sh <python_version> <gpu/mkl/cpu> <mode> <unattended> <virtualenv name>
+	bash tensorflow_setup.sh <python_version> <gpu/mkl/cpu> <mode> <unattended> <virtualenv name>
 
-1. python_version: Required, enter
-                   \"2\": To work with python2 
-                   \"3\": To work with python3
-2. gpu/mkl/cpu: Required, pass 
-                \"gpu\" to build with NVIDIA; [Do set up CUDA Compute Capability in line 62!]
-                \"mkl\" to build with Intel MKL;
-                \"cpu\" to build with Intel SSE/FMA/AVX instructions
-3. <mode> : Required, enter 
-            --clean: executes \"bazel clean\" - Undoes bazel-build and ./configure
-            --configure-only: executes \"./configure\"
-            --reconfigure: executes \"bazel clean\" to undo configure; followed by \"./configure\"
-            --build-only: executes \"bazel-build\" -- Useful if you want to only compile now.
-            --build-and-wheel: executes \"bazel-build\" followed by \"bazel-bin/...build-pip-package\" -- Useful if you want to see the pip whl
-            --wheel-and-install: executes \"bazel-bin\" followed by \"pip-install\" -- Useful if you have already compiled and want to install now
-            --build-and-install: same as --build-and-wheel, also followed by \"pip install /tmp/tensorflow..\"
-            --pip-install-only: executes \"pip install /tmp/tensorflow_pkg/tensorflow*.whl\"
-            --all: \"bazel clean; ./configure; bazel build; bazel-bin/..build-pip-package; pip install\"
-4. unattended : pass \"-y\" as a parameter if you want an automated/unattended installation
-              : pass \"-n\" as a parameter for an interactive installation
-5. virtualenv_name: string argument, target virtualenv to install tensorflow in
-   If nothing is passed, will install tensorflow on global level [requires sudo]
-"
+	1. python_version: Required, enter
+	                   \"2\": To work with python2 
+	                   \"3\": To work with python3
+	2. gpu/mkl/cpu: Required, pass 
+	                \"gpu\" to build with NVIDIA; [Do set up CUDA Compute Capability in line 62!]
+	                \"mkl\" to build with Intel MKL;
+	                \"cpu\" to build with Intel SSE/FMA/AVX instructions
+	3. <mode> : Required, enter 
+	            --clean: executes \"bazel clean\" - Undoes bazel-build and ./configure
+	            --configure-only: executes \"./configure\"
+	            --reconfigure: executes \"bazel clean\" to undo configure; followed by \"./configure\"
+	            --build-only: executes \"bazel-build\" -- Useful if you want to only compile now.
+	            --build-and-wheel: executes \"bazel-build\" followed by \"bazel-bin/...build-pip-package\" -- Useful if you want to see the pip whl
+	            --wheel-and-install: executes \"bazel-bin\" followed by \"pip-install\" -- Useful if you have already compiled and want to install now
+	            --build-and-install: same as --build-and-wheel, also followed by \"pip install /tmp/tensorflow..\"
+	            --pip-install-only: executes \"pip install /tmp/tensorflow_pkg/tensorflow*.whl\"
+	            --all: \"bazel clean; ./configure; bazel build; bazel-bin/..build-pip-package; pip install\"
+	4. unattended : pass \"-y\" as a parameter if you want an automated/unattended installation
+	              : pass \"-n\" as a parameter for an interactive installation
+	5. virtualenv_name: string argument, target virtualenv to install tensorflow in
+	   If nothing is passed, will install tensorflow on global level [requires sudo]
+	"
 }
+
 _bazel_build() {
 	if [[ $Python_Tensorflow_GPU -eq 1 ]]; then
 		log $INFO "start bazel build for GPU"
@@ -70,7 +61,7 @@ _bazel_build() {
 	fi
 }
 
-tfGitRoot=~/tfSource # path where tensorflow is downloaded from github
+
 ## best use an absolute/complete path here, like I did! 
 
 if test "$1" = "--help"; then
@@ -266,25 +257,6 @@ elif [[ $Python_Tensorflow_CPUOnly -eq 1 ]]; then
 	export TF_NEED_MKL=0
 	export TF_NEED_CUDA=0
 fi
-
-#dont change the following
-export TF_DOWNLOAD_MKL=0
-export TF_DOWNLOAD_CLANG=0
-
-# other TF compilation variables
-export TF_SET_ANDROID_WORKSPACE=0
-export TF_CONFIGURE_ANDROID=0
-export TF_ENABLE_XLA=0
-export TF_NEED_GCP=0
-export TF_NEED_GDR=0
-export TF_NEED_HDFS=0
-export TF_NEED_JEMALLOC=0
-export TF_NEED_KAFKA=0
-export TF_NEED_MPI=0
-export TF_NEED_OPENCL_SYCL=0
-export TF_NEED_S3=0
-export TF_NEED_TENSORRT=0
-export TF_NEED_VERBS=0
 
 case $3 in 
 	"--clean")

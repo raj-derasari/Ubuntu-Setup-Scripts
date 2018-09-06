@@ -1,161 +1,121 @@
 #!/bin/bash
-export XDG_CURRENT_DESKTOP=GNOME
-# Possible values: 
-# Unity,GNOME,XFCE,KDE,LXDE,Pantheon
+set -o errexit -o pipefail -o noclobber #-o nounset
+## get util functions loaded
+. util.sh
 
-## you can set up your own variables, values here:
-export BF=~/.bashrc ## your bashrc profile file
 
-### Variables to set-up installation of Applications, Bloatware and whatnot
-Do_AptGetUpgradeLast=1
-Do_CleanupAfterExec=1
-
-Master_Dependencies=1
-Master_RemoveBloatware=1
-Master_Software=1
-Master_Python=1
-
-# debugging some stuff
-PYTHON_DEBUG_MODE=1
-MASTER_DEBUG_MODE=0;  ## todo, this one has not been implemented
-
-# git
-export Install_Git=1
-export Install_Git_SSHKeys=1   # IF you set this as 1, you will have to enter your email in Git_Email
-export Git_Email="raj.derasari@gmail.com" # remember to unset this to some random values, or delete this file when done
-
-# strongly recommended packages
-export Install_EXFatUtils=1
-export Install_Flux=1
-export Install_GParted=1
-export Install_P7Zip=1
-export Install_QBitTorrent=1
-export Install_QPDFView=1
-export Install_UGET=1
-export Install_VLCMediaPlayer=1
-export Install_ZSH=1
-
-# choose a web browser
-export Install_Chromium=1
-export Install_GoogleChrome=0
-export Install_MozillaFirefox=1
-export Install_Vivaldi=0
-
-# audacity audio editing application
-export Install_Audacity=1
-export Install_WinFF=1
-
-## other packages: editors/programming, remoting, password mgmt, office tools
-export Install_Docker=1
-export Docker_Remove_SUDO=1
-export Install_Grive_GoogleDrive=1
-export Install_KeepassPasswordManager=1
-export Install_Octave=1
-export Install_Okular=1
-export Install_TildaTmux=1  # terminal client/replacement for ctrl+alt+t
-
-#TexStudio
-export Install_TexStudio=1
-
-#Java
-export Remove_OpenJDK=1
-export Install_OracleJava8=0;
-export Install_OracleJava10=1;  ## todo, not implemented
-
-# Gedit is a regular text editor but can be quite handy
-export Install_GEdit=1
-export Install_Atom=0
-export Install_SublimeText=1
-export Install_VisualStudioCode=1
-
-export Install_LibreOffice=1
-export LibreOffice_Base=1
-export LibreOffice_Draw=1
-export LibreOffice_Impress=1
-export LibreOffice_Math=1
-export LibreOffice_Writer=1
-
-export Install_TeamViewer=1
-export Install_PyCharm=0
-
-# setting up python for developers
-export Setup_Python_Dev=1
-
-# virtualenv - if you are using Ubuntu 18 or above, it is highly recommended to use virtualenv with Python2 or Python3
-export Setup_VirtualEnv=1
-
-# if 1 above, consider setting up the next two parameters
-export VirtualEnv_Name="venv1"
-export VirtualEnv_Directory=~/.virtualenvs/$VirtualEnv_Name
-
-# set one value from 2 and 3
-export Python_PreferredVersion=3
-
-#python setup - installing python libraries
-export Python_InstallBasics=1
-export Python_InstallWebDevelopmentTools=1
-export Python_InstallDjango=1
-export Python_InstallJupyter=1
-export Python_InstallMachineLearningTools=1     # Must set to 1 if you want to install tensorflow!
-export Python_InstallComputerGraphicsTools=0    ## TODO, not implemented
-export Python_InstallNLTK=1
-export Python_Compile_Tensorflow=0
-export Python_Tensorflow_CPUOnly=1
-export Python_Tensorflow_GPU=0
-export Python_Tensorflow_MKL=0
-
-## configuration is finished here
-## master script begins here
-
-echo "----------------------------------------------------------------------------"
-echo "                        Ubuntu Master Script"
-echo "----------------------------------------------------------------------------"
-##TODO: check out apt-get install byobu"
+# use the display function to print this
+disp "Ubuntu Master Script"
 
 #logging/utils/help
-LOGGER=`pwd`/log_master.log
 INFO="Master: INFO: "
 ERROR="Master: ERROR: "
-DEBUG="DEBUG: "
-
-#define the logging function
-log()
-{
-	echo -e "[${USER}]\t[`date`]\t${*}" >> "${LOGGER}"
-}
 
 ##begin
 export startDir=`pwd`
 export ERRORFILE=`pwd`/log_errors.log
 
-## CLEAR-LOG-CONDITION
-if test "$1" = "--clear-logs"; then
-	echo " ------------------------------------------ "
-	echo "              Clearing Logs"
-	echo " ------------------------------------------ "
-	rm *.log 2>&1 > /dev/null && echo "Logs have been cleared"
-	log $INFO "cleared all logs"
-elif [[ ! -z "$1" ]]; then
-	echo "Did not understand command-line argument. Did you mean \"--clear-logs\"?"
-	exit
+## Command line options parsing
+### TODOS
+## check out apt-get install byobu"
+
+echo "Parsing command line parameters:"
+while true; do
+    case "$1" in
+    	-h|--help)
+			echo "TODO: print help message for master.sh"
+			shift
+			;;
+        -C|--clear-logs)
+			echo "Clearing log files."
+			rm *.log 2>&1 > /dev/null && log $INFO "cleared all logs. Time// `date`"
+			if [ $? -eq 0 ]; then 
+				echo "Logs have been cleared"
+			else
+				echo "Logs could not be cleared. Some files may not have been deleted."
+			fi
+			shift
+			;;
+		-f|--file)
+			CustomConfig=1
+			echo "Loading configuration from input file."
+			log $INFO "exec custom config file"
+			shift
+			;;
+		-v|--verbose)
+			VERBOSE=1
+			echo "Verbose Mode - All execution will be displayed in the console"
+			log $INFO "verbose mode"
+			shift
+			;;
+		-d|--debug)
+			DEBUG_MODE=1;
+			echo "Debug Mode - "
+			log $INFO $DEBUG "Running in debug mode"
+			shift
+			;;
+		-D|--dry-run)
+			DRY_RUN="echo "
+			echo "Dry-Run: No commands will be executed"
+			log $INFO $DEBUG "Running in debug mode"
+			shift
+			;;
+        --)
+            shift
+            break
+            ;;
+        *)
+            echo "Programming error"
+            exit 126
+            ;;
+    esac
+done
+
+if [ -z $CustomConfig ]; then
+	echo "Executing with the default Configuration-File: config_recommended.sh"
+	CONFIG_FILE=config_recommended.sh
+else
+	echo "Executing with custom Configuration-File:" $1
+	CONFIG_FILE=$1
 fi
+
+. "${CONFIG_FILE}" && echo "Loading Configuration!"
+if [ $? -ne 0 ]; then
+	echo "Errors in completing configuration! Exit?"
+	read -p  "Continue at your own risk! (Enter y/Y to exit) - " ex
+	if test "$ex" = "y" -o "$ex" = "Y"; then
+		exit 5
+	else
+		echo "Continuing setup!"
+	fi
+fi
+
+## Configuration loaded, run apt-get update first things first
+echo "Running sudo apt-get update" && log $INFO "first run of apt-get update in masterscript" && $DEDE sudo apt-get update
 
 ## ALIAS SETUP
 checkBash="`grep \"alias brc=\" $BF`"
 if [[ ! -z $checkBash ]]; then
 	log $INFO "common-aliases - Seems like aliases are already setup. Not modifying $BF"
 else
-	# the first line permanently sets your bash file in the $BF variable
+	## redirecting output to your bashrc file
+	## the first line permanently sets the BF variable as your bash profile
 	cat <<EOT >> $BF
-alias sh=bash
 export BF=$BF
+# Execute bash instead of sh
+alias sh=bash
+# You can later replace nano with a text editor of your choice - gedit, subl, vim, emacs, ...
 alias brc="sudo nano $BF"
+# Loads the bashrc profile
 alias sbrc="source $BF"
 alias sau="sudo apt-get update"
 alias sai="sudo apt-get install"
 alias saiy="sudo apt-get -y install"
 alias aptgetupgrade="sudo apt-get upgrade"
-alias aptreset="sudo mv /var/lib/apt/lists/lock ~/locks/apt/list; sudo mv /var/lib/dpkg/lock ~/locks/dpkg;sudo mv /var/cache/apt/archives/lock ~/locks/apt; sudo dpkg --configure -a"
+alias py2install="python2 -m pip install --user "
+alias py3install="python3 -m pip install --user "
+# If you ever get APT lock errors aptreset will do your work for ya
+alias aptreset="mkdir -p ~/locks/apt/list; mkdir -p ~/locks/dpkg; sudo mv /var/lib/apt/lists/lock ~/locks/apt/list; sudo mv /var/lib/dpkg/lock ~/locks/dpkg/lock; sudo mv /var/cache/apt/archives/lock ~/locks/apt; sudo dpkg --configure -a"
 _sai_complete() { 
 	mapfile -t COMPREPLY < <(apt-cache --no-generate pkgnames "$2");
 }
@@ -164,78 +124,107 @@ complete -F _sai_complete saiy
 EOT
 fi
 
-source $BF
-log $INFO "Updated .bashrc profile and loaded in bash"
-
-checkBash="`grep \"virtualenvwrapper.sh\" $BF`"
-if [[ ! -z $checkBash ]]; then
-	log $INFO "virtualenvwrapper - Seems like aliases are already setup. Not modifying $BF"
-else
-	cat <<EOT >> $BF
+## virtualenv aliases
+if [ $Setup_VirtualEnv -eq 1 ]; then 
+	log $INFO "installing virtualenv for python"
+	
+	## aliases
+	checkBash="`grep \"virtualenvwrapper.sh\" $BF`"
+	if [[ ! -z $checkBash ]]; then
+		log $INFO "virtualenvwrapper - Seems like aliases are already setup. Not modifying $BF"
+	else
+		## redirecting output to your bashrc file
+		cat <<EOT >> $BF
 venvwrap="virtualenvwrapper.sh"
 if [ \$? -eq 0 ]; then
 	venvwrap=\`/usr/bin/which \$venvwrap\`
 	source \$venvwrap
 fi
 EOT
+	fi
+	if [ $Python_PreferredVersion -eq 2 ]; then
+		sudo apt-get install -y virtualenv python-virtualenv virtualenvwrapper
+	elif [ $Python_PreferredVersion -eq 3 ]; then
+		sudo apt-get install -y virtualenv python3-virtualenv virtualenvwrapper
+	fi
+else
+	log $INFO "Not setting up virtualenv"
+fi
+
+## python=python3 alias if Python3 is the desired version
+if [ $Python_PreferredVersion -eq 3 ]; then
+	checkBash="`grep \"alias python=python3\" ~/.bashrc`"
+	if [[ ! -z $checkBash ]]; then
+		echo "\"python3\" is already linked to \"python\" in this Ubuntu installation"
+		log $INFO "python3 is already linked as python for terminals"
+	else
+		echo "alias python=python3" >> ~/.bashrc
+		echo "Alias python=python3 has been set up."
+		log $INFO "Make python3 default python in bashrc"
+	fi
 fi
 
 # git and vcsh - vcsh allows you to manage multiple git repos in one directory
 if [ $Install_Git -eq 1 ]; then
+	disp "Git Setup"
 	log $INFO "install Git"
 	sudo apt-get install -y vcsh git
 	if [ $Install_Git_SSHKeys -eq 1 ]; then
-		ssh-keygen -t rsa -b 4096 -C "${Git_Email}" -f ~/.ssh/github_key
-		cat "Visit https://github.com/settings/keys and add this key in your SSH keys: " > ~/Desktop/Git_PublicKey.txt
-		cat ~/.ssh/github_key.pub >> ~/Desktop/Git_PublicKey.txt && echo "You can copypasta your Github key from your Desktop"
-		eval "$(ssh-agent -s)"
-		ssh-add ~/.ssh/github_key
+		if [ -e ${Github_SSH_File} ]; then
+    		echo "you have already generated the ssh-key, displaying Pub-Key:"
+		else
+			ssh-keygen -t rsa -b 4096 -C "${Git_Email}" -f "${Github_SSH_File}"
+			eval "$(ssh-agent -s)"
+			ssh-add ${Github_SSH_File}
+		fi
+		echo "Visit https://github.com/settings/keys and add this key in your SSH keys: " >| ~/Desktop/Git_PublicKey.txt
+		cat ${Github_SSH_File}.pub >>~/Desktop/Git_PublicKey.txt && echo "You can copypasta your Github key, refer Desktop/Git_PublicKey.txt"
+		git config --global user.name "${Git_YourName}"
+		git config --global user.email "${Git_Email}"
+		git config --global alias.add-commit '!git add -A && git commit -m '
+		git config --global alias.ls 'log --pretty=format:"%C(green)%h\\ %C(yellow)[%ad]%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative'
+    	git config --global alias.ll 'log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat'
+    	git config --global alias.lnc 'log --pretty=format:"%h\\ %s\\ [%cn]"'
+		echo -e "Git aliases set up.\nYou can use this to directly commit a directory:\n\tgit add-commit '<Commit-Message>'\n"
+		echo -e "You can use this to see lists of commits:\n\tgit ls\n\tgit ll\n\tgit lnc"
 	fi
 fi
 
 ## libsdeps
 if [ $Master_Dependencies -eq 1 ]; then
 	#sudo apt-key update && 
-	echo "Running sudo apt-get update" && log $INFO "first run of apt-get update in masterscript" && sudo apt-get update > /dev/null
-
-	echo " ------------------------------------------ "
-	echo "      Basic Libraries and dependencies"
-	echo " ------------------------------------------ "
+	disp "Master - Executing Dependencies Install"
 	log $INFO "Setting up lib* and dependencies"
 	bash libsdeps.sh 2>>"${ERRORFILE}"
-	if [ $Setup_VirtualEnv -eq 1 ]; then
-		source $BF
-	fi
+	#if [ $Setup_VirtualEnv -eq 1 ]; then
+		#source $BF
+	#fi
 else
 	log $INFO "NOT setting up lib* and dependencies"
 fi
 
-
 ## bloatremove
 if [ $Master_RemoveBloatware -eq 1 ]; then
-	echo " ------------------------------------------ "
-	echo "      Bloatware removal"
-	echo " ------------------------------------------ "
-	echo "      Detected Desktop Environment: " $XDG_CURRENT_DESKTOP
-	echo " ------------------------------------------ "
+	disp "Master - Executing Bloatware Removal"
+	echo "Detected Desktop Environment: " $XDG_CURRENT_DESKTOP
+	echo "------------------------------------------"
 	log $INFO "Bloatremove: Detected Desktop:" ${XDG_CURRENT_DESKTOP}
 	case $XDG_CURRENT_DESKTOP in
 		Unity|LXDE|GNOME) #|XFCE|KDE|Pantheon)  # have to work on the rest
 		echo "Running bloatremove for ${XDG_CURRENT_DESKTOP}" && bash BR,SWC_${XDG_CURRENT_DESKTOP}.sh 2>>"${ERRORFILE}";
 	;;
-esac
+	esac
 else
 	log $INFO "NOT setting up bloatware removal"
 fi
 
+source $BF && log $INFO "Updated .bashrc profile and loaded in bash"
 
 ## softwares
 if [ $Master_Software -eq 1 ]; then
 	#sudo apt-key update && 
-	echo "Running sudo apt-get update" && log $INFO "first run of apt-get update in masterscript" && sudo apt-get update > /dev/null
-	echo " ------------------------------------------ "
-	echo "      Installing Software"
-	echo " ------------------------------------------ "
+	echo "Running sudo apt-get update" && log $INFO "APT-GET-UPDATE - before Software Script" && $DEDE sudo apt-get update
+	disp "Master - Executing Software Installation"
 	log $INFO "Setting up software"
 	bash software.sh 2>>"${ERRORFILE}"
 else
@@ -245,17 +234,13 @@ fi
 ## python
 if [ $Master_Python -eq 1 ]; then
 	#sudo apt-key update && 
-	echo "Running sudo apt-get update" && log $INFO "first run of apt-get update in masterscript" && sudo apt-get update > /dev/null
+	echo "Running sudo apt-get update" && log $INFO "APT-GET-UPDATE - before Python Script" && $DEDE sudo apt-get update
 	if [ $PYTHON_DEBUG_MODE -eq 1 ]; then
-		echo " ------------------------------------------ "
-		echo "      Python - DEBUG MODE"
-		echo " ------------------------------------------ "
+		disp "Master - Executing Python-Debug-Mode"
 		log $INFO "DRY RUN python - debug mode"
 		bash python_util.sh --debug $Python_PreferredVersion $VirtualEnv_Name 2>>"${ERRORFILE}"
 	else
-		echo " ------------------------------------------ "
-		echo "                 Python"
-		echo " ------------------------------------------ "
+		disp "Master - Executing Python"
 		log $INFO "Setting up python"
 		bash python_util.sh $Python_PreferredVersion $VirtualEnv_Name 2>>"${ERRORFILE}"
 	fi
@@ -265,14 +250,8 @@ fi
 
 #  ------------------------------------------
 ##                    APT-GET-UPGRADE
-# ------------------------------------------ 
 if [ $Do_AptGetUpgradeLast -eq 1 ]; then
 	log $INFO "apt-get upgrade before exit"
-	echo ""
-	echo " ------------------------------------------ "
-	echo "     Cleaning up ~/.cache/pip, /tmp, .deb files     "
-	echo " ------------------------------------------ "
-	echo ""
 	#sudo apt-key update && 
 	sudo apt-get update > /dev/null
 	sudo apt-get upgrade -y 2>>"${ERRORFILE}"; # fix dependencies
@@ -280,14 +259,9 @@ if [ $Do_AptGetUpgradeLast -eq 1 ]; then
 fi
 #  ------------------------------------------
 ##                    CLEANUP
-# ------------------------------------------ 
 if [ $Do_CleanupAfterExec -eq 1 ]; then
 	log $INFO "Cleaning up ~/.cache/pip, tmp, deb files"
-	echo ""
-	echo " ------------------------------------------ "
-	echo "     Cleaning up ~/.cache/pip, /tmp, .deb files     "
-	echo " ------------------------------------------ "
-	echo ""
+	disp "Cleaning up ~/.cache/pip, /tmp, .deb files"
 	sudo apt-get install -fy 2>>"${ERRORFILE}"; # fix dependencies, install/uninstall stuff
 	sudo apt -y autoclean > /dev/null 2>>"${ERRORFILE}"; # removes extra cache files
 	sudo apt -y autoremove 2>>"${ERRORFILE}"; # removes deb packages but not all of them sadly
@@ -296,27 +270,16 @@ if [ $Do_CleanupAfterExec -eq 1 ]; then
 	## Todo: This is safe to execute - I know that from results - but do i keep this
 	# sudo rm -f /var/cache/apt/archives/*.deb   # removes deb files apt cache
 fi
-echo ""
-echo " ------------------------------------------ "
-echo "                Completed"
-echo " ------------------------------------------ "
-echo ""
-echo "It is recommended to restart your computer now."
-read -p "Enter y/Y to restart, or anything else to exit.    " shut
-if test "$shut" = "y"; then
-	log $INFO "Finish_With_Reboot"
-	sudo shutdown -r 0
-elif test "$shut" = "Y"; then
-	log $INFO "Finish_With_Reboot"
+
+disp "Completed"
+echo "It is highly recommended to restart your computer now."
+read -p "Press Enter, or y/Y to restart right now, or anything else to exit. - " shut
+if test "$shut" = "y" -o "$shut" = "Y" -o "$shut" = ""; then
+	log $INFO "Finish_With_Reboot" && echo "REBOOTING"
 	sudo shutdown -r 0
 else
 	log $INFO "Finish_No_Reboot"
-	echo " ------------------------------------------ "
-	echo "           Finished setting up."
-	echo " ------------------------------------------ "
-	echo "           Not Restarting."
-	echo -e "Logs are stored in $startDir \n"
-	echo "GL & HF!"
+	echo "Not restarting your computer."
+	echo "Logs are stored in ${startDir}"
 fi
-# exit not required, but better to always have it
-exit
+exit 0

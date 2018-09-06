@@ -1,40 +1,62 @@
-#!/bin/bash 
-source `which virtualenvwrapper.sh`
-LOGGER=`pwd`/log_docker.log
-if [ -z $Setup_Python_Dev ]; then
-	echo "Not called from master script, setup variables here in docker.sh!"
-	export Docker_Remove_SUDO=0
+#!/bin/bash
+set -o errexit -o pipefail -o noclobber #-o nounset
+## get util functions loaded
+. util.sh
+. `which virtualenvwrapper.sh`
+
+# use the display function to print this
+disp "Docker REINSTALLATION Script"
+
+#logging/utils/help
+if test "$1" = "--dry-run" -o "$1" = "-D" ; then 
+	disp "--dry-run mode"
+	set -v
+#    set -n
 fi
-echo "----------------------------------------------------------------------------"
-echo "                   Docker Reinstallation Script"
-echo "----------------------------------------------------------------------------"
-echo "Uninstalling previous versions of docker" && sudo apt-get remove -y docker docker-engine docker.io 2>>"${LOGGER}";
-#sudo apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual 2>>"${LOGGER}"
-echo "Installing docker dependencies" && \
-sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common 2>>"${LOGGER}"
+## If you are running docker directly from here, please set the SUDO choice here.
+if [ -z $Install_Docker ]; then
+	echo "Not called from master script, setup variables here in docker.sh!"
+	
+	## This is the variable to set - if you set this to 1 you don't have to "sudo docker" everytime
+	export Docker_Remove_SUDO=0
+
+	read -p "Press Enter to exit, or any other key to continue: - " exitqn
+	if test "$exitqn" = ""; then
+		echo "Exiting"; exit 127
+	else
+		echo "Continuing Docker Installation"
+	fi
+	
+	read -p "Uninstall previous versions of Docker? (y/Y for yes) - " uninstqn
+	if test "$uninstqn" = "N" -o "$uninstqn" = "n"; then
+		echo "Not uninstalling previous versions of Docker.";
+	else
+		echo "Uninstalling previous versions of Docker.";
+		sudo apt-get remove -y docker docker-engine docker.io
+	fi
+fi
+
+#sudo apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual}"
+#echo "Installing docker dependencies";
+sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common;
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-echo "Adding docker repository to lists" && \
-sudo add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-# for testing/debug
-#echo -e "Result of key-fingerprint for Docker: \n"
-#sudo apt-key fingerprint 0EBFCD88
-echo "Running apt-get update" && \
-sudo apt-get update > /dev/null
-echo "Running apt-get install docker" && \
-sudo apt-get install -y docker docker-compose docker-ce docker-doc docker-registry 2>>"${LOGGER}"
-echo "--------------------------------------------------"
-echo -e "Testing Docker\n"
+echo "Adding docker repository to lists";
+sudo add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" # &> /dev/null
+
+#echo "Running apt-get update"; 
+sudo apt-get update
+#echo "Running apt-get install docker"
+sudo apt-get install -y docker docker-compose docker-ce docker-doc docker-registry
+disp "Testing Docker"
 if [ $Docker_Remove_SUDO -eq 1 ]; then
-	sudo groupadd docker 2>/dev/null
-	sudo gpasswd -a $USER docker 2>/dev/null
+	sudo groupadd docker
+	sudo gpasswd -a $USER docker
 	docker run hello-world
 else
 	sudo docker run hello-world
 fi
-echo "--------------------------------------------------"
 if [  $? -eq 0 ]; then
-	echo "Docker installed fine!"
+	disp "Docker installed fine!"
 else
-	echo "Docker did not install fine!"
+	disp "Docker did not install fine!"
 fi
-echo "--------------------------------------------------"
