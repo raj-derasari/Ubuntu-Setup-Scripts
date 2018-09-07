@@ -1,5 +1,4 @@
 #!/bin/bash 
-source `which virtualenvwrapper.sh`
 #logging function
 caller=`basename "$0"`
 #String operations, build logfile Name
