@@ -112,18 +112,18 @@ log $INFO "first run of apt-get update in masterscript" && $dry_echo sudo apt-ge
 ## ALIAS SETUP
 checkBash="`grep \"alias brc=\" ${BF}`"
 if [[ ! -z $checkBash ]]; then
-	log $INFO "common-aliases - Seems like aliases are already setup. Not modifying $BF"
+	log $INFO "common-aliases - Seems like aliases are already setup. Not modifying ${BF}"
 else
 	## redirecting output to your bashrc file
 	## the first line permanently sets the BF variable as your bash profile
-	cat <<EOT >> $BF
-export BF=$BF
+	cat <<EOT >> ${BF}
+export BF=${BF}
 # Execute bash instead of sh
 alias sh=bash
 # You can later replace nano with a text editor of your choice - gedit, subl, vim, emacs, ...
-alias brc="sudo nano $BF"
+alias brc="sudo nano \$BF"
 # Loads the bashrc profile
-alias sbrc="source $BF"
+alias sbrc="source \$BF"
 alias sau="sudo apt-get update"
 alias sai="sudo apt-get install"
 alias saiy="sudo apt-get -y install"
@@ -145,12 +145,12 @@ if [ $Setup_VirtualEnv -eq 1 ]; then
 	log $INFO "installing virtualenv for python"
 	
 	## aliases
-	checkBash="`grep \"virtualenvwrapper.sh\" $BF`"
+	checkBash="`grep \"virtualenvwrapper.sh\" ${BF}`"
 	if [[ ! -z $checkBash ]]; then
-		log $INFO "virtualenvwrapper - Seems like aliases are already setup. Not modifying $BF"
+		log $INFO "virtualenvwrapper - Seems like aliases are already setup. Not modifying ${BF}"
 	else
 		## redirecting output to your bashrc file
-		cat <<EOT >> $BF
+		cat <<EOT >> ${BF}
 venvwrap="virtualenvwrapper.sh"
 if [ \$? -eq 0 ]; then
 	venvwrap=\`/usr/bin/which \$venvwrap\`
@@ -232,7 +232,7 @@ else
 	log $INFO "NOT setting up bloatware removal"
 fi
 
-source $BF && log $INFO "Updated .bashrc profile and loaded in bash"
+source ${BF} && log $INFO "Updated .bashrc profile and loaded in bash"
 
 ## softwares
 if [ $Master_Software -eq 1 ]; then
