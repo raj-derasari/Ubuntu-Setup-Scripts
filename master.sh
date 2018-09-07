@@ -110,7 +110,7 @@ echo "Running sudo apt-get update"
 log $INFO "first run of apt-get update in masterscript" && $dry_echo sudo apt-get update
 
 ## ALIAS SETUP
-checkBash="`grep \"alias brc=\" $BF`"
+checkBash="`grep \"alias brc=\" ${BF}`"
 if [[ ! -z $checkBash ]]; then
 	log $INFO "common-aliases - Seems like aliases are already setup. Not modifying $BF"
 else
