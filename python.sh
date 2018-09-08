@@ -13,6 +13,12 @@ if [ -z $Setup_Python_Dev ]; then
 	echo "Parameters are now loaded from config file"
 	## your bashrc profile/main profile file.
 	BF=~/.bashrc
+	#Setup_VirtualEnv=0
+	# Enter the path to your virtualenv parent directory, eg. if you venv is "myVE" and path is
+	# ~/.virtualenvs/myVE/
+	# then enter ~/.virtualenvs
+	# without quotes
+	VirtualEnv_Directory=~/.virtualenvs
 	## Python installation params
 	Python_InstallBasics=1
 	Python_InstallWebDevelopmentTools=1
@@ -31,9 +37,9 @@ INFO="Py: INFO: "
 ERROR="Py: ERROR: "
 
 #base/Initial variables
-use_virtualenv=0
-venv_prefix="sudo -H python3 -m pip install --user --upgrade" # this is used if NOT using virtualenv, else replaced with ""
+#use_virtualenv=0
 dry_echo=""
+
 ## Prints Help Message for command line (Tensorflow/Python)
 _help_() {
 echo "
@@ -65,8 +71,9 @@ while true; do
 			shift
 			;;
         -v|--virtual-env)
-			use_virtualenv=1
+			Setup_VirtualEnv=1
 			VE="$2"
+			venv_prefix="python -m pip install --user --upgrade " # this is used if NOT using virtualenv
 			shift 2
 			;;
         -p|--preferred-version)
@@ -83,17 +90,16 @@ while true; do
             ;;
     esac
 done
-
-## at this point, PV and VE are confidently known - VE can be null or valued, or from master script. PV is Fix
+## PV sanity check
 if [[ -z $PV ]]; then
 	echo "Python Version argument not passed!"
 	_help_
 	exit 127
 elif [ ! $PV -eq 2 ] && [ ! $PV -eq 3 ]; then
-	if [[ ! -z $Python_Version ]]; then
-		echo "Master Script has set Python_Version as "$Python_Version
+	if [[ ! -z $Python_PreferredVersion ]]; then
+		echo "Master Script has set Python_Version as Python"$Python_PreferredVersion
 		echo "Using master-script python version!"
-		PV=$Python_Version
+		PV=$Python_PreferredVersion
 	else
 		log $INFO "FATAL: python version unknown. entered value: "$1
 		echo "Python version entered is not 2 or 3!"
@@ -102,42 +108,29 @@ elif [ ! $PV -eq 2 ] && [ ! $PV -eq 3 ]; then
 	fi
 fi
 
-# check if run from master script
-if [[ ! -z $Setup_VirtualEnv ]]; then
-	# yes, run from master script and venv is already provided
-	if [ $Setup_VirtualEnv -eq 1 ]; then
-		echo "VirtualEnv present in master script, using these details"
-		use_virtualenv=1
+## VE sanity check
+# Called from terminal and Venv wasnt used, OR called from master and venv wasnt used
+if [[ -z $Setup_VirtualEnv ]] | [ $Setup_VirtualEnv -eq 0 ]; then
+	log "DEBUG: line 96 Py"
+	Setup_VirtualEnv=0
+	venv_prefix="sudo -H python${PV} -m pip install --user --upgrade " # this is used if NOT using virtualenv
+	echo "Not installing to any virtualenv!"
+# called from either source, but venv was used - hence name is definitely known
+elif [ $Setup_VirtualEnv -eq 1 ]; then
+	Setup_VirtualEnv=1
+	venv_prefix="python${PV} -m pip install --user --upgrade " # this is used if NOT using virtualenv
+	if [[ -z $VE ]]; then
 		VE=$VirtualEnv_Name
-		venv_prefix="python$PV -m pip install --user --upgrade "
-	# no, dont run venv according to master-script
-	else
-		# master says, dont use venv
-		use_virtualenv=0
-		venv_prefix="sudo -H python$PV -m pip install --user --upgrade "
 	fi
-# not run from master script
-else
-	# check only VE - if NOT null, USE venv - BUT - also set path
-	if [[ ! -z $VE ]]; then
-		use_virtualenv=1
-		venv_prefix="python$PV -m pip install --user --upgrade "
+	if [[ -z $VirtualEnv_Directory ]]; then
 		VirtualEnv_Directory=~/.virtualenvs/$VE
-	# else, DONT use venv
-	else
-		use_virtualenv=0
-		venv_prefix="sudo -H python$PV -m pip install --user --upgrade "
 	fi
-fi
-# ------------------------------------------------------------------------------------------------------------------
-
-#mkvirtualenv $VirtualEnv_Name
-#workon $VirtualEnv_Name
-## mkvirtualenv can be replaced with
-#virtualenv --system-site-packages -p python2 ~/.virtualenvs/$VirtualEnv_Name
-## workon $ENV$ can be replaced with
-#source /$VENV_PATH$/$ENV$/bin/activate
-if [ $use_virtualenv -eq 1 ]; then
+	#mkvirtualenv $VirtualEnv_Name
+	#workon $VirtualEnv_Name
+	## mkvirtualenv can be replaced with
+	#virtualenv --system-site-packages -p python2 ~/.virtualenvs/$VirtualEnv_Name
+	## workon $ENV$ can be replaced with
+	#source /$VENV_PATH$/$ENV$/bin/activate
 	if [ ! -e  $VirtualEnv_Directory/bin/activate ]; then
 		log $INFO "Creating virtualenv $VirtualEnv_Name"
 		echo "Creating virtualenv $VE!"
@@ -145,7 +138,7 @@ if [ $use_virtualenv -eq 1 ]; then
 	fi
 	$dry_echo source $VirtualEnv_Directory/bin/activate
 fi
-
+# ------------------------------------------------------------------------------------------------------------------
 $dry_echo sudo apt install -y --install-recommends \
 	python-genshi \
 	python-colorama \

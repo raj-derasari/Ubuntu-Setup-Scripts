@@ -6,12 +6,11 @@
 
 # use the display function to print this
 disp "Docker REINSTALLATION Script"
-
 #logging/utils/help
 if test "$1" = "--dry-run" -o "$1" = "-D" ; then 
-	disp "--dry-run mode"
+	echo "Running docker setup in --dry-run mode"
 	set -v
-#    set -n
+	#dry_echo=""
 fi
 ## If you are running docker directly from here, please set the SUDO choice here.
 if [ -z $Install_Docker ]; then
@@ -49,7 +48,7 @@ sudo apt-get update
 sudo apt-get install -y docker docker-compose docker-ce docker-doc docker-registry
 disp "Testing Docker"
 if [ $Docker_Remove_SUDO -eq 1 ]; then
-	# -f will suppress output if group already exists
+	# -f will suppress output if group already exists, and $? will echo 0
 	sudo groupadd -f docker
 	sudo gpasswd -a $USER docker
 	docker run hello-world

@@ -253,7 +253,7 @@ if [ $Master_Python -eq 1 ]; then
 	#sudo apt-key update && 
 	echo "Running sudo apt-get update" && log $INFO "APT-GET-UPDATE - before Python Script" &&  $dry_echo  sudo apt-get update
 	log $INFO "Setting up python"
-	bash python_util.sh $DRYFLAG -p $Python_PreferredVersion -v $VirtualEnv_Name 
+	bash python.sh $DRYFLAG -p $Python_PreferredVersion -v $VirtualEnv_Name 
 else
 	log $INFO "NOT setting up python"
 fi

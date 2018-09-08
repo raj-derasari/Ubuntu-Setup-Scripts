@@ -29,6 +29,7 @@ while true; do
 			;;
 		-D|--dry-run)
 			DRYRUN=1
+			DRY_FLAG="-D"
 			echo "Software setup script in dry-run mode"
 			shift
 			;;
@@ -85,10 +86,10 @@ if [ $Install_Audacity -eq 1 ]; then
 fi
 
 ## Pycharm installation not implemented yet
-##if [ $Install_PyCharm -eq 1 ]; then
-##	echo "deb http://archive.getdeb.net/ubuntu $(lsb_release -cs)-getdeb apps" | sudo tee /etc/apt/sources.list.d/getdeb-apps.list
-##	wget -q -O- http://archive.getdeb.net/getdeb-archive.key | sudo apt-key add -
-##fi
+if [ $Install_PyCharm -eq 1 ]; then
+	echo "deb http://archive.getdeb.net/ubuntu $(lsb_release -cs)-getdeb apps" | sudo tee /etc/apt/sources.list.d/getdeb-apps.list
+	wget -q -O- http://archive.getdeb.net/getdeb-archive.key | sudo apt-key add -
+fi
 if [ $DRYRUN -ne 1 ]; then 
 	if [ $Install_SublimeText -eq 1 ]; then
 		curl https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
@@ -187,7 +188,7 @@ fi
 
 if [ $Install_PyCharm -eq 1 ]; then
 	log $INFO "install Pycharm"
-	 $dry_echo $prefix pycharm
+	$dry_echo $prefix pycharm
 fi
 	
 # exfat
@@ -311,7 +312,7 @@ fi
 
 if [ $Install_Docker -eq 1 ]; then
 	log $INFO "install docker"
-	$dry_echo bash docker.sh
+	$dry_echo bash docker.sh $DRY_FLAG
 fi
 
 if [ $Install_LibreOffice -eq 1 ]; then
