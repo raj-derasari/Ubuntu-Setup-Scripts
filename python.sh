@@ -2,7 +2,7 @@
 #set -o errexit -o pipefail -o noclobber #-o nounset
 ## get util functions loaded
 . util.sh
-. `which virtualenvwrapper.sh`
+#. `which virtualenvwrapper.sh`
 #. ${BF}
 
 # use the display function to print this

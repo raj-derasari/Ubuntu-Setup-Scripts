@@ -148,13 +148,18 @@ if [ $Setup_VirtualEnv -eq 1 ]; then
 	log $INFO "installing virtualenv for python"
 	
 	## aliases
-	checkBash="`grep \"virtualenvwrapper.sh\" ${BF}`"
+	# checkBash="`grep \"virtualenvwrapper.sh\" ${BF}`"
+	## this part is under investigation.
+	checkBash="VIRTUALENVNOWORKMAN"
 	if [[ ! -z $checkBash ]]; then
 		log $INFO "virtualenvwrapper - Seems like aliases are already setup. Not modifying ${BF}"
 		NewShell=$NewShell+1
 	else
 		## redirecting output to your bashrc file
 		cat <<EOT >> ${BF}
+export WORKON_HOME=${VirtualEnv_Directory}
+export PROJECT_HOME=$HOME/
+source /usr/local/bin/virtualenvwrapper.sh
 venvwrap="virtualenvwrapper.sh"
 if [ \$? -eq 0 ]; then
 	venvwrap=\`/usr/bin/which \$venvwrap\`

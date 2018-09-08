@@ -28,9 +28,9 @@ export BF=~/.bashrc
 ### 1. GITHUB
 ## -------------------------------------------------------------------------------------------------------------------
 # Github setup - This is independent of every other installation given above
-export Install_Git=0
+export Install_Git=1
 # IF you set this as 1, you will have to enter your email and name in Git_Email and Git_YourName
-export Install_Git_SSHKeys=0
+export Install_Git_SSHKeys=1
 # Remember to unset this to some random values, or delete this file when done (If you create a pull request, to save your data)
 export Git_Email="user.name@example.com"
 export Git_YourName="User Name"
@@ -49,7 +49,7 @@ export VirtualEnv_Directory=~/.virtualenvs/$VirtualEnv_Name
 ### 3. MASTER SETUP - REQUIRED TO SET EITHER 1 OR 0 HERE
 ## -------------------------------------------------------------------------------------------------------------------
 # Dependencies and Libraries - Highly recommended keep this as 1
-export Master_Dependencies=0
+export Master_Dependencies=1
 # Bloatware removal script that checks your Desktop Environment and uninstalls bloatware based on that
 export Master_RemoveBloatware=1
 # Software setup script - Common Software, Java, Programming Tools, etc.
@@ -57,7 +57,7 @@ export Master_Software=1
 # Python Libraries setup - For Python 2/3 Development, Both are supported.
 export Master_Python=1
 # Executes sudo apt-get upgrade after installing software
-export Do_AptGetUpgradeLast=0
+export Do_AptGetUpgradeLast=1
 # cleans up your /tmp, pip cache and 
 export Do_CleanupAfterExec=1
 
@@ -147,14 +147,14 @@ export Docker_Remove_SUDO=0
 ### 9. PROGRAMMING TOOLS - JAVA/JDK
 ## -------------------------------------------------------------------------------------------------------------------
 # Java SE and JDK - They come combined together in Java 10
-export Install_Oracle_Java=0
+export Install_Oracle_Java=1
 ## JAVA VERSION - I allow 2 possible values - 8 and 10. IF oracle keeps their naming scheme
 ## for the packages oracle-java(X)-installer and oracle-java(X)-set-default; then
 ## this script may work in the future too. For now, it is confirmed to work for Java 8 and Java 10
 ## IF you are installing a version other than 8 or 10, please be careful about setting Purge_OpenJDK to 1
 export Install_Java_Version=10
 # This line uninstalls any inbuilt Java that comes with your Ubuntu/Debian installation
-export Purge_OpenJDK=0
+export Purge_OpenJDK=1
 
 ### 10. PROGRAMMING TOOLS - IDE
 ## -------------------------------------------------------------------------------------------------------------------
@@ -162,17 +162,17 @@ export Purge_OpenJDK=0
 export Install_GEdit=1
 # Atom is one of the programming tools I provide - Handy IDE
 # From my experience, apt-install atom will be a PRETTY SLOW DOWNLOAD
-export Install_Atom=0
+export Install_Atom=1
 # Lightweight alternative to Atom - Sublime Text (Free Edition)
 export Install_SublimeText=1
 # VS Code is also a great programming IDE
-export Install_VisualStudioCode=0
+export Install_VisualStudioCode=1
 ## TODO: Add emacs here, and... anything else?
 
 ## Scientific Coding "IDE" hah
 # GNU/Octave is an open-source MATLAB alternative.
 # TODO: IF possible, install the Octave Sourceforge packages directly via this script.
-export Install_Octave=0
+export Install_Octave=1
 
 ### 11. PYTHON SETUP - VERSION, LIBRARIES SELECTION
 ## -------------------------------------------------------------------------------------------------------------------
@@ -193,7 +193,7 @@ export Python_InstallWebDevelopmentTools=1
 export Python_InstallDjango=1
 
 # Jupyter Notebook, because it's a pretty handy tool
-export Python_InstallJupyter=0
+export Python_InstallJupyter=1
 
 # some OpenCV stuff that I haven't coded yet - there are scripts for it already.
 # if you need it check out this cool repository:
@@ -203,7 +203,7 @@ export Python_InstallJupyter=0
 export Python_InstallComputerGraphicsTools=0    ## TODO, not implemented
 
 # NLTK if you're into it
-export Python_InstallNLTK=0
+export Python_InstallNLTK=1
 
 # Installs ML tools - theano (Not Thanos), Tensorflow, Keras, etc - you can select your own tensorflow below if you want to
 # but to have tensorflow installed the next variable must definitely be 1

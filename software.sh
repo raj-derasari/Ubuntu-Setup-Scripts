@@ -2,7 +2,7 @@
 #set -o errexit -o pipefail -o noclobber #-o nounset
 ## get util functions loaded
 . util.sh
-. `which virtualenvwrapper.sh`
+#. `which virtualenvwrapper.sh`
 
 # use the display function to print this
 disp "Software Setup Script - Raj Derasari"
@@ -352,7 +352,9 @@ if [ "$1" = "teamviewer" ] || [ ! -z  $Install_TeamViewer ]; then
 	else
 		log $INFO "install teamviewer"
 		$dry_echo wget -q https://download.teamviewer.com/download/linux/teamviewer_amd64.deb
-		$dry_echo sudo dpkg -i teamviewer_amd64.deb
+		# This is definitely gonna fail and be fixed in the next step
+		$dry_echo sudo dpkg -i teamviewer_amd64.deb &>/dev/null 
+		# In this step, teamviewer will definitely be fixed, which is why i supressed the previous output.
 		$dry_echo sudo apt-get install -fy
 		$dry_echo rm teamviewer_amd64.deb	
 	fi

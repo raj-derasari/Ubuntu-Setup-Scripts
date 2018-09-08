@@ -2,7 +2,7 @@
 #set -o errexit -o pipefail -o noclobber #-o nounset
 ## get util functions loaded
 . util.sh
-. `which virtualenvwrapper.sh`
+#. `which virtualenvwrapper.sh`
 
 # use the display function to print this
 disp "Docker REINSTALLATION Script"
@@ -51,14 +51,16 @@ if [ $Docker_Remove_SUDO -eq 1 ]; then
 	# -f will suppress output if group already exists, and $? will echo 0
 	sudo groupadd -f docker
 	sudo gpasswd -a $USER docker
-	docker run hello-world
+	## Docker run won't work on the first-run because you must login/logout, entering a new session, making docker run fine.
+	# docker run hello-world 
 else
 	sudo docker run hello-world
-fi
-if [  $? -eq 0 ]; then
-	log "Docker installed fine"
-	disp "Docker installed fine!"
-else
-	log "Docker did not install fine"
-	disp "Docker did not install fine!"
+	# Verifying if sudo docker run... works.
+	if [  $? -eq 0 ]; then
+		log "Docker installed fine"
+		disp "Docker installed fine!"
+	else
+		log "Docker did not install fine"
+		disp "Docker did not install fine!"
+	fi
 fi
