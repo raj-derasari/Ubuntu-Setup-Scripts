@@ -295,8 +295,8 @@ if [ $Do_CleanupAfterExec -eq 1 ]; then
 	$dry_echo sudo apt-get install -fy # 2>>"${ERRORFILE}"; # fix dependencies, install/uninstall stuff
 	$dry_echo sudo apt -y autoclean #> /dev/null 2>>"${ERRORFILE}"; # removes extra cache files
 	$dry_echo sudo apt -y autoremove #2>>"${ERRORFILE}"; # removes deb packages but not all of them sadly
-	$dry_echo rm -rfd ~/.cache/pip #> /dev/null  2>>"${ERRORFILE}"; # removes pip packages
-	$dry_echo rm -rfd /tmp/ #2>&1 > /dev/null; # removes temp files made only by the user, keeps system etc. files
+	$dry_echo rm -rfd ~/.cache/pip# removes pip packages
+	$dry_echo rm -rfd /tmp/ > /dev/null  2>&1  # removes temp files made only by the user, keeps system etc. files
 	## Todo: This is safe to execute - I know that from results - but do i keep this
 	# sudo rm -f /var/cache/apt/archives/*.deb   # removes deb files apt cache
 fi

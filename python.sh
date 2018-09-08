@@ -109,8 +109,14 @@ fi
 
 ## VE sanity check
 # Called from terminal and Venv wasnt used, OR called from master and venv wasnt used
-if [[ -z $Setup_VirtualEnv ]] | [ $Setup_VirtualEnv -eq 0 ]; then
+if [[ -z $Setup_VirtualEnv ]]; then
+	## called from terminal, Venv wasnt used
 	log "DEBUG: line 96 Py"
+	Setup_VirtualEnv=0
+	venv_prefix="sudo -H python${PV} -m pip install --user --upgrade " # this is used if NOT using virtualenv
+	echo "Not installing to any virtualenv!"
+elif [ $Setup_VirtualEnv -eq 0 ]; then
+	log "DEBUG: line 119 Py"
 	Setup_VirtualEnv=0
 	venv_prefix="sudo -H python${PV} -m pip install --user --upgrade " # this is used if NOT using virtualenv
 	echo "Not installing to any virtualenv!"
