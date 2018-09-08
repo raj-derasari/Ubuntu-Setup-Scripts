@@ -66,13 +66,13 @@ export Do_CleanupAfterExec=1
 # Strongly recommended packages
 # All of the following are affected based on the value of Master_Software being 1
 # ExFat file system utilites
-export Install_EXFatUtils=0
+export Install_EXFatUtils=1
 # Flux is recommended for programmers during evening/night times.
-export Install_Flux=0
+export Install_Flux=1
 # Gparted is a partition utility which is highly useful, and most recommended
-export Install_GParted=0
+export Install_GParted=1
 # 7-zip and other archive types support (Not a GUI, integrates with default archive applications)
-export Install_P7Zip=0
+export Install_P7Zip=1
 # Torrent Client
 export Install_QBitTorrent=1
 # PDF Viewer which is incredibly fast and lightweight
@@ -125,7 +125,7 @@ export Install_RealVNC=0
 ### 7. SOFTWARE TOOLS SETUP - LIBREOFFICE SUITE
 ## -------------------------------------------------------------------------------------------------------------------
 # Libre Office
-export Install_LibreOffice=0
+export Install_LibreOffice=1
 # Base is like MS Access, database software
 export LibreOffice_Base=1
 # Draw is for .. drawing?
@@ -141,8 +141,8 @@ export LibreOffice_Writer=1
 ## -------------------------------------------------------------------------------------------------------------------
 # Docker - If you select one, the docker installation script will be executed
 # Be careful, because the script does a complete reinstall of any existing Docker installation
-export Install_Docker=0
-export Docker_Remove_SUDO=0
+export Install_Docker=1
+export Docker_Remove_SUDO=1
 
 ### 9. PROGRAMMING TOOLS - JAVA/JDK
 ## -------------------------------------------------------------------------------------------------------------------
@@ -162,7 +162,7 @@ export Purge_OpenJDK=1
 export Install_GEdit=1
 # Atom is one of the programming tools I provide - Handy IDE
 # From my experience, apt-install atom will be a PRETTY SLOW DOWNLOAD
-export Install_Atom=1
+export Install_Atom=0
 # Lightweight alternative to Atom - Sublime Text (Free Edition)
 export Install_SublimeText=1
 # VS Code is also a great programming IDE
