@@ -264,7 +264,7 @@ if [ $Install_Oracle_Java -eq 1 ]; then
 	fi
 	if [ $Purge_OpenJDK -eq 1 ]; then
 		log $INFO "PURGE OpenJDK"
-		sudo apt-get purge -y openjdk-\*
+		$dry_echo sudo apt-get purge -y openjdk-\*
 	fi
 
 	if [ $DRYRUN -ne 1 ]; then 
