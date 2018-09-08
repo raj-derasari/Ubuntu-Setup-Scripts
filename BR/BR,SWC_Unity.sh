@@ -1,5 +1,5 @@
 #!/bin/bash 
-source `which virtualenvwrapper.sh`
+#source `which virtualenvwrapper.sh`
 . util.sh
 
 #logging/utils/help
