@@ -22,9 +22,9 @@ fi
 
 
 log $INFO "Adding default ubuntu repositories!"
-$dry_echo sudo add-apt-repository universe
-$dry_echo sudo add-apt-repository restricted
-$dry_echo sudo add-apt-repository multiverse
+#$dry_echo sudo add-apt-repository universe
+#$dry_echo sudo add-apt-repository restricted
+#$dry_echo sudo add-apt-repository multiverse
 #sudo apt-key update && 
 $dry_echo sudo apt-get update
 
