@@ -18,8 +18,10 @@ else
 	log $INFO "lubuntu-bloatremove was called"
 fi
 ## literally bloatware, in my opinion
-splash_msg="-------------------------------------
-Removing packages, followed by softwares:"
+splash_msg="
+-------------------------------------
+Removing packages, followed by softwares:
+"
 echo $splash_msg
 
 # pkg to remove, remove lines or add packages below with a \\ at the end, to uninstall
@@ -51,6 +53,8 @@ transmission*
 $br_purge $pkgs
 $br_purge $sw
 
+$dry_echo sudo dpkg --configure -a
+$dry_echo sudo apt -y autoremove
 $dry_echo sudo apt-get install -fy
 
 # to fix mute button problems in Lubuntu
