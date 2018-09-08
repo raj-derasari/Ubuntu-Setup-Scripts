@@ -37,7 +37,6 @@ INFO="Py: INFO: "
 ERROR="Py: ERROR: "
 
 #base/Initial variables
-#use_virtualenv=0
 dry_echo=""
 
 ## Prints Help Message for command line (Tensorflow/Python)
@@ -155,7 +154,7 @@ fi
 log $INFO "Upgrade pip (globally)"
 $dry_echo $venv_prefix pip
 
-if [ $use_virtualenv -eq 1 ]; then
+if [ $Setup_VirtualEnv -eq 1 ]; then
 	log $INFO "Install virtualenvwrapper"
 	$dry_echo $venv_prefix virtualenvwrapper
 fi
@@ -174,7 +173,7 @@ if [ $Python_InstallDjango -eq 1 ]; then
 	log $INFO "Django"
 	$dry_echo $venv_prefix django
 	$dry_echo $venv_prefix geoip2
-	t## setup aliases
+	## setup aliases
 	checkBash="`grep \"alias django_runserver=\" $BF`"
 	if [[ ! -z $checkBash ]]; then
 		log $INFO "Django-aliases - Seems like aliases are already setup. Not modifying $BF"
