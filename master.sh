@@ -303,7 +303,7 @@ fi
 
 disp "Completed"
 echo "It is highly recommended to restart your computer now."
-read -p "Press Enter, or y/Y to restart right now, or anything else to exit. - " shut
+$dry_echo read -p "Press Enter, or y/Y to restart right now, or anything else to exit. - " shut
 if test "$shut" = "y" -o "$shut" = "Y" -o "$shut" = ""; then
 	log $INFO "Finish_With_Reboot" && echo "REBOOTING"
 	$dry_echo sudo shutdown -r 0

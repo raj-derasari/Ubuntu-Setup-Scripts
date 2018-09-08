@@ -12,29 +12,29 @@ INFO="Lib-Dep: INFO: "
 ERROR="Lib-Dep: ERROR: "
 
 DRY_RUN=0
-dry_echo=""
+Prefix="sudo apt-get install -y "
 DEBUG=0
 
 if test "$1" = "-D"; then
 	DRY_RUN=1
-	dry_echo="echo "
+	Prefix="echo sudo apt-get install -y "
 fi
 
 
 log $INFO "Adding default ubuntu repositories!"
-#$dry_echo sudo add-apt-repository universe
-#$dry_echo sudo add-apt-repository restricted
-#$dry_echo sudo add-apt-repository multiverse
+#$Prefix sudo add-apt-repository universe
+#$Prefix sudo add-apt-repository restricted
+#$Prefix sudo add-apt-repository multiverse
 #sudo apt-key update && 
-$dry_echo sudo apt-get update
+sudo apt-get update
 
 # get ifconfig working on Ubuntu Unity/Budgie/gnome
 log $INFO "IFCONFIG"
-$dry_echo sudo apt install -y net-tools
+$Prefix --install-recommends net-tools
 
 # build tools
 log $INFO "Build Tools - cmake, etc."
-$dry_echo sudo apt-get install -y \
+$Prefix --install-recommends \
 build-essential \
 cmake \
 curl \
@@ -44,7 +44,7 @@ libgtk2.0-dev
 
 # better stuff
 log $INFO "C/C++ SO files"
-$dry_echo sudo apt-get install -y --install-recommends \
+$Prefix --install-recommends \
 gcc-6-base:i386 \
 libbz2-1.0:i386 \
 libc6:i386 \
@@ -59,7 +59,7 @@ lib32z1 \
 libtinfo5:i386
 
 log $INFO "gconf "
-$dry_echo sudo apt-get install -y --install-recommends \
+$Prefix --install-recommends \
 gconf2 \
 gconf2-common \
 gconf-service \

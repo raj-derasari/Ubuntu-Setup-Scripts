@@ -46,11 +46,6 @@ while true; do
 	esac
 done
 
-if [ $DRYRUN -eq 1 ]; then
-	
-	INFO="SW: INFO: DRY: "
-fi
-
 #begin
 #ADDREPO=""
 curl > /dev/null 2>&1
@@ -108,7 +103,6 @@ if [ $DRYRUN -ne 1 ]; then
 
 	if [ $Install_Vivaldi -eq 1 ]; then
 		curl http://repo.vivaldi.com/stable/linux_signing_key.pub | sudo apt-key add -
-		#echo "deb http://repo.vivaldi.com/stable/deb/ stable main" | sudo tee /etc/apt/sources.list.d/vivaldi.list
 		echo "deb [arch=amd64] http://repo.vivaldi.com/stable/deb/ stable main" | sudo tee /etc/apt/sources.list.d/vivaldi.list
 	fi
 
@@ -123,9 +117,11 @@ if [ $DRYRUN -ne 1 ]; then
 	fi
 fi
 
-#sudo sudo apt-key update && 
-sudo apt-get update #>&/dev/null
-
+## dont update if in drymode
+# sudo apt-key update && 
+if [ $DRYRUN -eq 1 ]; then
+	sudo apt-get update #>&/dev/null
+fi
 # First things first: Check if install AMD or Intel microcode:
 if [ $DRYRUN -ne 1 ]; then
 	sudo lshw -c CPU | grep -i intel > /dev/null
@@ -317,7 +313,7 @@ fi
 # atom editor
 if [ $Install_Atom -eq 1 ]; then
 	log $INFO "install atom"
-	 $prefix atom
+	$prefix atom
 fi
 
 if [ $Install_Docker -eq 1 ]; then
