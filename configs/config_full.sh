@@ -74,49 +74,49 @@ export Install_GParted=0
 # 7-zip and other archive types support (Not a GUI, integrates with default archive applications)
 export Install_P7Zip=0
 # Torrent Client
-export Install_QBitTorrent=1
+export Install_QBitTorrent=0
 # PDF Viewer which is incredibly fast and lightweight
-export Install_QPDFView=1
+export Install_QPDFView=0
 # Uget is a download manager
-export Install_UGET=1
+export Install_UGET=0
 # VLC is the go-to media player for Linux, with various alternatives (however, I recommend VLC)
-export Install_VLCMediaPlayer=1
+export Install_VLCMediaPlayer=0
 # Z-shell, alternative for bash
 export Install_ZSH=1
 
 ### 5. SOFTWARE TOOLS SETUP - WEB BROWSERS
 ## -------------------------------------------------------------------------------------------------------------------
 # Choose a web browser
-export Install_Chromium=1
-export Install_GoogleChrome=1
+export Install_Chromium=0
+export Install_GoogleChrome=0
 export Install_MozillaFirefox=1
-export Install_Vivaldi=1
+export Install_Vivaldi=0
 
 ### 6. SOFTWARE TOOLS SETUP - HANDY TOOLS
 ## -------------------------------------------------------------------------------------------------------------------
 # Audacity is an audio editing application, you can also choose to install the FFMpeg library in the second option
-export Install_Audacity=1
-export Install_WinFF=1
+export Install_Audacity=0
+export Install_WinFF=0
 # grive is an open source, third-party, command line Google-Drive tool.
-export Install_Grive_GoogleDrive=1
+export Install_Grive_GoogleDrive=0
 # keepass password manager, for all your random password needs!
-export Install_KeepassPasswordManager=1
+export Install_KeepassPasswordManager=0
 # Teamviewer is a remoting software, you probably knew that already didn't ya?
-export Install_TeamViewer=1
+export Install_TeamViewer=0
 # Okular is a heavy-featured PDF Suite
-export Install_Okular=1
+export Install_Okular=0
 # Terminal client/replacement for ctrl+alt+t
-export Install_TildaTmux=1
+export Install_TildaTmux=0
 # TexStudio is LaTeX software for writing up college assignments and research papers
 # It's most likely not going to be used anywhere else
 # Why am I even installing it I'm not even in college right now...
-export Install_TexStudio=1
+export Install_TexStudio=0
 ## -------------------------------------------------------------------------------------------------------------------
 ## TODO, haven't done these yet.
 # Terminal management, Kinda like Tmux/Tilda
 export Install_BYOBU=0
 # a python coding environment. Alternative - Spyder
-export Install_PyCharm=1
+export Install_PyCharm=0
 # Another remoting software solution - The RealVNC server does not work on Ubuntu from my attempts
 # But you can definitely connect to your RealVNC Server on a remote Windows installation via this tool
 # That is to say, RealVNC Viewer on Linux works fine!
@@ -159,12 +159,12 @@ export Purge_OpenJDK=0
 ### 10. PROGRAMMING TOOLS - IDE
 ## -------------------------------------------------------------------------------------------------------------------
 # Gedit is a regular text editor but can be quite handy
-export Install_GEdit=1
+export Install_GEdit=0
 # Atom is one of the programming tools I provide - Handy IDE
 # From my experience, apt-install atom will be a PRETTY SLOW DOWNLOAD
 export Install_Atom=0
 # Lightweight alternative to Atom - Sublime Text (Free Edition)
-export Install_SublimeText=1
+export Install_SublimeText=0
 # VS Code is also a great programming IDE
 export Install_VisualStudioCode=0
 ## TODO: Add emacs here, and... anything else?
