@@ -56,7 +56,7 @@ done
 curl > /dev/null 2>&1
 if [ $? -eq 127 ]; then
 	echo "curl not installed. This can cause problems in adding HTTPS repositories. installing curl now!"
-	echo "sudo apt-get update" && sudo apt-get update > /dev/null 2>&1
+	echo "sudo apt-get update" && $dry_echo sudo apt-get update > /dev/null 2>&1
 	$prefix curl
 fi
 

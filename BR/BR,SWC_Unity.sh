@@ -121,14 +121,12 @@ unity-scope-video-remote \
 unity-scope-virtualbox \
 unity-scope-yelp \
 unity-scope-zotero \
-wvdial
-"
+wvdial"
 
 sws="
 totem* \
 ubuntu-desktop* \
-unity-webapps-* \
-"
+unity-webapps-*"
 
 echo "Removing" $pkgs
 echo "Removing" $sws

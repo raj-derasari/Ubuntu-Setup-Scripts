@@ -18,13 +18,13 @@ else
 	log $INFO "lubuntu-bloatremove was called"
 fi
 ## literally bloatware, in my opinion
-splash_msg="
--------------------------------------
-Removing packages, followed by softwares:
-"
-echo $splash_msg
+splash_msg="\n
+----------------------------------------------\n
+Removing packages, followed by softwares:\n"
+echo -e $splash_msg
 
-# pkg to remove, remove lines or add packages below with a \\ at the end, to uninstall
+# pkg to remove, remove lines or add packages below with a backslash (\) at the end, to uninstall
+# Make sure that there is no space after the backslash!
 pkgs="
 gnome-disk-utility \
 gnome-mplayer \
@@ -36,8 +36,8 @@ mtools \
 mtpaint \
 mtr-tiny \
 simple-scan \
-ubuntu-release-upgrader-gtk \ 
-xfburn "
+ubuntu-release-upgrader-gtk \
+xfburn"
 
 # pkg to remove, same as above
 sw="
@@ -47,8 +47,7 @@ audacious* \
 gnumeric* \
 pidgin* \
 sylpheed* \
-transmission*
-"
+transmission*"
 
 $br_purge $pkgs
 $br_purge $sw
