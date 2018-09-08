@@ -33,7 +33,7 @@ ERROR="Py: ERROR: "
 #base/Initial variables
 use_virtualenv=0
 venv_prefix="sudo -H python3 -m pip install --user --upgrade" # this is used if NOT using virtualenv, else replaced with ""
-
+dry_echo=""
 ## Prints Help Message for command line (Tensorflow/Python)
 _help_() {
 echo "
@@ -46,8 +46,6 @@ Usage: bash python_util.sh <arguments>
 "; exit 0
 }
 
-DRY_RUN=0
-DEBUG=0
 echo "Parsing command line parameters."
 while true; do
     case "$1" in
@@ -56,6 +54,7 @@ while true; do
 			;;
         -D|--dry-run)
 			DRY_RUN=1
+			dry_echo="echo "
 			#set -v
 			echo "In dry-run mode"
 			shift
@@ -84,12 +83,6 @@ while true; do
             ;;
     esac
 done
-
-if [ $DRY_RUN -eq 1 ]; then
-	dry_echo="echo "
-else
-	dry_echo=" "
-fi
 
 ## at this point, PV and VE are confidently known - VE can be null or valued, or from master script. PV is Fix
 if [[ -z $PV ]]; then
@@ -188,7 +181,7 @@ if [ $Python_InstallDjango -eq 1 ]; then
 	log $INFO "Django"
 	$dry_echo $venv_prefix django
 	$dry_echo $venv_prefix geoip2
-	## setup aliases
+	t## setup aliases
 	checkBash="`grep \"alias django_runserver=\" $BF`"
 	if [[ ! -z $checkBash ]]; then
 		log $INFO "Django-aliases - Seems like aliases are already setup. Not modifying $BF"
