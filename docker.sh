@@ -49,14 +49,17 @@ sudo apt-get update
 sudo apt-get install -y docker docker-compose docker-ce docker-doc docker-registry
 disp "Testing Docker"
 if [ $Docker_Remove_SUDO -eq 1 ]; then
-	sudo groupadd docker
+	# -f will suppress output if group already exists
+	sudo groupadd -f docker
 	sudo gpasswd -a $USER docker
 	docker run hello-world
 else
 	sudo docker run hello-world
 fi
 if [  $? -eq 0 ]; then
+	log "Docker installed fine"
 	disp "Docker installed fine!"
 else
+	log "Docker did not install fine"
 	disp "Docker did not install fine!"
 fi
