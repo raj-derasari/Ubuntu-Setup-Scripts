@@ -7,10 +7,11 @@
 # use the display function to print this
 disp "Docker REINSTALLATION Script"
 #logging/utils/help
+dry_echo=""
 if test "$1" = "--dry-run" -o "$1" = "-D" ; then 
 	echo "Running docker setup in --dry-run mode"
-	set -v
-	#dry_echo=""
+	#set -v
+	dry_echo="echo "
 fi
 ## If you are running docker directly from here, please set the SUDO choice here.
 if [ -z $Install_Docker ]; then
@@ -37,24 +38,24 @@ fi
 
 #sudo apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual}"
 #echo "Installing docker dependencies";
-sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common;
+$dry_echo sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common;
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 echo "Adding docker repository to lists";
-sudo add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" # &> /dev/null
+$dry_echo sudo add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" # &> /dev/null
 
 #echo "Running apt-get update"; 
-sudo apt-get update
+$dry_echo sudo apt-get update
 #echo "Running apt-get install docker"
-sudo apt-get install -y docker docker-compose docker-ce docker-doc docker-registry
+$dry_echo sudo apt-get install -y docker docker-compose docker-ce docker-doc docker-registry
 disp "Testing Docker"
 if [ $Docker_Remove_SUDO -eq 1 ]; then
 	# -f will suppress output if group already exists, and $? will echo 0
-	sudo groupadd -f docker
-	sudo gpasswd -a $USER docker
+	$dry_echo sudo groupadd -f docker
+	$dry_echo sudo gpasswd -a $USER docker
 	## Docker run won't work on the first-run because you must login/logout, entering a new session, making docker run fine.
 	# docker run hello-world 
 else
-	sudo docker run hello-world
+	$dry_echo sudo docker run hello-world
 	# Verifying if sudo docker run... works.
 	if [  $? -eq 0 ]; then
 		log "Docker installed fine"
