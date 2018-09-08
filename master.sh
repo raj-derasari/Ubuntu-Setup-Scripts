@@ -168,15 +168,18 @@ else
 fi
 
 ## python=python3 alias if Python3 is the desired version
-if [ $Python_PreferredVersion -eq 3 ]; then
-	checkBash="`grep \"alias python=python3\" ~/.bashrc`"
+if [ $Python_PreferredVersion -eq 3 ] | [ $Python_PreferredVersion -eq 2 ]; then
+	checkBash="`grep \"alias python=python${Python_PreferredVersion}\" ~/.bashrc`"
 	if [[ ! -z $checkBash ]]; then
-		echo "\"python3\" is already linked to \"python\" in this Ubuntu installation"
-		log $INFO "python3 is already linked as python for terminals"
+		echo "\"python${Python_PreferredVersion}\" is already linked to \"python\" in this Ubuntu installation"
+		log $INFO "python${Python_PreferredVersion} is already linked as python for terminals"
 	else
-		echo "alias python=python3" >> ~/.bashrc
-		echo "Alias python=python3 has been set up."
-		log $INFO "Make python3 default python in bashrc"
+		echo "# Python aliases-------------------" >> ${BF}
+		echo "alias python=python${Python_PreferredVersion}" >> ${BF}
+		echo "alias pip3install=python3 -m pip install --user --upgrade " >> ${BF}
+		echo "alias pip2install=python2 -m pip install --user --upgrade " >> ${BF}
+		echo "Aliases for Python have been setup"
+		log $INFO "Make python${Python_PreferredVersion} default python in bashrc"
 	fi
 fi
 
