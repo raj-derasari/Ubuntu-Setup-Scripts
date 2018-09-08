@@ -114,7 +114,7 @@ log $INFO "first run of apt-get update in masterscript" && $dry_echo sudo apt-ge
 checkBash="`grep \"alias brc=\" ${BF}`"
 if [[ ! -z $checkBash ]]; then
 	log $INFO "common-aliases - Seems like aliases are already setup. Not modifying ${BF}"
-	NewShell=$NewShell+1
+	NewShell=$((NewShell+1))
 else
 	## redirecting output to your bashrc file
 	## the first line permanently sets the BF variable as your bash profile
@@ -153,7 +153,7 @@ if [ $Setup_VirtualEnv -eq 1 ]; then
 	checkBash="VIRTUALENVNOWORKMAN"
 	if [[ ! -z $checkBash ]]; then
 		log $INFO "virtualenvwrapper - Seems like aliases are already setup. Not modifying ${BF}"
-		NewShell=$NewShell+1
+		NewShell=$((NewShell+1))
 	else
 		## redirecting output to your bashrc file
 		cat <<EOT >> ${BF}
@@ -182,7 +182,7 @@ if [ $Python_PreferredVersion -eq 3 ] | [ $Python_PreferredVersion -eq 2 ]; then
 	if [[ ! -z $checkBash ]]; then
 		echo "\"python${Python_PreferredVersion}\" is already linked to \"python\" in this Ubuntu installation"
 		log $INFO "python${Python_PreferredVersion} is already linked as python for terminals"
-		NewShell=$NewShell+1
+		NewShell=$((NewShell+1))
 	else
 		echo "# Python aliases-------------------" >> ${BF}
 		echo "alias python=python${Python_PreferredVersion}" >> ${BF}
