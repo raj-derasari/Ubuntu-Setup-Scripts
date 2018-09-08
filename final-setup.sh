@@ -10,7 +10,7 @@ cd My-Ubuntu-Setup-Scripts
 echo "About to bash master.sh now"
 chmod 777 master.sh
 reset; bash master.sh -C -D -f configs/config_full.sh > ~/Desktop/send_rd.txt
-read -p "Looking fine? Exec without dry-run? (Enter for yes, warna anything else) - " prom
+#read -p "Looking fine? Exec without dry-run? (Enter for yes, warna anything else) - " prom
 if test "$prom" = ""; then
 	reset; 
 	bash master.sh -C -f configs/config_full.sh
