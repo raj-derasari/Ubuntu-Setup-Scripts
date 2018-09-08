@@ -1,9 +1,11 @@
 #!/bin/bash 
 #logging function
 caller=`basename "$0"`
+Fname=${caller:0:-3}
 #String operations, build logfile Name
-LOGGER=`pwd`/log_${caller:0:-3}.log
-DEBUG="DEBUG: "
+LOGGER=`pwd`/log_${Fname}.log
+DEBUG="DEBUG: "${Fname}:
+#echo $DEBUG
 log() {
 	echo -e "[`lsb_release -ds`]\t[${USER}]\t[`date`]\t${*}" >> "${LOGGER}"
 }

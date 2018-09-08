@@ -3,7 +3,7 @@
 ## get util functions loaded
 . util.sh
 . `which virtualenvwrapper.sh`
-#. $BF
+#. ${BF}
 
 # use the display function to print this
 disp "Ubuntu Python Script"
@@ -174,11 +174,11 @@ if [ $Python_InstallDjango -eq 1 ]; then
 	$dry_echo $venv_prefix django
 	$dry_echo $venv_prefix geoip2
 	## setup aliases
-	checkBash="`grep \"alias django_runserver=\" $BF`"
+	checkBash="`grep \"alias django_runserver=\" ${BF}`"
 	if [[ ! -z $checkBash ]]; then
-		log $INFO "Django-aliases - Seems like aliases are already setup. Not modifying $BF"
+		log $INFO "Django-aliases - Seems like aliases are already setup. Not modifying ${BF}"
 	else
-		cat <<EOT >> $BF
+		cat <<EOT >> ${BF}
 # -------------------------------------
 # Django aliases
 alias django_makemigrations="python manage.py makemigrations "
@@ -192,6 +192,8 @@ if [ $Python_InstallWebDevelopmentTools -eq 1 ]; then
 	log $INFO "flask, BeautifulSoup, Twisted"
 	$dry_echo $venv_prefix flask
 	$dry_echo $venv_prefix Twisted
+	# html,xml parser
+	$dry_echo $venv_prefix lxml
 	if [ $PV -eq 2 ]; then 
 		$dry_echo $venv_prefix BeautifulSoup
 	elif [ $PV -eq 3 ]; then 

@@ -106,6 +106,7 @@ if [ $? -ne 0 ]; then
 fi
 
 ## Configuration loaded, run apt-get update first things first
+NewShell=0
 echo "Running sudo apt-get update"
 log $INFO "first run of apt-get update in masterscript" && $dry_echo sudo apt-get update
 
@@ -113,6 +114,7 @@ log $INFO "first run of apt-get update in masterscript" && $dry_echo sudo apt-ge
 checkBash="`grep \"alias brc=\" ${BF}`"
 if [[ ! -z $checkBash ]]; then
 	log $INFO "common-aliases - Seems like aliases are already setup. Not modifying ${BF}"
+	NewShell=$NewShell+1
 else
 	## redirecting output to your bashrc file
 	## the first line permanently sets the BF variable as your bash profile
@@ -121,13 +123,14 @@ export BF=${BF}
 # Execute bash instead of sh
 alias sh=bash
 # You can later replace nano with a text editor of your choice - gedit, subl, vim, emacs, ...
-alias brc="sudo nano \$BF"
+alias brc="sudo nano \${BF}"
 # Loads the bashrc profile
-alias sbrc="source \$BF"
+alias sbrc="source \${BF}"
 alias sau="sudo apt-get update"
 alias sai="sudo apt-get install"
 alias saiy="sudo apt-get -y install"
 alias aptgetupgrade="sudo apt-get upgrade"
+#Aliases to replace your pip install hardwork
 alias py2install="python2 -m pip install --user "
 alias py3install="python3 -m pip install --user "
 # If you ever get APT lock errors aptreset will do your work for ya
@@ -148,6 +151,7 @@ if [ $Setup_VirtualEnv -eq 1 ]; then
 	checkBash="`grep \"virtualenvwrapper.sh\" ${BF}`"
 	if [[ ! -z $checkBash ]]; then
 		log $INFO "virtualenvwrapper - Seems like aliases are already setup. Not modifying ${BF}"
+		NewShell=$NewShell+1
 	else
 		## redirecting output to your bashrc file
 		cat <<EOT >> ${BF}
@@ -173,6 +177,7 @@ if [ $Python_PreferredVersion -eq 3 ] | [ $Python_PreferredVersion -eq 2 ]; then
 	if [[ ! -z $checkBash ]]; then
 		echo "\"python${Python_PreferredVersion}\" is already linked to \"python\" in this Ubuntu installation"
 		log $INFO "python${Python_PreferredVersion} is already linked as python for terminals"
+		NewShell=$NewShell+1
 	else
 		echo "# Python aliases-------------------" >> ${BF}
 		echo "alias python=python${Python_PreferredVersion}" >> ${BF}
@@ -181,6 +186,13 @@ if [ $Python_PreferredVersion -eq 3 ] | [ $Python_PreferredVersion -eq 2 ]; then
 		echo "Aliases for Python have been setup"
 		log $INFO "Make python${Python_PreferredVersion} default python in bashrc"
 	fi
+fi
+
+if [ $NewShell -eq 3 ]; then
+	## All bash vars are set already
+	echo ${*}
+	read -p "fine?? - " var
+	x-terminal-emulator -e ~/SetupScript/My-Ubuntu-Setup-Scripts/master.sh -C -f 
 fi
 
 # git and vcsh - vcsh allows you to manage multiple git repos in one directory
@@ -235,7 +247,9 @@ else
 	log $INFO "NOT setting up bloatware removal"
 fi
 
+export PATH=$PATH:~/.local/bin
 source ${BF} && log $INFO "Updated .bashrc profile and loaded in bash"
+ 
 
 ## softwares
 if [ $Master_Software -eq 1 ]; then
@@ -252,8 +266,9 @@ fi
 if [ $Master_Python -eq 1 ]; then
 	#sudo apt-key update && 
 	echo "Running sudo apt-get update" && log $INFO "APT-GET-UPDATE - before Python Script" &&  $dry_echo  sudo apt-get update
+	disp "Master - Setting up Python"
 	log $INFO "Setting up python"
-	bash python.sh $DRYFLAG -p $Python_PreferredVersion -v $VirtualEnv_Name  2>>"${ERRORFILE}"
+	bash python.sh $DRYFLAG -p $Python_PreferredVersion -v $VirtualEnv_Name 
 else
 	log $INFO "NOT setting up python"
 fi
@@ -283,7 +298,7 @@ fi
 
 disp "Completed"
 echo "It is highly recommended to restart your computer now."
-$dry_echo read -p "Press Enter, or y/Y to restart right now, or anything else to exit. - " shut
+read -p "Press Enter, or y/Y to restart right now, or anything else to exit. - " shut
 if test "$shut" = "y" -o "$shut" = "Y" -o "$shut" = ""; then
 	log $INFO "Finish_With_Reboot" && echo "REBOOTING"
 	$dry_echo sudo shutdown -r 0
