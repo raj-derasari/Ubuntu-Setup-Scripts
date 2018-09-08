@@ -14,11 +14,15 @@ ERROR="SW: ERROR: "
 addaptrepo=" sudo add-apt-repository -y "
 prefix=" sudo apt-get install -y "
 
+## can add config file here if not in command line arguments (bash software.sh -f <configFile>)
+CFGFILE=""
+
 DRYRUN=0
+dry_echo=""
 DEBUGMODE=0
 VERBOSE=0
 
-CFGFILE=""
+## Command line parsing - you do not need to modify anything here, and you SHOULDNT
 while true; do
     case "$1" in
         -f|--file)
@@ -32,6 +36,7 @@ while true; do
 			DRY_FLAG="-D"
 			addaptrepo="echo sudo add-apt-repository -y "
 			prefix="echo sudo apt-get install -y "
+			dry_echo="echo "
 			echo "Software setup script in dry-run mode"
 			shift
 			;;
@@ -119,9 +124,8 @@ fi
 
 ## dont update if in drymode
 # sudo apt-key update && 
-if [ $DRYRUN -eq 1 ]; then
-	sudo apt-get update #>&/dev/null
-fi
+$dry_echo sudo apt-get update #>&/dev/null
+
 # First things first: Check if install AMD or Intel microcode:
 if [ $DRYRUN -ne 1 ]; then
 	sudo lshw -c CPU | grep -i intel > /dev/null
@@ -348,21 +352,22 @@ else
 	log $INFO "NOT install libreoffice"
 fi
 
-if [ "$1" = "teamviewer" ] || [ ! -z  $Install_TeamViewer ]; then
+
+if [ "$1" = "teamviewer" ] || [ $Install_TeamViewer -eq 1 ]; then
 	if [ ! -z `which teamviewer` ]; then
 		log $INFO "teamviewer already installed, download teamviewer debian file"
 		echo "Teamviewer is already installed! will ONLY download the latest deb file"
-		wget -q https://download.teamviewer.com/download/linux/teamviewer_amd64.deb
+		$dry_echo wget -q https://download.teamviewer.com/download/linux/teamviewer_amd64.deb
 		echo "teamviewer downloaded. To install, enter the command:"
 		echo "sudo dpkg -i teamviewer_amd64.deb"
 	else
 		log $INFO "install teamviewer"
-		wget -q https://download.teamviewer.com/download/linux/teamviewer_amd64.deb
+		$dry_echo wget -q https://download.teamviewer.com/download/linux/teamviewer_amd64.deb
 		# This is definitely gonna fail and be fixed in the next step
-		sudo dpkg -i teamviewer_amd64.deb &>/dev/null 
+		$dry_echo sudo dpkg -i teamviewer_amd64.deb &>/dev/null 
 		# In this step, teamviewer will definitely be fixed, which is why i supressed the previous output.
-		sudo apt-get install -fy
-		rm teamviewer_amd64.deb	
+		$dry_echo sudo apt-get install -fy
+		$dry_echo rm teamviewer_amd64.deb	
 	fi
 else
 	echo "Not installing teamviewer"
