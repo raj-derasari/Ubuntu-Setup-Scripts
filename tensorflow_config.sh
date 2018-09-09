@@ -1,11 +1,15 @@
-
 ## LOAD YOUR TENSORFLOW CONFIGURATION HERE:
 
 # CUDA COMPUTE CAPABILITY of your GPU must be enterred -- IF you are building for NVIDIA GPU
-export TF_CUDA_COMPUTE_CAPABILITIES=0
+export TF_CUDA_COMPUTE_CAPABILITIES=6
 
-tfGitRoot=~/SetupScript/tfSource # path where tensorflow is downloaded from github
+## if your pc doesn't have java, it will be installed here
+## supported values; 8 and 10
+export TF_JAVA_VERSION=10
 
+# path where tensorflow is downloaded from github
+## best to use an absolute/complete path here
+tfGitRoot=~/SetupScript/tensorflow_source
 
 ## other TF variables, you probably wont be using them
 #dont change the following

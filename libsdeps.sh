@@ -12,13 +12,17 @@ INFO="Lib-Dep: INFO: "
 ERROR="Lib-Dep: ERROR: "
 
 DRY_RUN=0
-Prefix="sudo apt-get install -y "
+dry_echo="echo "
 DEBUG=0
+
 
 if test "$1" = "-D"; then
 	DRY_RUN=1
 	Prefix="echo sudo apt-get install -y "
+	dry_echo="echo "
 fi
+
+Prefix="$dry_echo sudo apt-get install -y "
 
 
 log $INFO "Adding default ubuntu repositories!"
@@ -26,7 +30,7 @@ log $INFO "Adding default ubuntu repositories!"
 #$Prefix sudo add-apt-repository restricted
 #$Prefix sudo add-apt-repository multiverse
 #sudo apt-key update && 
-sudo apt-get update
+$dry_echo sudo apt-get update
 
 # get ifconfig working on Ubuntu Unity/Budgie/gnome
 log $INFO "IFCONFIG"

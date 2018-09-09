@@ -102,22 +102,22 @@ fi
 #fi
 if [ $DRYRUN -ne 1 ]; then 
 	if [ $Install_SublimeText -eq 1 ]; then
-		curl https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
+		curl https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add - 2>&1 >$(tty)
 		echo "deb [arch=amd64] https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
 	fi
 
 	if [ $Install_Vivaldi -eq 1 ]; then
-		curl http://repo.vivaldi.com/stable/linux_signing_key.pub | sudo apt-key add -
+		curl http://repo.vivaldi.com/stable/linux_signing_key.pub | sudo apt-key add - 2>&1 >$(tty)
 		echo "deb [arch=amd64] http://repo.vivaldi.com/stable/deb/ stable main" | sudo tee /etc/apt/sources.list.d/vivaldi.list
 	fi
 
 	if [ $Install_VisualStudioCode -eq 1 ]; then
-		curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+		curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add - 2>&1 >$(tty)
 		echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" | sudo tee /etc/apt/sources.list.d/vscode.list
 	fi
 
 	if [ $Install_GoogleChrome -eq 1 ]; then
-		curl https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+		curl https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - 2>&1 >$(tty)
 		echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list
 	fi
 fi
@@ -128,12 +128,12 @@ $dry_echo sudo apt-get update #>&/dev/null
 
 # First things first: Check if install AMD or Intel microcode:
 if [ $DRYRUN -ne 1 ]; then
-	sudo lshw -c CPU | grep -i intel > /dev/null
+	sudo lshw -c CPU | grep -q -i intel
 	if [ $? -eq 0 ]; then 
 		log $INFO "install intel microcode"
 		$prefix microcode.ctl intel-microcode
 	else
-		sudo lshw -c CPU | grep -i amd > /dev/null
+		sudo lshw -c CPU | grep -q -i amd
 		if [ $? -eq 0 ]; then
 			log $INFO "install amd microcode"
 			$prefix microcode.ctl amd64-microcode
@@ -196,11 +196,12 @@ if [ $Install_GEdit -eq 1 ]; then
 	 $prefix gedit
 fi
 
-if [ $Install_PyCharm -eq 1 ]; then
-	log $INFO "install Pycharm"
-	$prefix pycharm
-fi
-	
+## pycharm installation via apt is not supported by this project yet.
+# if [ $Install_PyCharm -eq 1 ]; then
+# 	log $INFO "install Pycharm"
+# 	$prefix pycharm
+# fi
+
 # exfat
 if [ $Install_EXFatUtils -eq 1 ]; then
 	log $INFO "install exfat-utils"
@@ -320,11 +321,6 @@ if [ $Install_Atom -eq 1 ]; then
 	$prefix atom
 fi
 
-if [ $Install_Docker -eq 1 ]; then
-	log $INFO "install docker"
-	bash docker.sh $DRY_FLAG
-fi
-
 if [ $Install_LibreOffice -eq 1 ]; then
 	log $INFO "install libreoffice-stuff"
 	if [ $LibreOffice_Base -eq 1 ]; then
@@ -372,4 +368,10 @@ if [ "$1" = "teamviewer" ] || [ $Install_TeamViewer -eq 1 ]; then
 else
 	echo "Not installing teamviewer"
 fi
+
+if [ $Install_Docker -eq 1 ]; then
+	log $INFO "install docker"
+	bash docker.sh $DRY_FLAG
+fi
+
 exit 0

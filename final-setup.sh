@@ -13,7 +13,7 @@ reset; bash master.sh -C -D -f configs/config_full.sh > ~/Desktop/send_rd.txt
 #read -p "Looking fine? Exec without dry-run? (Enter for yes, warna anything else) - " prom
 if test "$prom" = ""; then
 	reset; 
-	bash master.sh -C -f configs/config_full.sh
+	bash master.sh -C -f configs/config_full.sh 2>>"log_errors_new.log"
 else
 	exit 127
 fi

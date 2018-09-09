@@ -7,47 +7,60 @@
 # use the display function to print this
 disp "Ubuntu Python Tensorflow Compile/Install Script"
 
+CONFIGFILE=tensorflow_config.sh
+
 #logging/utils/help
-INFO="Py: INFO: "
-ERROR="Py: ERROR: "
+INFO="TF: INFO: "
+ERROR="TF: ERROR: "
 
 ## Variables to use while setting up tensorflow
-venv_prefix="sudo -H python -m " # this is used if NOT using virtualenv, else replaced with ""
+DEBUG_MODE=0
+DRY_MODE=0
+dry_echo=""
+#venv_prefix="sudo -H python -m " # this is used if NOT using virtualenv, else replaced with ""
 startDir=`pwd`
 
 ## Help Message (Tensorflow/Python)
 _help_() {
-echo "
-	Usage:
-	bash tensorflow_setup.sh --help
-	Prints this message.
+	echo "
+	Usage: bash tensorflow_setup.sh <arguments>
+	-D or --dry-run        | Dry-run
+	-d or --debug-mode     | To run in debug mode
+	-f or --file           | (Optional) Select a configuration file (Bash script similar to tensorflow_config.sh in this directory)
+	                          If no argument is passed, tensorflow_config.sh will be loaded, you can edit it for your own use
+	-p or --python-version | (Required) Set the Python Version for your Tensorflow compilation [Supported- Python2 and Python3]
+	-v or --virtual-env    | (Optional) Virtual Environment to use. [If no argument is passed, uses system-wide installation]
+	-a or --automated      | (Optional) Run in automated mode and Disable all user prompts
+	-b or --build-for      | (Required) Build mode for compiling. [Supported- GPU,CPU,MKL] (case insensitive)
+	                          \"gpu\": Build with NVIDIA; [Do set up CUDA Compute Capability in your configuration script!]
+	                          \"mkl\": Build with Intel MKL
+	                          \"cpu\": Build with Intel SSE/FMA/AVX instructions
+	-m or --mode           | (Required) Mode to build in:
+	                           clean: executes \"bazel clean\" - Undoes bazel-build and ./configure
+	                           configure-only: executes \"./configure\"
+	                           reconfigure: executes \"bazel clean\" to undo configure; followed by \"./configure\"
+	                           build-only: executes \"bazel-build\" -- Useful if you want to only compile now.
+	                           build-and-wheel: executes \"bazel-build\" followed by \"bazel-bin/...build-pip-package\" -- Useful if you want to see the pip whl
+	                           wheel-and-install: executes \"bazel-bin\" followed by \"pip-install\" -- Useful if you have already compiled and want to install now
+	                           build-and-install: same as --build-and-wheel, also followed by \"pip install /tmp/tensorflow..\"
+	                           pip-install-only: executes \"pip install /tmp/tensorflow_pkg/tensorflow*.whl\"
+	                           all: \"bazel clean; ./configure; bazel build; bazel-bin/..build-pip-package; pip install\"
+	----------------------------------------------------------------------------------------------------------------------
+	The script executes compilation steps-
+	1. Clones tensorflow from Github
+	2. Loads your tensorflow configuration file
+	3. Installs any missing dependencies
+	4. Does a bazel-build from the source code, using your configuration (command - bazel-build)
+	5. From the bazel build, a bazel binary is compiled (command - bazel-bin)
+	6. The bazel binary is converted to a pip package (command - build-pip-package, creates a wheel/.whl file)
+	7. Python-pip installs the pip package from the previous step (command - pip install <>)
+	8. That's it, you can now install keras if you wish to, or run \"import tensorflow\"
+	   from your Python executable to check if it installed correctly!
+	----------------------------------------------------------------------------------------------------------------------
+	If this is your first-ever run of the tensorflow compilation, select \"all\" "; exit 0
+	}
 
-	bash tensorflow_setup.sh <python_version> <gpu/mkl/cpu> <mode> <unattended> <virtualenv name>
-
-	1. python_version: Required, enter
-	                   \"2\": To work with python2 
-	                   \"3\": To work with python3
-	2. gpu/mkl/cpu: Required, pass 
-	                \"gpu\" to build with NVIDIA; [Do set up CUDA Compute Capability in line 62!]
-	                \"mkl\" to build with Intel MKL;
-	                \"cpu\" to build with Intel SSE/FMA/AVX instructions
-	3. <mode> : Required, enter 
-	            --clean: executes \"bazel clean\" - Undoes bazel-build and ./configure
-	            --configure-only: executes \"./configure\"
-	            --reconfigure: executes \"bazel clean\" to undo configure; followed by \"./configure\"
-	            --build-only: executes \"bazel-build\" -- Useful if you want to only compile now.
-	            --build-and-wheel: executes \"bazel-build\" followed by \"bazel-bin/...build-pip-package\" -- Useful if you want to see the pip whl
-	            --wheel-and-install: executes \"bazel-bin\" followed by \"pip-install\" -- Useful if you have already compiled and want to install now
-	            --build-and-install: same as --build-and-wheel, also followed by \"pip install /tmp/tensorflow..\"
-	            --pip-install-only: executes \"pip install /tmp/tensorflow_pkg/tensorflow*.whl\"
-	            --all: \"bazel clean; ./configure; bazel build; bazel-bin/..build-pip-package; pip install\"
-	4. unattended : pass \"-y\" as a parameter if you want an automated/unattended installation
-	              : pass \"-n\" as a parameter for an interactive installation
-	5. virtualenv_name: string argument, target virtualenv to install tensorflow in
-	   If nothing is passed, will install tensorflow on global level [requires sudo]
-	"
-}
-
+# Bazel-build function
 _bazel_build() {
 	if [[ $Python_Tensorflow_GPU -eq 1 ]]; then
 		log $INFO "start bazel build for GPU"
@@ -61,116 +74,249 @@ _bazel_build() {
 	fi
 }
 
+#OPTIONS=hf:v:dDp:b:m:a
+while true; do
+    case "$1" in
+    	-h|--help)
+			_help_
+			shift
+			exit 0
+			;;
+		-f|--file)
+			CONFIGFILE="$2"
+			if [ -e "$2" ]; then
+				echo "Configuration file loaded"
+			else
+				echo "The configuration file you input does not exist!"
+				exit 5
+			fi
+			shift 2
+			;;
+		-D|--dry-run)
+			DRY_MODE=1
+			dry_echo="echo "
+			DRYFLAG=" -D "
+			echo "Dry-Run: No commands will be executed"
+			log $INFO $DEBUG "Running in debug mode"
+			shift
+			;;
+		-v|--virtualenv)
+			Setup_VirtualEnv=1
+			VE="$2"
+			shift 2
+			;;
+        -p|--python-version)
+			PV="$2"
+			shift 2
+			;;
+		## ALLOWED VALUES: GPU,MKL,CPU
+		-b|--build-for)
+			BUILDFOR="$2"
+			shift 2
+			;;
+		## mode can have tons of values - check this out
+		-m|--mode)
+			MODE="$2"
+			shift 2
+			;;
+		-a|--automated)
+			AUTOMODE=1
+			echo "Running in fully automated Tensorflow setup mode - All prompts disabled"
+			shift
+			#echo "Running in auto mode, all user inputs disabled!"
+			;;
+        --)
+		    shift
+            break
+            ;;
+        *)
+            echo "Programming error"
+            exit 126
+            ;;
+    esac
+done
 
-## best use an absolute/complete path here, like I did! 
-
-if test "$1" = "--help"; then
-	echo "$HELP"
-	exit
-elif [[ -z $1 ]] || [[ -z $2 ]]  || [[ -z $3 ]]  || [[ -z $4 ]] ; then
-	echo "Incorrect usage."
-	echo "$HELP"
-	exit
-else
-	log $INFO "Set tensorflow build mode: "$2
-	log $INFO "Set tensorflow steps: "$3
+## This next part has been tested to be working fine, so commented it out
+	# echo "Loaded values:"
+	# echo "File:: " $CONFIGFILE
+	# echo "Debug Mode:: " $DEBUG_MODE
+	# echo "Dry Mode:: " $DRY_MODE
+	# echo "Python Version:: " $PV
+	# echo "Build For:: " $BUILDFOR
+	# echo "Selected Mode:: " $MODE
+	# echo "Virtualenv: " $VE
+## Command line args parse successfully, now do a sanity check
+## Python version Sanity Check
+if [[ -z $PV ]]; then
+	## Python version not passed
+	echo "Required: Python Version command line argument"
+	_help_
+	exit 3
+elif [ $PV -ne 2 ] && [ $PV -ne 3 ]; then
+	echo "Cannot recognize Python version"
+	echo "Supported Python versions are Python2 and Python3"
+	_help_
+	exit 5
+#Python version is OK
+## Build target sanity check
+elif [[ -z $BUILDFOR  ]]; then
+	## Build Target Unclear (CPU/GPU/MKL)
+	echo "Required: Build-target command line argument"
+	_help_
+	exit 3
+elif [ ! "$BUILDFOR" = "mkl" ] && [ ! "$BUILDFOR" = "gpu" ] && [ ! "$BUILDFOR" = "cpu" ]; then
+	echo "Cannot recognize BUILDFOR variable"
+	echo "Did you select one of the three allowed values (CPU,GPU,MKL)?"
+	_help_
+	exit 5
+## Buildfor target is OK
+## MODE sanity check
+elif [[ ! -z $MODE ]]; then
+	# 	echo "Required: Mode command line argument"
+	# 	_help_
+	# 	exit 3
+	# elif [[  ]]; then
+	case $MODE in
+	## All allowed values, pass these
+	"clean") ;;
+	"configure-only") ;;
+	"reconfigure") ;;
+	"build-only") ;;
+	"build-and-wheel") ;;
+	"build-and-install") ;;
+	"wheel-and-install") ;;
+	"pip-install-only") ;;
+	"all") ;;
+	# Any other value, fail
+	*)
+	echo "Cannot recognize MODE variable"
+	echo "Did you select one of the allowed values for MODE?"
+	_help_
+	exit 5
+	;;
+	esac
 fi
 
-# Now, not in help mode and all params are given: set values based on params
-if [[ ! -z "$Python_PreferredVersion" ]]; then
-	python_version=$Python_PreferredVersion
-	log $INFO "Set python version from Master Script: python"$python_version
-else
-	python_version="$1"
-	echo "Building tensorflow from source, for python version python$python_version"
-	log $INFO "Set python version from console: python"$python_version
+## Verify virtualenv usage and auto mode
+if [[ -z $Setup_VirtualEnv ]]; then
+	## wasnt passed in master-script OR in command line
+	Setup_VirtualEnv=0
+	## DO other venv stuff here
 fi
+if [[ -z $AUTOMODE ]]; then
+	## NOT in AUTOMODE, yes in interactive mode
+	AUTOMODE=0
+fi
+## Everything is sane!
 
-if test $2 = "gpu"; then
-	if [ $DEBUGMODE -eq 1 ]; then
-		echo "Will check for NVCC and TF_CUDA_COMPUTE_CAPABILITIES"
-	else
-		if [ -z `which nvcc` ]; then
+## LOAD TF CONFIG
+. ${CONFIGFILE}
+
+## Sanity check on GPU-Nvidia
+#if [[ "$BUILDFOR" = "gpu" || "$BUILDFOR" = "gpu" ]] && [ "$TF_CUDA_COMPUTE_CAPABILITIES" -eq 0 ]; then
+if [ "$BUILDFOR" = "gpu" ]; then
+	if [ "$TF_CUDA_COMPUTE_CAPABILITIES" -eq 0 ]; then
+		echo "You have not set the variable TF_CUDA_COMPUTE_CAPABILITIES in your configuration"
+		echo "Please set TF_CUDA_COMPUTE_CAPABILITIES according to your GPU before you can continue!"
+		exit 0
+	elif [ -z `which nvcc` ]; then
 			log $ERROR "FATAL: Cannot build for GPU, CUDA Toolkit is not installed."
 			echo -e "FATAL ERROR: CUDA Toolkit not installed!\nPerhaps try running \"nvidia_setup_cuda.sh\"?"
 			echo -e "Download CUDA: https://developer.nvidia.com/cuda-downloads \nDownload CUDNN: https://developer.nvidia.com/cudnn"
-			echo "Fatal errors encountered while installing tensorflow"
+			echo "You will also have to restart your computer after installing nvcc, and re-run this script"
+			echo -e "Fatal error: nvcc not installed. \nCould not install tensorflow"
 			exit
-		fi
-		if [ $TF_CUDA_COMPUTE_CAPABILITIES -eq 0 ]; then
-			echo "FATAL error: You have not set your GPU's CUDA COMPUTE CAPABILITIES in the script - Line 13"
-			log $ERROR "Cuda Compute Capabilities not set - Cannot continue"
-			#echo -e "Please also note: \n\tYou have not mentioned your GPU's CUDA COMPUTE CAPABILITIES in the script\nPlease modify the script and update line 13 before you execute"
-			echo "Fatal errors encountered while installing tensorflow"
-			exit
-		fi
+	else
+		## nvcc found AND CUDA COMP is nonzero
+		echo "Seems like nvcc is installed fine!"
+		echo "You have set TF_CUDA_COMPUTE_CAPABILITIES as:" $TF_CUDA_COMPUTE_CAPABILITIES
 		Python_Tensorflow_GPU=1	
 		Python_Tensorflow_MKL=0
 		Python_Tensorflow_CPUOnly=0
 	fi
-elif
-	test $2 = "mkl"; then
-	echo "I assume you have already installed Intel MKL on your system! If you haven't please exit"
+elif [ $"BUILDFOR" = "mkl" ]; then
+	echo "Building tensorflow with MKL optimizations"
+	echo "I assume you have already installed Intel MKL on your system!"
 	echo "Download Intel MKL: https://software.seek.intel.com/performance-libraries"
 	Python_Tensorflow_GPU=0	
 	Python_Tensorflow_MKL=1
 	Python_Tensorflow_CPUOnly=0
-elif test $2 = "cpu"; then
+elif [ $"BUILDFOR" = "cpu" ]; then
 	echo "Building tensorflow with CPU optimizations"
 	Python_Tensorflow_GPU=0	
 	Python_Tensorflow_MKL=0
 	Python_Tensorflow_CPUOnly=1
 fi
 
-if test $4 = "-y"; then
-	log $INFO "Tensorflow in automated install mode:"
-	AUTOMODE="$2"
-elif test $4 = "-n"; then
-	log $INFO "Tensorflow in interactive install mode:"
-	AUTOMODE=""
-else
-	echo "Argument #4 not understood. Please enter \"-y\" or \"-n\""
-	exit
-fi
-
-if [[ ! -z "$VirtualEnv_Name" ]]; then
-	use_virtualenv=1
-	log $INFO "Set virtual environment from master:" $VirtualEnv_Name
-	echo "Working in virtual environment $VirtualEnv_Name"
-	workon $VirtualEnv_Name
-	venv_prefix=""
-elif [[ ! -z "$5" ]]; then
-	use_virtualenv=1
-	VirtualEnv_Name=$5
-	log $INFO "Set virtual environment from console: "$5
-	echo "Working in virtual environment $VirtualEnv_Name"
-	workon $VirtualEnv_Name
-	venv_prefix=""
-else
-	use_virtualenv=0
-	echo "Installing Tensorflow in system, NOT in VirtualEnvironment"
-	log $INFO "NOT setting up virtual environment"
-	venv_prefix="sudo -H "
-fi
-
-if [[ ! -z "$AUTOMODE" ]]; then
-	echo "Running in auto mode, all user inputs disabled!"
-else
-	#echo "Configuration you have asked for: "
-	#echo "Python version: $1, TF Compile: $2"
+if [ $AUTOMODE -eq 0 ]; then
 	echo "Steps that will be executed now:"
-	echo "Download dependencies via apt-get; Clone TF from Github; Compile from there; and execution mode: $3"
+	echo "Download dependencies via apt-get; Clone TF from Github; Compile from there; and execution mode: --"$MODE
 	read -p "Press (y) or Enter to continue setting up, or anything else to exit." exitQn
+	if [ "$exitQn" = "y" ] | [ "$exitQn" = "" ] ; then
+		echo "Building tensorflow from source..."
+	else
+		exit 6
+	fi
 fi
 
-if [[ "$exitQn" = "y" ]]; then
-	echo "Building tensorflow from source..."
-elif [[ "$exitQn" = "Y" ]]; then
-	echo "Building tensorflow from source..."
-elif [[ ! -z "$exitQn" ]]; then ## if anything beside y/Y/enter is pressed
-	echo "Exiting"
-	exit
+echo "Setting up bazel and build tools"
+if [[ -z `which bazel` ]]; then
+	echo "bazel not found, installing bazel by apt-get"
+	log $INFO "bazel: Installing from this script"
+	if [ $DRY_MODE -eq 1 ]; then
+		echo "Add apt-repositories for bazel"
+	else
+		echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
+		curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
+	fi
+	#sudo apt-key update && 
+	$dry_echo sudo apt-get update 1>/dev/null
+	#$dry_echo sudo apt-get -o Dpkg::Options::="--force-overwrite" install -y openjdk-9-jdk
+	if [[ -z `which javac` ]]; then
+		if [ $AUTOMODE -eq 1 ]; then
+			echo "Javac not installed, Installing oracle javac-10"
+		else
+			read -p "Install oracle javac 10? (Enter/y to continue, n to exit)" install_javac
+			if [ "$install_javac" = "y" ] | [ "$install_javac" = "" ]; then
+				echo "installing javac!"
+			elif [ "$install_javac" = "n" ]; then
+				echo "Not installing javac, Exiting!"
+				exit 122
+			fi
+		fi
+		if [ $TF_JAVA_VERSION -eq 10 ]; then
+			$dry_echo sudo add-apt-repository -y ppa:linuxuprising/java
+		elif [ $TF_JAVA_VERSION -eq 8 ]; then
+			$dry_echo sudo add-apt-repository -y ppa:webupd8team/java
+		fi
+		$dry_echo sudo apt-get update
+		$dry_echo sudo apt-get install -y oracle-java${TF_JAVA_VERSION}-installer
+		$dry_echo sudo apt-get install -y oracle-java${TF_JAVA_VERSION}-set-default
+		if [ $DRY_MODE -ne 1 ]; then 
+			echo "oracle-java${TF_JAVA_VERSION}-installer shared/accepted-oracle-license-v1-1 select true" | sudo /usr/bin/debconf-set-selections
+			echo "oracle-java${TF_JAVA_VERSION}-installer shared/accepted-oracle-license-v1-1 seen true" | sudo /usr/bin/debconf-set-selections
+		fi
+	fi
+	$dry_echo sudo apt-get install -y bazel
+else
+	echo "seems like bazel is installed, only checking for other dependencies"
+	log $INFO "bazel: Already installed"
+	$dry_echo sudo apt-get install -y build-essential cmake git python{PV}-dev pylint libcupti-dev curl
 fi
+
+
+
+
+
+
+
+
+
+
+
+
+
+exit 0
 
 # fulfil dependencies and build tools
 if [ $DEBUGMODE -eq 0 ]; then
@@ -258,106 +404,6 @@ elif [[ $Python_Tensorflow_CPUOnly -eq 1 ]]; then
 	export TF_NEED_CUDA=0
 fi
 
-case $3 in 
-	"--clean")
-	if [ $DEBUGMODE -eq 1 ]; then 
-		echo "bazel clean"
-	else
-		log $INFO "executing bazel-clean because: "$3
-		bazel clean;
-	fi
-	;;
-	"--configure-only")
-	if [ $DEBUGMODE -eq 1 ]; then 
-		echo "./configure"
-	else
-		log $INFO "executing ./configure because: "$3
-		./configure
-	fi
-	;;
-	"--reconfigure")
-	if [ $DEBUGMODE -eq 1 ]; then 
-		echo "bazel clean; configure"
-	else
-		log $INFO "executing bazel clean: "$3
-		bazel clean;
-		log $INFO "executing ./configure: "$3
-		./configure
-	fi
-	;;
-	"--build-only")
-	if [ $DEBUGMODE -eq 1 ]; then 
-		echo "bazel build"
-	else
-		log $INFO "executing bazel build because: "$3
-		_bazel_build
-	fi
-	;;
-	"--build-and-wheel")
-	if [ $DEBUGMODE -eq 1 ]; then 
-		echo "bazel build; bazel-bin"
-	else
-		log $INFO "executing bazel build;wheel because: "$3
-		log $INFO "bazel build: "$3
-		_bazel_build;
-		log $INFO "bazel-bin: "$3
-		bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
-	fi
-	;;
-	"--build-and-install")
-	if [ $DEBUGMODE -eq 1 ]; then 
-		echo "bazel build; bazel-bin; $venv_prefix pip insall"
-	else
-		log $INFO "executing bazel build;wheel because: "$3
-		log $INFO "bazel build: "$3
-		_bazel_build;
-		log $INFO "bazel-bin: "$3
-		bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
-		log $INFO "pip install: "$3
-		$venv_prefix pip$python_version install --upgrade --ignore-installed /tmp/tensorflow_pkg/tensorflow*.whl
-	fi
-	;;
-	"--wheel-and-install")
-	if [ $DEBUGMODE -eq 1 ]; then 
-		echo "bazel-bin; $venv_prefix pip insall"
-	else
-		log $INFO "executing bazel-bin; pip install because: "$3
-		log $INFO "bazel-bin: "$3
-		bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
-		log $INFO "pip install: "$3
-		$venv_prefix pip$python_version install --upgrade --ignore-installed /tmp/tensorflow_pkg/tensorflow*.whl
-	fi
-	;;
-	"--pip-install-only")
-	if [ $DEBUGMODE -eq 1 ]; then 
-		echo "$venv_prefix pip insall"
-	else
-		log $INFO "pip install, because: "$3
-		$venv_prefix pip$python_version install --upgrade --ignore-installed /tmp/tensorflow_pkg/tensorflow*.whl
-	fi
-	;;
-	"--all")
-	if [ $DEBUGMODE -eq 1 ]; then 
-		echo "bazel clean; ./configure; bazel build; bazel-bin; $venv_prefix pip insall"
-	else
-		log $INFO "executing EVERYTHING because: "$3
-		bazel clean;
-		log $INFO "./configure: "$3
-		./configure;
-		log $INFO "bazel-build: "$3
-		_bazel_build;
-		log $INFO "bazel-wheel: "$3
-		bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
-		log $INFO "pip install: "$3
-		$venv_prefix pip$python_version install --upgrade --ignore-installed /tmp/tensorflow_pkg/tensorflow*.whl
-	fi
-	;;
-	*)
-	log $ERROR "FATAL: Misunderstood compilation steps, value: $3"
-	echo "Argument $3 not understood, exiting"
-	exit
-	;;
-esac
 if [ -e /tmp/tensorflow_pkg ]; then
 	if [ `sudo cp /tmp/tensorflow_pkg/tensorflow*.whl "$startDir" 2>/dev/null` ]; then
 		log $INFO "Backing up tensorflow whl!"

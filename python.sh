@@ -69,13 +69,13 @@ while true; do
 			echo "In debug mode"
 			shift
 			;;
-        -v|--virtual-env)
+        -v|--virtualenv)
 			Setup_VirtualEnv=1
 			VE="$2"
 			venv_prefix="python -m pip install --user --upgrade " # this is used if NOT using virtualenv
 			shift 2
 			;;
-        -p|--preferred-version)
+        -p|--python-version)
 			PV="$2"
 			shift 2
 			;;

@@ -1,5 +1,9 @@
 #!/bin/bash 
 #logging function
+
+## make string comparisons case insensitive
+shopt -s nocasematch
+
 caller=`basename "$0"`
 Fname=${caller:0:-3}
 #String operations, build logfile Name
@@ -14,7 +18,6 @@ disp() {
 	echo -e "----------------------------------------------------\n\t\t${*}\n----------------------------------------------------"
 }
 
-
 ##################### REst of it is command line parsing
 ! getopt --test > /dev/null 
 if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
@@ -23,9 +26,8 @@ if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
     exit 127
 fi
 
-OPTIONS=hCf:v:dDp:
-#hDdv:p
-LONGOPTS=clear-logs,file,verbose,debug
+OPTIONS=hCf:v:dDp:b:m:a
+LONGOPTS=help,clear-logs,file:,verbose,virtualenv:,debug,dry-run,python-version:,build-for:,mode:,automated
 # -use ! and PIPESTATUS to get exit code with errexit set
 # -temporarily store output to be able to check for errors
 # -activate quoting/enhanced mode (e.g. by writing out “--options”)

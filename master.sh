@@ -80,14 +80,10 @@ while true; do
     esac
 done
 
-if [ $DRY_RUN -eq 1 ]; then
-	dry_echo="echo "
-	DRYFLAG=" -D "
-else
+if [ $DRY_RUN -eq 0 ]; then
 	dry_echo=""
 	DRYFLAG=""
 fi
-
 
 if [ -z $CustomConfig ]; then
 	echo "Executing with the default Configuration-File: config_recommended.sh"
