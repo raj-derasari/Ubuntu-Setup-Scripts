@@ -320,7 +320,7 @@ $dry_echo git checkout -- .
 log $INFO "Successfully cloned from git"
 # now in tensorflow git directory!
 export TF_ROOT=$tfGitRoot/tensorflow
-export PYTHON_BIN_PATH=$(which python${python_version})
+export PYTHON_BIN_PATH=$(which python${PV})
 log $INFO "python bin path: "$PYTHON_BIN_PATH
 
 if [ $Setup_VirtualEnv -eq 1 ]; then
