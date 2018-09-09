@@ -322,7 +322,7 @@ log $INFO "Successfully cloned from git"
 export TF_ROOT=$tfGitRoot/tensorflow
 export PYTHON_BIN_PATH=$(which python${PV})
 log $INFO "python bin path: "$PYTHON_BIN_PATH
-
+echo "Setup_VirtualEnv:" $Setup_VirtualEnv
 if [ $Setup_VirtualEnv -eq 1 ]; then
 	export PYTHON_LIB_PATH="$($PYTHON_BIN_PATH -c 'from distutils.sysconfig import get_python_lib; print(get_python_lib())')"
 	log $INFO "venv python lib path: "$PYTHON_LIB_PATH
