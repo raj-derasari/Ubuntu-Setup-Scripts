@@ -299,12 +299,12 @@ if [[ -z `which bazel` ]]; then
 			echo "oracle-java${TF_JAVA_VERSION}-installer shared/accepted-oracle-license-v1-1 seen true" | sudo /usr/bin/debconf-set-selections
 		fi
 	fi
-	$dry_echo sudo apt-get install -y build-essential cmake git python{PV}-dev python{PV}-distutls pylint libcupti-dev curl
+	$dry_echo sudo apt-get install -y build-essential cmake git python${PV}-dev python${PV}-distutls pylint libcupti-dev curl
 	$dry_echo sudo apt-get install -y bazel
 else
 	echo "seems like bazel is installed, only checking for other dependencies"
 	log $INFO "bazel: Already installed"
-	$dry_echo sudo apt-get install -y build-essential cmake git python{PV}-dev python{PV}-distutls pylint libcupti-dev curl 
+	$dry_echo sudo apt-get install -y build-essential cmake git python${PV}-dev python${PV}-distutls pylint libcupti-dev curl 
 fi
 
 ## Now we clone from git and begin installation
