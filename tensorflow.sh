@@ -7,7 +7,7 @@
 # use the display function to print this
 disp "Ubuntu Python Tensorflow Compile/Install Script"
 
-CONFIGFILE=tensorflow_config.sh
+CONFIGFILE=config_tensorflow.sh
 
 #logging/utils/help
 INFO="TF: INFO: "
@@ -25,8 +25,8 @@ _help_() {
 	Usage: bash tensorflow_setup.sh <arguments>
 	-D or --dry-run        | Dry-run
 	-d or --debug-mode     | To run in debug mode
-	-f or --file           | (Optional) Select a configuration file (Bash script similar to tensorflow_config.sh in this directory)
-	                          If no argument is passed, tensorflow_config.sh will be loaded, you can edit it for your own use
+	-f or --file           | (Optional) Select a configuration file (Bash script similar to config_tensorflow.sh in this directory)
+	                          If no argument is passed, config_tensorflow.sh will be loaded, you can edit it for your own use
 	-p or --python-version | (Required) Set the Python Version for your Tensorflow compilation [Supported- Python2 and Python3]
 	-v or --virtual-env    | (Optional) Virtual Environment to use. [If no argument is passed, uses system-wide installation]
 	-a or --automated      | (Optional) Run in automated mode and Disable all user prompts
