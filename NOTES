@@ -9,4 +9,5 @@ add pycharm etc. check TODOs
 Document and Define Error Codes and ...
 Logging - Which I basically reverted during this last build
 Can choose to optimize the if conditions for checking "y" and "Y" -> currently case insensitive comparison all across.
-
+Tensorflow does not install virtualenv, hence cannot be executed independently/on-first-run
+Same applies to Python script too, I guess? Don't know, must check!
