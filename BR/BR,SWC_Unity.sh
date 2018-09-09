@@ -128,8 +128,8 @@ totem* \
 ubuntu-desktop* \
 unity-webapps-*"
 
-echo "Removing" $pkgs
-echo "Removing" $sws
+echo "Packages: "$pkgs
+echo "Softwares: "$sws
 
 $br_purge $pkgs
 $br_purge $sws
