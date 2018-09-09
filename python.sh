@@ -230,13 +230,13 @@ if [ $Python_InstallMachineLearningTools -eq 1 ]; then
 		fi
 		if [ $Python_Tensorflow_GPU -eq 1 ]; then
 			log $INFO "Compiling Tensorflow - GPU"
-			bash tensorflow_setup.sh -a -p $PV -b gpu -m all $DFlag $VFlag
+			bash tensorflow.sh -a -p $PV -b gpu -m all $DFlag $VFlag
 		elif [ $Python_Tensorflow_MKL -eq 1 ]; then
 			log $INFO "Compiling Tensorflow - MKL"
-			bash tensorflow_setup.sh -a -p $PV -b mkl -m all $DFlag $VFlag
+			bash tensorflow.sh -a -p $PV -b mkl -m all $DFlag $VFlag
 		elif [ $Python_Tensorflow_CPUOnly -eq 1 ]; then
 			log $INFO "Compiling Tensorflow - CPU"
-			bash tensorflow_setup.sh -a -p $PV -b cpu -m all $DFlag $VFlag
+			bash tensorflow.sh -a -p $PV -b cpu -m all $DFlag $VFlag
 		fi
 	else
 		log $INFO "Not compiling tensorflow, installing from pip"
