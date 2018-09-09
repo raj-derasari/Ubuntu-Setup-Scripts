@@ -297,12 +297,12 @@ if [[ -z `which bazel` ]]; then
 			$dry_echo sudo add-apt-repository -y ppa:webupd8team/java
 		fi
 		$dry_echo sudo apt-get update
-		$dry_echo sudo apt-get install -y oracle-java${TF_JAVA_VERSION}-installer
-		$dry_echo sudo apt-get install -y oracle-java${TF_JAVA_VERSION}-set-default
 		if [ $DRY_MODE -ne 1 ]; then 
 			echo "oracle-java${TF_JAVA_VERSION}-installer shared/accepted-oracle-license-v1-1 select true" | sudo /usr/bin/debconf-set-selections
 			echo "oracle-java${TF_JAVA_VERSION}-installer shared/accepted-oracle-license-v1-1 seen true" | sudo /usr/bin/debconf-set-selections
 		fi
+		$dry_echo sudo apt-get install -y oracle-java${TF_JAVA_VERSION}-installer
+		$dry_echo sudo apt-get install -y oracle-java${TF_JAVA_VERSION}-set-default
 	fi
 	$dry_echo sudo apt-get install -y bazel
 else
