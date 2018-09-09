@@ -361,7 +361,8 @@ fi
 
 
 ## PUt the Build Blocks here
-
+pwd
+read -p "wow" wow
 case $MODE in 
 	"clean")
 		$dry_echo bazel clean;
