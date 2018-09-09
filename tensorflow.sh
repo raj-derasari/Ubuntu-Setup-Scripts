@@ -63,6 +63,7 @@ _help_() {
 _bazel_build() {
 	if [[ $Python_Tensorflow_GPU -eq 1 ]]; then
 		log $INFO "start bazel build for GPU"
+		echo "HIHIHIHI"
 		bazel build --config=opt --config=cuda --verbose_failures //tensorflow/tools/pip_package:build_pip_package
 	elif [[ $Python_Tensorflow_MKL -eq 1 ]]; then 
 		log $INFO "start bazel build for MKL"
