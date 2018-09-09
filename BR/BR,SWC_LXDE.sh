@@ -5,6 +5,7 @@ dry_echo=""
 DEBUG=0
 
 if test "$1" = "-D"; then
+	echo "Bloatremove running in --dry-run mode"
 	DRY_RUN=1
 	dry_echo="echo "
 fi
@@ -60,7 +61,6 @@ echo "Softwares: "$sws
 
 $br_purge $pkgs
 $br_purge $sws
-
 $dry_echo sudo dpkg --configure -a
 $dry_echo sudo apt -y autoremove
 $dry_echo sudo apt-get install -fy

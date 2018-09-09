@@ -17,7 +17,6 @@ ERROR="TF: ERROR: "
 DEBUG_MODE=0
 DRY_MODE=0
 dry_echo=""
-#venv_prefix="sudo -H python -m " # this is used if NOT using virtualenv, else replaced with ""
 startDir=`pwd`
 
 ## Help Message (Tensorflow/Python)
@@ -202,6 +201,9 @@ if [[ -z $Setup_VirtualEnv ]]; then
 	## wasnt passed in master-script OR in command line
 	Setup_VirtualEnv=0
 	## DO other venv stuff here
+	PIP_PREFIX="sudo -H python$PV -m pip install --upgrade"
+elif [ $Setup_VirtualEnv -eq 1 ]; then
+	PIP_PREFIX="python$PV -m pip install --upgrade"
 fi
 if [[ -z $AUTOMODE ]]; then
 	## NOT in AUTOMODE, yes in interactive mode
@@ -297,6 +299,7 @@ if [[ -z `which bazel` ]]; then
 			echo "oracle-java${TF_JAVA_VERSION}-installer shared/accepted-oracle-license-v1-1 seen true" | sudo /usr/bin/debconf-set-selections
 		fi
 	fi
+	$dry_echo sudo apt-get install -y build-essential cmake git python{PV}-dev pylint libcupti-dev curl
 	$dry_echo sudo apt-get install -y bazel
 else
 	echo "seems like bazel is installed, only checking for other dependencies"
@@ -304,74 +307,23 @@ else
 	$dry_echo sudo apt-get install -y build-essential cmake git python{PV}-dev pylint libcupti-dev curl
 fi
 
+## Now we clone from git and begin installation
 
-
-
-
-
-
-
-
-
-
-
-
-exit 0
-
-# fulfil dependencies and build tools
-if [ $DEBUGMODE -eq 0 ]; then
-	log $INFO "Bazel and build tools"
-	echo "Setting up bazel and build tools"
-	if [[ -z `which bazel` ]]; then
-		echo "bazel not found, installing bazel by apt-get"
-		log $INFO "bazel: Installing from this script"
-		echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
-		curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
-		#sudo apt-key update && 
-		sudo apt-get update > /dev/null
-		sudo apt-get -o Dpkg::Options::="--force-overwrite" install -y openjdk-9-jdk
-		sudo apt-get install -y bazel
-	else
-		echo "seems like bazel is installed, only checking for other dependencies"
-		log $INFO "bazel: Already installed"
-	fi
-	if [ $python_version -eq 2 ]; then
-		sudo apt-get install -y build-essential cmake git python2.7-dev pylint libcupti-dev curl
-	else
-		sudo apt-get install -y build-essential cmake git python3.5-dev pylint libcupti-dev curl
-	fi
-else
-	log $INFO $DEBUG "should be installing bazel, build tools and libs now"
+$dry_echo mkdir -p $tfGitRoot
+$dry_echo cd $tfGitRoot;
+if [[ ! -e ./tensorflow/README.md ]]; then
+	echo "Git repo is not cloned yet!"
+	$dry_echo git clone https://github.com/tensorflow/tensorflow
 fi
-
-if [ $DEBUGMODE -eq 1 ]; then
-	mkdir tensorflow 2>/dev/null;
-	cd tensorflow;
-	echo "fake created tensorflow gitclone"
-else
-	if [[ ! -e $tfGitRoot/tensorflow/README.md ]]; then
-		log INFO "Git Clone";
-		echo "Cloning tensorflow from Github in $tfGitRoot..."
-		mkdir -p $tfGitRoot;
-		cd $tfGitRoot;
-		git clone https://github.com/tensorflow/tensorflow
-	else
-		echo "NOT cloning from git"
-#		ls
-		cp workspace.bzl $tfGitRoot/tensorflow/tensorflow/
-		cd $tfGitRoot;
-		grep "nasm.us/pub/" ./tensorflow/tensorflow/workspace.bzl
-	fi
-	cd tensorflow;
-	git checkout -- .
-	log $INFO "Successfully cloned from git"
-fi
-
+$dry_echo cd tensorflow;
+$dry_echo git checkout -- .
+log $INFO "Successfully cloned from git"
+# now in tensorflow git directory!
 export TF_ROOT=$tfGitRoot/tensorflow
 export PYTHON_BIN_PATH=$(which python${python_version})
 log $INFO "python bin path: "$PYTHON_BIN_PATH
 
-if [ $use_virtualenv -eq 1 ]; then
+if [ $Setup_VirtualEnv -eq 1 ]; then
 	export PYTHON_LIB_PATH="$($PYTHON_BIN_PATH -c 'from distutils.sysconfig import get_python_lib; print(get_python_lib())')"
 	log $INFO "venv python lib path: "$PYTHON_LIB_PATH
 else
@@ -379,12 +331,11 @@ else
 	log $INFO "sys python lib path: "$PYTHON_LIB_PATH
 fi
 
+## Initial values, will actually be set up in the next block
 export PYTHONPATH="${TF_ROOT}"/lib
 export PYTHON_ARG="${TF_ROOT}"/lib
 export GCC_HOST_COMPILER_PATH=$(which gcc)
 export CC_OPT_FLAGS="-march=native"
-
-## Initial values, will actually be set up in the next block
 export TF_NEED_CUDA=0
 export TF_NEED_MKL=0
 
@@ -404,6 +355,59 @@ elif [[ $Python_Tensorflow_CPUOnly -eq 1 ]]; then
 	export TF_NEED_CUDA=0
 fi
 
+
+
+## PUt the Build Blocks here
+
+case $MODE in 
+	"clean")
+		$dry_echo bazel clean;
+	;;
+		"configure-only")
+		$dry_echo ./configure;
+	;;
+	"reconfigure") 
+		$dry_echo bazel clean;
+		$dry_echo ./configure; 
+	;;
+	"build-only")
+		$dry_echo _bazel_build;
+	;;
+	"build-and-wheel")
+		$dry_echo _bazel_build;
+		$dry_echo bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
+	;;
+	"build-and-install")
+		$dry_echo _bazel_build;
+		$dry_echo bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
+		$dry_echo $PIP_PREFIX $PIP_PREFIX /tmp/tensorflow_pkg/tensorflow*.whl
+	;;
+	"wheel-and-install")
+		$dry_echo bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
+		$dry_echo $PIP_PREFIX $PIP_PREFIX /tmp/tensorflow_pkg/tensorflow*.whl
+	;;
+	"pip-install-only")
+		$dry_echo $PIP_PREFIX $PIP_PREFIX /tmp/tensorflow_pkg/tensorflow*.whl
+	;;
+	"all")
+		#echo "bazel clean; ./configure; bazel build; bazel-bin; $PIP_PREFIX pip insall"
+		$dry_echo bazel clean;
+		$dry_echo ./configure;
+		$dry_echo _bazel_build;
+		$dry_echo bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
+		$dry_echo $PIP_PREFIX --ignore-installed /tmp/tensorflow_pkg/tensorflow*.whl
+	;;
+	*)
+		echo "come again?"
+	;;
+esac
+
+
+#########################################################################################################################
+
+
+
+
 if [ -e /tmp/tensorflow_pkg ]; then
 	if [ `sudo cp /tmp/tensorflow_pkg/tensorflow*.whl "$startDir" 2>/dev/null` ]; then
 		log $INFO "Backing up tensorflow whl!"
@@ -413,8 +417,11 @@ if [ -e /tmp/tensorflow_pkg ]; then
 	fi
 else
 	echo "the path /tmp/tensorflow_pkg/ does not seem to exist. huh."
+	#exit 5
 fi
-log $INFO "running tensorflow test script!"
+#log $INFO "running tensorflow test script!"
 cd "$startDir"
-python$python_version convolutional_test.py
-exit
+
+#python$python_version convolutional_test.py
+## will exit with the python code's exit condition
+#exit $?

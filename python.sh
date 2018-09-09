@@ -222,15 +222,21 @@ fi
 if [ $Python_InstallMachineLearningTools -eq 1 ]; then
 	log $INFO "ML-Tools: TF-Theano-Keras"
 	if [ $Python_Compile_Tensorflow -eq 1 ]; then
+		if [ $Setup_VirtualEnv -eq 1 ]; then 
+			VFlag=" -v $VE "
+		fi
+		if [ $DRY_RUN -eq 1 ]; then
+			DFlag=" -D "
+		fi
 		if [ $Python_Tensorflow_GPU -eq 1 ]; then
 			log $INFO "Compiling Tensorflow - GPU"
-			$dry_echo bash tensorflow_setup.sh $PV "gpu" "--all" "-y" $VE
+			bash tensorflow_setup.sh -a -p $PV -b gpu -m all $DFlag $VFlag
 		elif [ $Python_Tensorflow_MKL -eq 1 ]; then
 			log $INFO "Compiling Tensorflow - MKL"
-			$dry_echo bash tensorflow_setup.sh $PV "mkl" "--all" "-y" $VE
+			bash tensorflow_setup.sh -a -p $PV -b mkl -m all $DFlag $VFlag
 		elif [ $Python_Tensorflow_CPUOnly -eq 1 ]; then
 			log $INFO "Compiling Tensorflow - CPU"
-			$dry_echo bash tensorflow_setup.sh $PV "cpu" "--all" "-y" $VE
+			bash tensorflow_setup.sh -a -p $PV -b cpu -m all $DFlag $VFlag
 		fi
 	else
 		log $INFO "Not compiling tensorflow, installing from pip"

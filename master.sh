@@ -55,12 +55,6 @@ while true; do
 			log $INFO "verbose mode"
 			shift
 			;;
-		-d|--debug)
-			DEBUG_MODE=1;
-			echo "Debug Mode - "
-			log $INFO $DEBUG "Running in debug mode"
-			shift
-			;;
 		-D|--dry-run)
 			DRY_RUN=1
 			dry_echo="echo "

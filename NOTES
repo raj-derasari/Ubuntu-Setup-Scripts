@@ -1,15 +1,12 @@
-STUFF TO DO HERE
-
-
-Make current mode as verbose
 The default should be made the files one that I originally wrote
-tensorflow script dryrun etc
-Setup debug mode for the scripts.. like what would it even be?
 
-Scripts already tried in dry-run:
-SW
-python
-libsdeps and docker (coz nothing in)
-master
+Make current mode (prints everything to stdout) as verbose <- or maybe not even that -> make verbose print command before exec
+but save the outputs to files anyway?
+debug = dry-run mode
+dont know how/what to setup in debug mode
 
 add pycharm etc. check TODOs
+Document and Define Error Codes and ...
+Logging - Which I basically reverted during this last build
+Can choose to optimize the if conditions for checking "y" and "Y" -> currently case insensitive comparison all across.
+

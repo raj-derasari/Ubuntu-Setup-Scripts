@@ -26,9 +26,9 @@ Prefix="$dry_echo sudo apt-get install -y "
 
 
 log $INFO "Adding default ubuntu repositories!"
-#$Prefix sudo add-apt-repository universe
-#$Prefix sudo add-apt-repository restricted
-#$Prefix sudo add-apt-repository multiverse
+$Prefix sudo add-apt-repository universe
+$Prefix sudo add-apt-repository restricted
+$Prefix sudo add-apt-repository multiverse
 #sudo apt-key update && 
 $dry_echo sudo apt-get update
 

@@ -159,6 +159,7 @@ export Purge_OpenJDK=1
 ### 10. PROGRAMMING TOOLS - IDE
 ## -------------------------------------------------------------------------------------------------------------------
 # Gedit is a regular text editor but can be quite handy
+export Install_Emacs=1
 export Install_GEdit=1
 # Atom is one of the programming tools I provide - Handy IDE
 # From my experience, apt-install atom will be a PRETTY SLOW DOWNLOAD

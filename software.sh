@@ -31,7 +31,7 @@ while true; do
 			. $CFGFILE
 			shift 2
 			;;
-		-D|--dry-run)
+		-d|--dry-run)
 			DRYRUN=1
 			DRY_FLAG="-D"
 			addaptrepo="echo sudo add-apt-repository -y "
@@ -191,6 +191,11 @@ if [ $Install_Vivaldi -eq 1 ]; then
 	log $INFO "install vivaldi"
 	$prefix --install-recommends vivaldi-stable
 fi
+if [ $Install_Emacs -eq 1 ]; then
+	log $INFO "install emacs"
+	$prefix --install-recommends emacs
+fi
+
 if [ $Install_GEdit -eq 1 ]; then
 	log $INFO "install gedit"
 	 $prefix gedit
@@ -343,7 +348,7 @@ if [ $Install_LibreOffice -eq 1 ]; then
 		log $INFO "install libreoffice-writer"
 		 $prefix libreoffice-writer
 	fi
-	sudo apt-get install -yf
+	$dry_echo sudo apt-get install -yf
 else
 	log $INFO "NOT install libreoffice"
 fi

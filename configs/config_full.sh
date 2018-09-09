@@ -116,7 +116,7 @@ export Install_TexStudio=1
 # Terminal management, Kinda like Tmux/Tilda
 export Install_BYOBU=0
 # a python coding environment. Alternative - Spyder
-export Install_PyCharm=1
+export Install_PyCharm=0
 # Another remoting software solution - The RealVNC server does not work on Ubuntu from my attempts
 # But you can definitely connect to your RealVNC Server on a remote Windows installation via this tool
 # That is to say, RealVNC Viewer on Linux works fine!
@@ -159,6 +159,7 @@ export Purge_OpenJDK=1
 ### 10. PROGRAMMING TOOLS - IDE
 ## -------------------------------------------------------------------------------------------------------------------
 # Gedit is a regular text editor but can be quite handy
+export Install_Emacs=1
 export Install_GEdit=1
 # Atom is one of the programming tools I provide - Handy IDE
 # From my experience, apt-install atom will be a PRETTY SLOW DOWNLOAD
@@ -203,7 +204,7 @@ export Python_InstallJupyter=1
 export Python_InstallComputerGraphicsTools=0    ## TODO, not implemented
 
 # NLTK if you're into it
-export Python_InstallNLTK=1
+export Python_InstallNLTK=0
 
 # Installs ML tools - theano (Not Thanos), Tensorflow, Keras, etc - you can select your own tensorflow below if you want to
 # but to have tensorflow installed the next variable must definitely be 1
@@ -215,7 +216,7 @@ export Python_InstallMachineLearningTools=1     # Must set to 1 if you want to i
 ## and if you have a machine that can compile tensorflow;
 ## then you can select 1 below and choose any modes (CPU, CUDA/GPU, Intel MKL)
 ## -------------------------------------------------------------------------------------------------------------------
-export Python_Compile_Tensorflow=0
+export Python_Compile_Tensorflow=1
 ## Select one of the next 3 as 1, if you don't select any of them as 1
 ## I will be really sad :(
 export Python_Tensorflow_CPUOnly=1
