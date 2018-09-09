@@ -265,6 +265,8 @@ echo "Setting up bazel and build tools"
 if [[ -z `which bazel` ]]; then
 	echo "bazel not found, installing bazel by apt-get"
 	log $INFO "bazel: Installing from this script"
+	echo "installing bazel-dependencies"
+	$dry_echo sudo apt-get install -y build-essential cmake git python${PV}-dev python${PV}-distutls pylint libcupti-dev curl
 	if [ $DRY_MODE -eq 1 ]; then
 		echo "Add apt-repositories for bazel"
 	else
@@ -299,12 +301,11 @@ if [[ -z `which bazel` ]]; then
 			echo "oracle-java${TF_JAVA_VERSION}-installer shared/accepted-oracle-license-v1-1 seen true" | sudo /usr/bin/debconf-set-selections
 		fi
 	fi
-	$dry_echo sudo apt-get install -y build-essential cmake git python${PV}-dev python${PV}-distutls pylint libcupti-dev curl
 	$dry_echo sudo apt-get install -y bazel
 else
 	echo "seems like bazel is installed, only checking for other dependencies"
 	log $INFO "bazel: Already installed"
-	$dry_echo sudo apt-get install -y build-essential cmake git python${PV}-dev python${PV}-distutls pylint libcupti-dev curl 
+	# $dry_echo sudo apt-get install -y build-essential cmake git python${PV}-dev python${PV}-distutls pylint libcupti-dev curl 
 fi
 
 ## Now we clone from git and begin installation
