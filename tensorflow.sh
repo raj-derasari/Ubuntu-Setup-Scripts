@@ -359,8 +359,6 @@ elif [[ $Python_Tensorflow_CPUOnly -eq 1 ]]; then
 	export TF_NEED_CUDA=0
 fi
 
-
-
 ## PUt the Build Blocks here
 pwd
 read -p "wow" wow
@@ -385,14 +383,14 @@ case $MODE in
 	"build-and-install")
 		$dry_echo _bazel_build;
 		$dry_echo bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
-		$dry_echo $PIP_PREFIX $PIP_PREFIX /tmp/tensorflow_pkg/tensorflow*.whl
+		$dry_echo $PIP_PREFIX  --ignore-installed  /tmp/tensorflow_pkg/tensorflow*.whl
 	;;
 	"wheel-and-install")
 		$dry_echo bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
-		$dry_echo $PIP_PREFIX $PIP_PREFIX /tmp/tensorflow_pkg/tensorflow*.whl
+		$dry_echo $PIP_PREFIX --ignore-installed  /tmp/tensorflow_pkg/tensorflow*.whl
 	;;
 	"pip-install-only")
-		$dry_echo $PIP_PREFIX $PIP_PREFIX /tmp/tensorflow_pkg/tensorflow*.whl
+		$dry_echo $PIP_PREFIX --ignore-installed /tmp/tensorflow_pkg/tensorflow*.whl
 	;;
 	"all")
 		#echo "bazel clean; ./configure; bazel build; bazel-bin; $PIP_PREFIX pip insall"
