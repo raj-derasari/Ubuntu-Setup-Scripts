@@ -20,13 +20,12 @@ _uninstall_() {
 
 _install_and_disp_()
 {
+	echo "--------------------------------------------------------"
 	echo "$1"
-	echo "--------------------------------------------------------" >> pkgListCurrent.txt
-	echo "$1" >> pkgListCurrent.txt
-	echo "--------------------------------------------------------" >> pkgListCurrent.txt
+	echo "--------------------------------------------------------"
 	_install_ $1
 	#_uninstall_ $1
-	_pkg_list >> pkgListCurrent.txt
+	_pkg_list
 }
 ## First install the core packages that make octave what it is
 #echo "The very basic packages, that make octave what it is:"
