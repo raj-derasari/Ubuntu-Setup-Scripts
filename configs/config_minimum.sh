@@ -134,6 +134,8 @@ export LibreOffice_Draw=1
 export LibreOffice_Impress=1
 # Math is Workboot/Spreadsheet software
 export LibreOffice_Math=1
+# Calc is like MS Excel, spreadsheet software
+export LibreOffice_Calc=1
 # Writer is a document software
 export LibreOffice_Writer=1
 
