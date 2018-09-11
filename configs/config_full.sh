@@ -132,8 +132,10 @@ export LibreOffice_Base=1
 export LibreOffice_Draw=1
 # Impress is Presentation software
 export LibreOffice_Impress=1
-# Math is Workboot/Spreadsheet software
+# Math is math software
 export LibreOffice_Math=1
+# Calc is like MS Excel, spreadsheet software
+export LibreOffice_Calc=1
 # Writer is a document software
 export LibreOffice_Writer=1
 
