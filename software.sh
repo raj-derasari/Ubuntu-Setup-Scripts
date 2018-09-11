@@ -340,6 +340,10 @@ if [ $Install_LibreOffice -eq 1 ]; then
 		log $INFO "install libreoffice-impress"
 		 $prefix libreoffice-impress
 	fi
+	if [ $LibreOffice_Calc -eq 1 ]; then
+		log $INFO "install libreoffice-calc"
+		 $prefix libreoffice-calc
+	fi
 	if [ $LibreOffice_Math -eq 1 ]; then
 		log $INFO "install libreoffice-math"
 		 $prefix libreoffice-math
