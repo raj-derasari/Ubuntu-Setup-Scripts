@@ -210,7 +210,9 @@ export Python_InstallNLTK=0
 
 # Installs ML tools - theano (Not Thanos), Tensorflow, Keras, etc - you can select your own tensorflow below if you want to
 # but to have tensorflow installed the next variable must definitely be 1
-export Python_InstallMachineLearningTools=1     # Must set to 1 if you want to install tensorflow!
+# Must set to 1 if you want to install tensorflow!
+export Python_InstallMachineLearningTools=0
+
 
 ### 12. PYTHON SETUP - TENSORFLOW COMPILATION/INSTALLATION
 ## -------------------------------------------------------------------------------------------------------------------
@@ -218,9 +220,9 @@ export Python_InstallMachineLearningTools=1     # Must set to 1 if you want to i
 ## and if you have a machine that can compile tensorflow;
 ## then you can select 1 below and choose any modes (CPU, CUDA/GPU, Intel MKL)
 ## -------------------------------------------------------------------------------------------------------------------
-export Python_Compile_Tensorflow=1
+export Python_Compile_Tensorflow=0
 ## Select one of the next 3 as 1, if you don't select any of them as 1
 ## I will be really sad :(
-export Python_Tensorflow_CPUOnly=1
+export Python_Tensorflow_CPUOnly=0
 export Python_Tensorflow_GPU=0
 export Python_Tensorflow_MKL=0

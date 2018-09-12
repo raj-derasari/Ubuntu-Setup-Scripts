@@ -32,18 +32,18 @@ export Install_Git=1
 # IF you set this as 1, you will have to enter your email and name in Git_Email and Git_YourName
 export Install_Git_SSHKeys=1
 # Remember to unset this to some random values, or delete this file when done (If you create a pull request, to save your data)
-export Git_Email="user.name@example.com"
-export Git_YourName="User Name"
+export Git_Email="raj.derasari@gmail.com"
+export Git_YourName="Raj Derasari"
 # Path to your github ssh-key (Private key below, and Public key is the "private-key"+".pub" file)
 export Github_SSH_File=~/.ssh/github_key
 
 ### 2. VIRTUALENV SETUP
 ## -------------------------------------------------------------------------------------------------------------------
 # virtualenv - if you are using Ubuntu 18 or above, it is highly recommended to use virtualenv with Python3 - And ditch Python2!
-export Setup_VirtualEnv=0
+export Setup_VirtualEnv=1
 
 # if 1 above, consider setting up the next two parameters
-export VirtualEnv_Name="venv1"
+export VirtualEnv_Name="mars"
 export VirtualEnv_Directory=~/.virtualenvs/$VirtualEnv_Name
 
 ### 3. MASTER SETUP - REQUIRED TO SET EITHER 1 OR 0 HERE
@@ -57,9 +57,9 @@ export Master_Software=1
 # Python Libraries setup - For Python 2/3 Development, Both are supported.
 export Master_Python=1
 # Executes sudo apt-get upgrade after installing software
-export Do_AptGetUpgradeLast=1
+export Do_AptGetUpgradeLast=0
 # cleans up your /tmp, pip cache and 
-export Do_CleanupAfterExec=1
+export Do_CleanupAfterExec=0
 
 ### 4. SOFTWARE TOOLS SETUP - RECOMMENDED UTILITIES
 ## -------------------------------------------------------------------------------------------------------------------
@@ -82,15 +82,15 @@ export Install_UGET=1
 # VLC is the go-to media player for Linux, with various alternatives (however, I recommend VLC)
 export Install_VLCMediaPlayer=1
 # Z-shell, alternative for bash
-export Install_ZSH=1
+export Install_ZSH=0
 
 ### 5. SOFTWARE TOOLS SETUP - WEB BROWSERS
 ## -------------------------------------------------------------------------------------------------------------------
 # Choose a web browser
 export Install_Chromium=1
-export Install_GoogleChrome=1
+export Install_GoogleChrome=0
 export Install_MozillaFirefox=1
-export Install_Vivaldi=1
+export Install_Vivaldi=0
 
 ### 6. SOFTWARE TOOLS SETUP - HANDY TOOLS
 ## -------------------------------------------------------------------------------------------------------------------
@@ -104,9 +104,9 @@ export Install_KeepassPasswordManager=1
 # Teamviewer is a remoting software, you probably knew that already didn't ya?
 export Install_TeamViewer=1
 # Okular is a heavy-featured PDF Suite
-export Install_Okular=1
+export Install_Okular=0
 # Terminal client/replacement for ctrl+alt+t
-export Install_TildaTmux=1
+export Install_TildaTmux=0
 # TexStudio is LaTeX software for writing up college assignments and research papers
 # It's most likely not going to be used anywhere else
 # Why am I even installing it I'm not even in college right now...
@@ -129,7 +129,7 @@ export Install_LibreOffice=1
 # Base is like MS Access, database software
 export LibreOffice_Base=1
 # Draw is for .. drawing?
-export LibreOffice_Draw=1
+export LibreOffice_Draw=0
 # Impress is Presentation software
 export LibreOffice_Impress=1
 # Math is Workboot/Spreadsheet software
@@ -149,7 +149,7 @@ export Docker_Remove_SUDO=1
 ### 9. PROGRAMMING TOOLS - JAVA/JDK
 ## -------------------------------------------------------------------------------------------------------------------
 # Java SE and JDK - They come combined together in Java 10
-export Install_Oracle_Java=1
+export Install_Oracle_Java=0
 ## JAVA VERSION - I allow 2 possible values - 8 and 10. IF oracle keeps their naming scheme
 ## for the packages oracle-java(X)-installer and oracle-java(X)-set-default; then
 ## this script may work in the future too. For now, it is confirmed to work for Java 8 and Java 10
@@ -161,8 +161,8 @@ export Purge_OpenJDK=1
 ### 10. PROGRAMMING TOOLS - IDE
 ## -------------------------------------------------------------------------------------------------------------------
 # Gedit is a regular text editor but can be quite handy
-export Install_Emacs=1
-export Install_GEdit=1
+export Install_Emacs=0
+export Install_GEdit=0
 # Atom is one of the programming tools I provide - Handy IDE
 # From my experience, apt-install atom will be a PRETTY SLOW DOWNLOAD
 export Install_Atom=0
@@ -206,11 +206,12 @@ export Python_InstallJupyter=1
 export Python_InstallComputerGraphicsTools=0    ## TODO, not implemented
 
 # NLTK if you're into it
-export Python_InstallNLTK=1
+export Python_InstallNLTK=0
 
 # Installs ML tools - theano (Not Thanos), Tensorflow, Keras, etc - you can select your own tensorflow below if you want to
 # but to have tensorflow installed the next variable must definitely be 1
-export Python_InstallMachineLearningTools=1     # Must set to 1 if you want to install tensorflow!
+     # Must set to 1 if you want to install tensorflow!
+export Python_InstallMachineLearningTools=0
 
 ### 12. PYTHON SETUP - TENSORFLOW COMPILATION/INSTALLATION
 ## -------------------------------------------------------------------------------------------------------------------
@@ -221,6 +222,6 @@ export Python_InstallMachineLearningTools=1     # Must set to 1 if you want to i
 export Python_Compile_Tensorflow=0
 ## Select one of the next 3 as 1, if you don't select any of them as 1
 ## I will be really sad :(
-export Python_Tensorflow_CPUOnly=1
+export Python_Tensorflow_CPUOnly=0
 export Python_Tensorflow_GPU=0
 export Python_Tensorflow_MKL=0

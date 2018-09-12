@@ -36,11 +36,6 @@ echo -e "$splash_msg"
 pkgs="
 gnome-disk-utility \
 gnome-mplayer \
-gpicview \
-guvcview \
-mtools \
-mtpaint \
-mtr-tiny \
 simple-scan \
 xfburn"
 

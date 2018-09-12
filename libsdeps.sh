@@ -62,12 +62,11 @@ lib32ncurses5 \
 lib32z1 \
 libtinfo5:i386
 
-$prefix --install-recommends \
+$Prefix --install-recommends \
 libbz2-dev \
 libssl-dev \
 libreadline-dev \
 libsqlite3-dev tk-dev
-
 
 log $INFO "gconf "
 $Prefix --install-recommends \

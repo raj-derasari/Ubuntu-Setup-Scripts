@@ -83,7 +83,7 @@ if [ $Install_QPDFView -eq 1 ]; then
 	 $addaptrepo ppa:adamreichold/qpdfview-dailydeb
 fi
 if [ $Install_Octave -eq 1 ]; then
-	 $addaptrepo ppa:nilarimogard/webupd8
+	 $addaptrepo ppa:octave/stable
 fi
 if [ $Install_QBitTorrent -eq 1 ]; then
 	 $addaptrepo ppa:qbittorrent-team/qbittorrent-stable
