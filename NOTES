@@ -2,15 +2,20 @@ The default should be made the files one that I originally wrote
 
 Make current mode (prints everything to stdout) as verbose <- or maybe not even that -> make verbose print command before exec
 but save the outputs to files anyway?
-debug = dry-run mode
 dont know how/what to setup in debug mode
 
 add pycharm etc. check TODOs
 Document and Define Error Codes and ...
 Logging - Which I basically reverted during this last build
+(fix Logging and error messages)
+
 Can choose to optimize the if conditions for checking "y" and "Y" -> currently case insensitive comparison all across.
 Tensorflow does not install virtualenv, hence cannot be executed independently/on-first-run
 Same applies to Python script too, I guess? Don't know, must check!
 
 Octave - Work In Progress
 Maybe test it out in the VMs
+Make it so that every script can write its finished-status onto /tmp/<> - So that it is not rerun or something? idk what i'm really thinking but its doable
+Mozilla Thunderbird
+VPN setup ?
+Can extract Tempaltes to user templates (maybe ask maybe make variable IDK)

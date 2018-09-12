@@ -114,13 +114,15 @@ export Install_TexStudio=1
 ## -------------------------------------------------------------------------------------------------------------------
 ## TODO, haven't done these yet.
 # Terminal management, Kinda like Tmux/Tilda
-export Install_BYOBU=0
+export Install_BYOBU=1
 # a python coding environment. Alternative - Spyder
-export Install_PyCharm=0
+export Install_PyCharm=1
 # Another remoting software solution - The RealVNC server does not work on Ubuntu from my attempts
 # But you can definitely connect to your RealVNC Server on a remote Windows installation via this tool
 # That is to say, RealVNC Viewer on Linux works fine!
-export Install_RealVNC=0
+export Install_RealVNC=1
+# Thunderbird is an email client
+export Install_Thunderbird=1
 
 ### 7. SOFTWARE TOOLS SETUP - LIBREOFFICE SUITE
 ## -------------------------------------------------------------------------------------------------------------------
@@ -132,7 +134,7 @@ export LibreOffice_Base=1
 export LibreOffice_Draw=1
 # Impress is Presentation software
 export LibreOffice_Impress=1
-# Math is math software
+# Math is Workboot/Spreadsheet software
 export LibreOffice_Math=1
 # Calc is like MS Excel, spreadsheet software
 export LibreOffice_Calc=1
@@ -165,7 +167,7 @@ export Install_Emacs=1
 export Install_GEdit=1
 # Atom is one of the programming tools I provide - Handy IDE
 # From my experience, apt-install atom will be a PRETTY SLOW DOWNLOAD
-export Install_Atom=0
+export Install_Atom=1
 # Lightweight alternative to Atom - Sublime Text (Free Edition)
 export Install_SublimeText=1
 # VS Code is also a great programming IDE
@@ -203,16 +205,15 @@ export Python_InstallJupyter=1
 #	https://github.com/jayrambhia/Install-OpenCV
 # or if you do not want that, try this search!
 #	https://github.com/search?q=opencv+install+script
-export Python_InstallComputerGraphicsTools=0    ## TODO, not implemented
+export Python_InstallComputerGraphicsTools=1    ## TODO, not implemented
 
 # NLTK if you're into it
-export Python_InstallNLTK=0
+export Python_InstallNLTK=1
 
 # Installs ML tools - theano (Not Thanos), Tensorflow, Keras, etc - you can select your own tensorflow below if you want to
 # but to have tensorflow installed the next variable must definitely be 1
 # Must set to 1 if you want to install tensorflow!
-export Python_InstallMachineLearningTools=0
-
+export Python_InstallMachineLearningTools=1
 
 ### 12. PYTHON SETUP - TENSORFLOW COMPILATION/INSTALLATION
 ## -------------------------------------------------------------------------------------------------------------------
@@ -220,9 +221,9 @@ export Python_InstallMachineLearningTools=0
 ## and if you have a machine that can compile tensorflow;
 ## then you can select 1 below and choose any modes (CPU, CUDA/GPU, Intel MKL)
 ## -------------------------------------------------------------------------------------------------------------------
-export Python_Compile_Tensorflow=0
+export Python_Compile_Tensorflow=1
 ## Select one of the next 3 as 1, if you don't select any of them as 1
 ## I will be really sad :(
-export Python_Tensorflow_CPUOnly=0
+export Python_Tensorflow_CPUOnly=1
 export Python_Tensorflow_GPU=0
 export Python_Tensorflow_MKL=0

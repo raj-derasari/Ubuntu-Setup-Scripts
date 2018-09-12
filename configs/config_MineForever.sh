@@ -43,7 +43,7 @@ export Github_SSH_File=~/.ssh/github_key
 export Setup_VirtualEnv=1
 
 # if 1 above, consider setting up the next two parameters
-export VirtualEnv_Name="venv1"
+export VirtualEnv_Name="mars"
 export VirtualEnv_Directory=~/.virtualenvs/$VirtualEnv_Name
 
 ### 3. MASTER SETUP - REQUIRED TO SET EITHER 1 OR 0 HERE
@@ -82,12 +82,12 @@ export Install_UGET=1
 # VLC is the go-to media player for Linux, with various alternatives (however, I recommend VLC)
 export Install_VLCMediaPlayer=1
 # Z-shell, alternative for bash
-export Install_ZSH=1
+export Install_ZSH=0
 
 ### 5. SOFTWARE TOOLS SETUP - WEB BROWSERS
 ## -------------------------------------------------------------------------------------------------------------------
 # Choose a web browser
-export Install_Chromium=0
+export Install_Chromium=1
 export Install_GoogleChrome=0
 export Install_MozillaFirefox=1
 export Install_Vivaldi=0
@@ -95,8 +95,8 @@ export Install_Vivaldi=0
 ### 6. SOFTWARE TOOLS SETUP - HANDY TOOLS
 ## -------------------------------------------------------------------------------------------------------------------
 # Audacity is an audio editing application, you can also choose to install the FFMpeg library in the second option
-export Install_Audacity=0
-export Install_WinFF=0
+export Install_Audacity=1
+export Install_WinFF=1
 # grive is an open source, third-party, command line Google-Drive tool.
 export Install_Grive_GoogleDrive=1
 # keepass password manager, for all your random password needs!
@@ -110,7 +110,7 @@ export Install_TildaTmux=0
 # TexStudio is LaTeX software for writing up college assignments and research papers
 # It's most likely not going to be used anywhere else
 # Why am I even installing it I'm not even in college right now...
-export Install_TexStudio=0
+export Install_TexStudio=1
 ## -------------------------------------------------------------------------------------------------------------------
 ## TODO, haven't done these yet.
 # Terminal management, Kinda like Tmux/Tilda
@@ -145,20 +145,20 @@ export LibreOffice_Writer=1
 ## -------------------------------------------------------------------------------------------------------------------
 # Docker - If you select one, the docker installation script will be executed
 # Be careful, because the script does a complete reinstall of any existing Docker installation
-export Install_Docker=0
-export Docker_Remove_SUDO=0
+export Install_Docker=1
+export Docker_Remove_SUDO=1
 
 ### 9. PROGRAMMING TOOLS - JAVA/JDK
 ## -------------------------------------------------------------------------------------------------------------------
 # Java SE and JDK - They come combined together in Java 10
-export Install_Oracle_Java=0
+export Install_Oracle_Java=1
 ## JAVA VERSION - I allow 2 possible values - 8 and 10. IF oracle keeps their naming scheme
 ## for the packages oracle-java(X)-installer and oracle-java(X)-set-default; then
 ## this script may work in the future too. For now, it is confirmed to work for Java 8 and Java 10
 ## IF you are installing a version other than 8 or 10, please be careful about setting Purge_OpenJDK to 1
 export Install_Java_Version=10
 # This line uninstalls any inbuilt Java that comes with your Ubuntu/Debian installation
-export Purge_OpenJDK=0
+export Purge_OpenJDK=1
 
 ### 10. PROGRAMMING TOOLS - IDE
 ## -------------------------------------------------------------------------------------------------------------------
@@ -177,7 +177,7 @@ export Install_VisualStudioCode=1
 ## Scientific Coding "IDE" hah
 # GNU/Octave is an open-source MATLAB alternative.
 # TODO: IF possible, install the Octave Sourceforge packages directly via this script.
-export Install_Octave=0
+export Install_Octave=1
 
 ### 11. PYTHON SETUP - VERSION, LIBRARIES SELECTION
 ## -------------------------------------------------------------------------------------------------------------------
@@ -213,7 +213,7 @@ export Python_InstallNLTK=0
 # Installs ML tools - theano (Not Thanos), Tensorflow, Keras, etc - you can select your own tensorflow below if you want to
 # but to have tensorflow installed the next variable must definitely be 1
 # Must set to 1 if you want to install tensorflow!
-export Python_InstallMachineLearningTools=0
+export Python_InstallMachineLearningTools=1
 
 ### 12. PYTHON SETUP - TENSORFLOW COMPILATION/INSTALLATION
 ## -------------------------------------------------------------------------------------------------------------------
@@ -221,9 +221,9 @@ export Python_InstallMachineLearningTools=0
 ## and if you have a machine that can compile tensorflow;
 ## then you can select 1 below and choose any modes (CPU, CUDA/GPU, Intel MKL)
 ## -------------------------------------------------------------------------------------------------------------------
-export Python_Compile_Tensorflow=0
+export Python_Compile_Tensorflow=1
 ## Select one of the next 3 as 1, if you don't select any of them as 1
 ## I will be really sad :(
-export Python_Tensorflow_CPUOnly=0
+export Python_Tensorflow_CPUOnly=1
 export Python_Tensorflow_GPU=0
 export Python_Tensorflow_MKL=0

@@ -1,22 +1,5 @@
 #!/bin/bash 
-#source `which virtualenvwrapper.sh`
-. util.sh
-
-#logging/utils/help
-LOGGER=`pwd`/log_bloatremove.log
-INFO="Bloatremove: INFO: "
-ERROR="Bloatremove: ERROR: "
-
-DRY_RUN=0
-dry_echo=""
-DEBUG=0
-
-if test "$1" = "-D"; then
-	DRY_RUN=1
-	dry_echo="echo "
-fi
-
-br_purge="$dry_echo sudo apt-get purge -y "
+. br_util.sh ${*}
 
 disp "Unity Bloat Removal Script"
 splash_msg="

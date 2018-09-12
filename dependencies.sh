@@ -1,34 +1,23 @@
 #!/bin/bash
 #set -o errexit -o pipefail -o noclobber #-o nounset
-## get util functions loaded
-. util.sh
 #. `which virtualenvwrapper.sh`
+## get util functions loaded
+. util.sh ${*}
 
 # use the display function to print this
 disp "Ubuntu Dependency/Package Script"
 
-#logging/utils/help
-INFO="Lib-Dep: INFO: "
-ERROR="Lib-Dep: ERROR: "
-
-DRY_RUN=0
-dry_echo="echo "
-DEBUG=0
-
-
-if test "$1" = "-D"; then
-	DRY_RUN=1
-	Prefix="echo sudo apt-get install -y "
-	dry_echo="echo "
+if [ $DRY_MODE -eq 1 ]; then
+	echo "Dry-running installation of dependencies!"
 fi
 
+## begin
 Prefix="$dry_echo sudo apt-get install -y "
 
-
 log $INFO "Adding default ubuntu repositories!"
-$Prefix sudo add-apt-repository universe
-$Prefix sudo add-apt-repository restricted
-$Prefix sudo add-apt-repository multiverse
+$Prefix sudo add-apt-repository -y universe
+$Prefix sudo add-apt-repository -y restricted
+$Prefix sudo add-apt-repository -y multiverse
 #sudo apt-key update && 
 $dry_echo sudo apt-get update
 

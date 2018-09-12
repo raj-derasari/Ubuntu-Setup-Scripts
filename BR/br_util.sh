@@ -65,4 +65,18 @@ addaptrepo="$dry_echo sudo add-apt-repository -y "
 # Maybe add sudo apt-key update depending on lsb_release
 apt_update="$dry_echo sudo apt-get update "
 apt_prefix="$dry_echo sudo apt-get install -y "
-apt_prefix_rec="$dry_echo sudo apt-get install -y --install-recommends "
+br_purge="$dry_echo sudo apt-get purge -y "
+_help_(){
+    echo "
+Ubuntu Bloatremove/Configuration-Fixing script
+Recommended software after this script completes:
+    Sublime Text 3/emacs for editing text files
+    VLC Media Player for media files
+    Gparted for partition configuration
+    QPDFView (lightweight) and Okular (features) for PDF suites
+    Thunderbird for email client
+    UGet and Qbittorrent for download-management
+    LibreOffice for an office suite";
+    exit 5;
+}
+

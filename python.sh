@@ -1,24 +1,24 @@
 #!/bin/bash
 #set -o errexit -o pipefail -o noclobber #-o nounset
-## get util functions loaded
-. util.sh
 #. `which virtualenvwrapper.sh`
-#. ${BF}
+## get util functions loaded
+. util.sh ${*}
 
 # use the display function to print this
 disp "Ubuntu Python Script"
+
 if [ -z $Setup_Python_Dev ]; then
 	log $INFO "Called from terminal"
 	echo "Looks like this script was run from the terminal (as a master variable is unset)."
 	echo "Parameters are now loaded from config file"
 	## your bashrc profile/main profile file.
 	BF=~/.bashrc
-	#Setup_VirtualEnv=0
 	# Enter the path to your virtualenv parent directory, eg. if you venv is "myVE" and path is
 	# ~/.virtualenvs/myVE/
 	# then enter ~/.virtualenvs
 	# without quotes
 	VirtualEnv_Directory=~/.virtualenvs
+	
 	## Python installation params
 	Python_InstallBasics=1
 	Python_InstallWebDevelopmentTools=1
@@ -32,23 +32,15 @@ if [ -z $Setup_Python_Dev ]; then
 	Python_Tensorflow_CPUOnly=0
 fi
 
-#logging/utils/help
-INFO="Py: INFO: "
-ERROR="Py: ERROR: "
-
-#base/Initial variables
-dry_echo=""
-
 ## Prints Help Message for command line (Tensorflow/Python)
 _help_() {
 echo "
 Usage: bash python_util.sh <arguments>
 -h  or  --help               |  Print this message
--D  or  --dry-run            |  Dry-run
--d  or  --debug-mode         |  To run in debug mode
+-d  or  --dry-run            |  Dry-run
 -v  or  --virtual-env        |  Virtual Environment to use. [If no argument is passed, system-wide installation]
 -p  or  --preferred-version  |  Python Version [accepted values: 2, 3]
-"; exit 0
+"; exit 122
 }
 
 echo "Parsing command line parameters."
@@ -57,22 +49,14 @@ while true; do
         -h|--help) _help_
 			shift
 			;;
-        -D|--dry-run)
-			DRY_RUN=1
-			dry_echo="echo "
-			#set -v
-			echo "In dry-run mode"
-			shift
-			;;
-        -d|--debug-mode)
-			DEBUG=1
-			echo "In debug mode"
+        -d|--dry-run)
+			echo "Dry-running installation of Python!"
 			shift
 			;;
         -v|--virtualenv)
 			Setup_VirtualEnv=1
 			VE="$2"
-			venv_prefix="python -m pip install --user --upgrade " # this is used if NOT using virtualenv
+			#venv_pip_prefix="$dry_echo python -m pip install --user --upgrade " # this is used if NOT using virtualenv
 			shift 2
 			;;
         -p|--python-version)
@@ -113,17 +97,17 @@ if [[ -z $Setup_VirtualEnv ]]; then
 	## called from terminal, Venv wasnt used
 	log "DEBUG: line 96 Py"
 	Setup_VirtualEnv=0
-	venv_prefix="sudo -H python${PV} -m pip install --user --upgrade " # this is used if NOT using virtualenv
+	venv_pip_prefix="$dry_echo sudo -H python${PV} -m pip install --user --upgrade " # this is used if NOT using virtualenv
 	echo "Not installing to any virtualenv!"
 elif [ $Setup_VirtualEnv -eq 0 ]; then
 	log "DEBUG: line 119 Py"
 	Setup_VirtualEnv=0
-	venv_prefix="sudo -H python${PV} -m pip install --user --upgrade " # this is used if NOT using virtualenv
+	venv_pip_prefix="$dry_echo sudo -H python${PV} -m pip install --user --upgrade " # this is used if NOT using virtualenv
 	echo "Not installing to any virtualenv!"
 # called from either source, but venv was used - hence name is definitely known
 elif [ $Setup_VirtualEnv -eq 1 ]; then
 	Setup_VirtualEnv=1
-	venv_prefix="python${PV} -m pip install --user --upgrade " # this is used if NOT using virtualenv
+	venv_pip_prefix="$dry_echo python${PV} -m pip install --user --upgrade " # this is used if NOT using virtualenv
 	if [[ -z $VE ]]; then
 		VE=$VirtualEnv_Name
 	fi
@@ -144,41 +128,44 @@ elif [ $Setup_VirtualEnv -eq 1 ]; then
 	$dry_echo source $VirtualEnv_Directory/bin/activate
 fi
 # ------------------------------------------------------------------------------------------------------------------
-$dry_echo sudo apt install -y --install-recommends \
-	python-genshi \
-	python-colorama \
-	python-distlib \
-	python-pkg-resources \
-	python-tk
+Python_Pkg_List="\
+python-genshi \
+python-colorama \
+python-distlib \
+python-pkg-resources \
+python-tk
+"
+
+$apt_prefix_rec $Python_Pkg_List	
 
 if [ $PV -eq 2 ]; then
-	$dry_echo sudo apt install -y python-pip --install-recommends
+	$apt_prefix_rec python-pip
 elif [ $PV -eq 3 ]; then
-	$dry_echo sudo apt install -y python3-pip --install-recommends
+	$apt_prefix_rec python3-pip
 fi
 
 log $INFO "Upgrade pip (globally)"
-$dry_echo $venv_prefix pip
+$venv_pip_prefix pip
 
 if [ $Setup_VirtualEnv -eq 1 ]; then
 	log $INFO "Install virtualenvwrapper"
-	$dry_echo $venv_prefix virtualenvwrapper
+	$venv_pip_prefix virtualenvwrapper
 fi
 
 if [ $Python_InstallBasics -eq 1 ]; then
 	log $INFO "Requests, matplotlib, pandas, h5py"
-	$dry_echo $venv_prefix Requests
-	$dry_echo $venv_prefix scipy
-	$dry_echo $venv_prefix sklearn
-	$dry_echo $venv_prefix matplotlib
-	$dry_echo $venv_prefix pandas
-	$dry_echo $venv_prefix h5py
+	$venv_pip_prefix Requests
+	$venv_pip_prefix scipy
+	$venv_pip_prefix sklearn
+	$venv_pip_prefix matplotlib
+	$venv_pip_prefix pandas
+	$venv_pip_prefix h5py
 fi
 
 if [ $Python_InstallDjango -eq 1 ]; then
 	log $INFO "Django"
-	$dry_echo $venv_prefix django
-	$dry_echo $venv_prefix geoip2
+	$venv_pip_prefix django
+	$venv_pip_prefix geoip2
 	## setup aliases
 	checkBash="`grep \"alias django_runserver=\" ${BF}`"
 	if [[ ! -z $checkBash ]]; then
@@ -196,27 +183,27 @@ fi
 
 if [ $Python_InstallWebDevelopmentTools -eq 1 ]; then
 	log $INFO "flask, BeautifulSoup, Twisted"
-	$dry_echo $venv_prefix flask
-	$dry_echo $venv_prefix Twisted
+	$venv_pip_prefix flask
+	$venv_pip_prefix Twisted
 	# html,xml parser
-	$dry_echo $venv_prefix lxml
+	$venv_pip_prefix lxml
 	if [ $PV -eq 2 ]; then 
-		$dry_echo $venv_prefix BeautifulSoup
+		$venv_pip_prefix BeautifulSoup
 	elif [ $PV -eq 3 ]; then 
-		$dry_echo $venv_prefix BeautifulSoup4
+		$venv_pip_prefix BeautifulSoup4
 	fi	
 fi
 
 if [ $Python_InstallJupyter -eq 1 ]; then
 	log $INFO "IPython and Jupyter-Notebook"
 	# Please Note ipython 6.x wont work with python2, needs python 3 - This is automated though
-	$dry_echo $venv_prefix IPython
-	$dry_echo $venv_prefix jupyter
+	$venv_pip_prefix IPython
+	$venv_pip_prefix jupyter
 fi
 
 if [ $Python_InstallNLTK -eq 1 ]; then
 	log $INFO "NLTK"
-	$dry_echo $venv_prefix nltk
+	$venv_pip_prefix nltk
 fi
 
 if [ $Python_InstallMachineLearningTools -eq 1 ]; then
@@ -225,8 +212,8 @@ if [ $Python_InstallMachineLearningTools -eq 1 ]; then
 		if [ $Setup_VirtualEnv -eq 1 ]; then 
 			VFlag=" -v $VE "
 		fi
-		if [ $DRY_RUN -eq 1 ]; then
-			DFlag=" -D "
+		if [ $DRY_MODE -eq 1 ]; then
+			DFlag=" -d "
 		fi
 		if [ $Python_Tensorflow_GPU -eq 1 ]; then
 			log $INFO "Compiling Tensorflow - GPU"
@@ -240,9 +227,9 @@ if [ $Python_InstallMachineLearningTools -eq 1 ]; then
 		fi
 	else
 		log $INFO "Not compiling tensorflow, installing from pip"
-		$dry_echo $venv_prefix tensorflow
+		$venv_pip_prefix tensorflow
 	fi
-	$dry_echo $venv_prefix theano
-	$dry_echo $venv_prefix keras
+	$venv_pip_prefix theano
+	$venv_pip_prefix keras
 fi
-exit
+exit 0

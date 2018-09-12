@@ -1,4 +1,4 @@
-# Minimum config - Sets up Git, Virtualenv, Py, Dependencies, and only basic/most required software
+# You can set up your own variables, values here in the config files
 # I provide 3 config files by default; you can create your own based on these templates
 # All you have to do is set 0s and 1s and some names here and there :D
 
@@ -49,13 +49,13 @@ export VirtualEnv_Directory=~/.virtualenvs/$VirtualEnv_Name
 ### 3. MASTER SETUP - REQUIRED TO SET EITHER 1 OR 0 HERE
 ## -------------------------------------------------------------------------------------------------------------------
 # Dependencies and Libraries - Highly recommended keep this as 1
-export Master_Dependencies=1
+export Master_Dependencies=0
 # Bloatware removal script that checks your Desktop Environment and uninstalls bloatware based on that
 export Master_RemoveBloatware=0
 # Software setup script - Common Software, Java, Programming Tools, etc.
-export Master_Software=1
+export Master_Software=0
 # Python Libraries setup - For Python 2/3 Development, Both are supported.
-export Master_Python=1
+export Master_Python=0
 # Executes sudo apt-get upgrade after installing software
 export Do_AptGetUpgradeLast=0
 # cleans up your /tmp, pip cache and 
@@ -66,13 +66,13 @@ export Do_CleanupAfterExec=0
 # Strongly recommended packages
 # All of the following are affected based on the value of Master_Software being 1
 # ExFat file system utilites
-export Install_EXFatUtils=1
+export Install_EXFatUtils=0
 # Flux is recommended for programmers during evening/night times.
 export Install_Flux=0
 # Gparted is a partition utility which is highly useful, and most recommended
-export Install_GParted=1
+export Install_GParted=0
 # 7-zip and other archive types support (Not a GUI, integrates with default archive applications)
-export Install_P7Zip=1
+export Install_P7Zip=0
 # Torrent Client
 export Install_QBitTorrent=0
 # PDF Viewer which is incredibly fast and lightweight
@@ -80,7 +80,7 @@ export Install_QPDFView=0
 # Uget is a download manager
 export Install_UGET=0
 # VLC is the go-to media player for Linux, with various alternatives (however, I recommend VLC)
-export Install_VLCMediaPlayer=1
+export Install_VLCMediaPlayer=0
 # Z-shell, alternative for bash
 export Install_ZSH=0
 
@@ -89,7 +89,7 @@ export Install_ZSH=0
 # Choose a web browser
 export Install_Chromium=0
 export Install_GoogleChrome=0
-export Install_MozillaFirefox=1
+export Install_MozillaFirefox=0
 export Install_Vivaldi=0
 
 ### 6. SOFTWARE TOOLS SETUP - HANDY TOOLS
@@ -121,6 +121,8 @@ export Install_PyCharm=0
 # But you can definitely connect to your RealVNC Server on a remote Windows installation via this tool
 # That is to say, RealVNC Viewer on Linux works fine!
 export Install_RealVNC=0
+# Thunderbird is an email client
+export Install_Thunderbird=0
 
 ### 7. SOFTWARE TOOLS SETUP - LIBREOFFICE SUITE
 ## -------------------------------------------------------------------------------------------------------------------
@@ -137,7 +139,7 @@ export LibreOffice_Math=0
 # Calc is like MS Excel, spreadsheet software
 export LibreOffice_Calc=0
 # Writer is a document software
-export LibreOffice_Writer=1
+export LibreOffice_Writer=0
 
 ### 8. PROGRAMMING TOOLS - DOCKER
 ## -------------------------------------------------------------------------------------------------------------------
@@ -167,7 +169,7 @@ export Install_GEdit=0
 # From my experience, apt-install atom will be a PRETTY SLOW DOWNLOAD
 export Install_Atom=0
 # Lightweight alternative to Atom - Sublime Text (Free Edition)
-export Install_SublimeText=1
+export Install_SublimeText=0
 # VS Code is also a great programming IDE
 export Install_VisualStudioCode=0
 ## TODO: Add emacs here, and... anything else?
@@ -181,13 +183,13 @@ export Install_Octave=0
 ## -------------------------------------------------------------------------------------------------------------------
 ## Python Setup - installing python libraries
 # setting up python-dev tools
-export Setup_Python_Dev=1
+export Setup_Python_Dev=0
 
 # set one value from 2 and 3
 export Python_PreferredVersion=3
 
 # basic libraries - Numpy, scipy, etc. stuff that you'll most likely need
-export Python_InstallBasics=1
+export Python_InstallBasics=0
 
 # This includes web-dev tools 
 export Python_InstallWebDevelopmentTools=0
@@ -210,7 +212,8 @@ export Python_InstallNLTK=0
 
 # Installs ML tools - theano (Not Thanos), Tensorflow, Keras, etc - you can select your own tensorflow below if you want to
 # but to have tensorflow installed the next variable must definitely be 1
-export Python_InstallMachineLearningTools=0     # Must set to 1 if you want to install tensorflow!
+# Must set to 1 if you want to install tensorflow!
+export Python_InstallMachineLearningTools=0
 
 ### 12. PYTHON SETUP - TENSORFLOW COMPILATION/INSTALLATION
 ## -------------------------------------------------------------------------------------------------------------------

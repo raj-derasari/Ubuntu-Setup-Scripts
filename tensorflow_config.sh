@@ -1,5 +1,9 @@
-## LOAD YOUR TENSORFLOW CONFIGURATION HERE:
+## SET YOUR TENSORFLOW CONFIGURATION HERE:
 
+## BTW - This script/configuration of Tensorflow is basically a beta-version because
+# I have only tested CPU,GPU compilations and an MKL compilation after installing Intel MKL
+# In all my installations, the last set of variables (from Android... TensorRT) were set as 0
+# So if you configure Tensorflow with any of these as 1; It is possible that it may not compile
 # CUDA COMPUTE CAPABILITY of your GPU must be enterred -- IF you are building for NVIDIA GPU
 export TF_CUDA_COMPUTE_CAPABILITIES=6
 
@@ -11,8 +15,7 @@ export TF_JAVA_VERSION=10
 ## best to use an absolute/complete path here
 tfGitRoot=~/SetupScript/tensorflow_source
 
-## other TF variables, you probably wont be using them
-#dont change the following
+## other TF variables - Not sure how it does whatever it does, Never used these
 export TF_DOWNLOAD_MKL=0
 export TF_DOWNLOAD_CLANG=0
 

@@ -1,11 +1,8 @@
-DRY_MODE=0
-dry_echo=""
+. util.sh ${*}
 
 # argv will be commdline arg inside .m files
 if [ "$1" = "-D" ] || [ "$1" = "--dry-run" ]; then
 	echo "Running octave setup in dry mode!"
-	DRY_MODE=1
-	dry_echo="echo "
 fi
 
 _pkg_list() {

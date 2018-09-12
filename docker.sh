@@ -1,23 +1,16 @@
 #!/bin/bash
 #set -o errexit -o pipefail -o noclobber #-o nounset
-## get util functions loaded
-. util.sh
 #. `which virtualenvwrapper.sh`
+## get util functions loaded
+. util.sh ${*}
+
+disp "Ubuntu Docker Install/Reinstall Script"
+
+## vars, independent of util file (usage is limited to this script)
+AUTO=0
 
 # use the display function to print this
-disp "Docker REINSTALLATION Script"
-#logging/utils/help
-dry_echo=""
-AUTO=0
-if test "$1" = "--dry-run" -o "$1" = "-D" ; then 
-	echo "Running docker setup in --dry-run mode"
-	dry_echo="echo "
-	shift
-fi
-if test "$1" = "--automated" -o "$1" = "-a" ; then 
-	echo "Running docker setup in automated mode"
-	AUTO=1
-fi
+#disp "Docker REINSTALLATION Script"
 ## If you are running docker directly from here, please set the SUDO choice here.
 if [ -z $Install_Docker ]; then
 	echo "Not called from master script, setup variables here in docker.sh!"
@@ -33,11 +26,11 @@ if [ -z $Install_Docker ]; then
 		fi
 		
 		read -p "Uninstall previous versions of Docker? (y/Y for yes) - " uninstqn
-		if test "$uninstqn" = "N" -o "$uninstqn" = "n"; then
+		if [ "$uninstqn" = "n" ]; then
 			echo "Not uninstalling previous versions of Docker.";
 		else
 			echo "Uninstalling previous versions of Docker.";
-			sudo apt-get remove -y docker docker-engine docker.io
+			$dry_echo sudo apt-get remove -y docker docker-engine docker.io
 		fi
 	fi
 fi

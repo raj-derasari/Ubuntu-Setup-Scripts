@@ -1,30 +1,22 @@
 #!/bin/bash
 # set -o errexit -o pipefail -o noclobber #-o nounset
-## get util functions loaded
-. util.sh
 #. `which virtualenvwrapper.sh`
+## get util functions loaded
+. util.sh ${*}
 
 # use the display function to print this
 disp "Ubuntu Python Tensorflow Compile/Install Script"
 
-CONFIGFILE=config_tensorflow.sh
-
-#logging/utils/help
-INFO="TF: INFO: "
-ERROR="TF: ERROR: "
+CONFIGFILE=tensorflow_config.sh
 
 ## Variables to use while setting up tensorflow
-DEBUG_MODE=0
-DRY_MODE=0
-dry_echo=""
 startDir=`pwd`
 
 ## Help Message (Tensorflow/Python)
-_help_() {
-	echo "
+_help_(){
+echo "
 	Usage: bash tensorflow_setup.sh <arguments>
-	-D or --dry-run        | Dry-run
-	-d or --debug-mode     | To run in debug mode
+	-d or --dry-run        | Dry-run
 	-f or --file           | (Optional) Select a configuration file (Bash script similar to config_tensorflow.sh in this directory)
 	                          If no argument is passed, config_tensorflow.sh will be loaded, you can edit it for your own use
 	-p or --python-version | (Required) Set the Python Version for your Tensorflow compilation [Supported- Python2 and Python3]
@@ -56,21 +48,20 @@ _help_() {
 	8. That's it, you can now install keras if you wish to, or run \"import tensorflow\"
 	   from your Python executable to check if it installed correctly!
 	----------------------------------------------------------------------------------------------------------------------
-	If this is your first-ever run of the tensorflow compilation, select \"all\" "; exit 0
-	}
+	If this is your first-ever run of the tensorflow compilation, select \"all\" "; exit 122
+}
 
 # Bazel-build function
 _bazel_build() {
 	if [[ $Python_Tensorflow_GPU -eq 1 ]]; then
 		log $INFO "start bazel build for GPU"
-		echo "HIHIHIHI"
-		bazel build --config=opt --config=cuda --verbose_failures //tensorflow/tools/pip_package:build_pip_package
+		$dry_echo bazel build --config=opt --config=cuda --verbose_failures //tensorflow/tools/pip_package:build_pip_package
 	elif [[ $Python_Tensorflow_MKL -eq 1 ]]; then 
 		log $INFO "start bazel build for MKL"
-		bazel build --config=opt --config=mkl --verbose_failures //tensorflow/tools/pip_package:build_pip_package
+		$dry_echo bazel build --config=opt --config=mkl --verbose_failures //tensorflow/tools/pip_package:build_pip_package
 	elif [[ $Python_Tensorflow_CPUOnly -eq 1 ]]; then
 		log $INFO "start bazel build for CPU"
-		bazel build --config=opt --verbose_failures //tensorflow/tools/pip_package:build_pip_package
+		$dry_echo bazel build --config=opt --verbose_failures //tensorflow/tools/pip_package:build_pip_package
 	fi
 }
 
@@ -85,19 +76,16 @@ while true; do
 		-f|--file)
 			CONFIGFILE="$2"
 			if [ -e "$2" ]; then
-				echo "Configuration file loaded"
+				echo "Configuration file loaded."
 			else
-				echo "The configuration file you input does not exist!"
+				echo "The configuration file does not exist."
 				exit 5
 			fi
 			shift 2
 			;;
-		-D|--dry-run)
-			DRY_MODE=1
-			dry_echo="echo "
-			DRYFLAG=" -D "
-			echo "Dry-Run: No commands will be executed"
-			log $INFO $DEBUG "Running in debug mode"
+		-d|--dry-run)
+			echo "Executing installation of Tensorfow in dry-run mode"
+			log $INFO $DEBUG "Running in dry mode"
 			shift
 			;;
 		-v|--virtualenv)
@@ -123,7 +111,6 @@ while true; do
 			AUTOMODE=1
 			echo "Running in fully automated Tensorflow setup mode - All prompts disabled"
 			shift
-			#echo "Running in auto mode, all user inputs disabled!"
 			;;
         --)
 		    shift
@@ -269,7 +256,8 @@ if [[ -z `which bazel` ]]; then
 	echo "installing bazel-dependencies"
 	
 	# echo "DE:" $dry_echo
-	$dry_echo sudo apt-get install -y build-essential cmake git python${PV}-dev python${PV}-distutils pylint libcupti-dev curl
+	$apt_update
+	$apt_prefix build-essential cmake git python${PV}-dev python${PV}-distutils pylint libcupti-dev curl
 	if [ $DRY_MODE -eq 1 ]; then
 		echo "Add apt-repositories for bazel"
 	else
@@ -277,7 +265,7 @@ if [[ -z `which bazel` ]]; then
 		curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
 	fi
 	#sudo apt-key update && 
-	$dry_echo sudo apt-get update 1>/dev/null
+	$apt_update
 	#$dry_echo sudo apt-get -o Dpkg::Options::="--force-overwrite" install -y openjdk-9-jdk
 	if [[ -z `which javac` ]]; then
 		if [ $AUTOMODE -eq 1 ]; then
@@ -296,15 +284,15 @@ if [[ -z `which bazel` ]]; then
 		elif [ $TF_JAVA_VERSION -eq 8 ]; then
 			$dry_echo sudo add-apt-repository -y ppa:webupd8team/java
 		fi
-		$dry_echo sudo apt-get update
+		$apt_update
 		if [ $DRY_MODE -ne 1 ]; then 
 			echo "oracle-java${TF_JAVA_VERSION}-installer shared/accepted-oracle-license-v1-1 select true" | sudo /usr/bin/debconf-set-selections
 			echo "oracle-java${TF_JAVA_VERSION}-installer shared/accepted-oracle-license-v1-1 seen true" | sudo /usr/bin/debconf-set-selections
 		fi
-		$dry_echo sudo apt-get install -y oracle-java${TF_JAVA_VERSION}-installer
-		$dry_echo sudo apt-get install -y oracle-java${TF_JAVA_VERSION}-set-default
+		$apt_prefix oracle-java${TF_JAVA_VERSION}-installer
+		$apt_prefix oracle-java${TF_JAVA_VERSION}-set-default
 	fi
-	$dry_echo sudo apt-get install -y bazel
+	$apt_prefix bazel
 else
 	echo "seems like bazel is installed, only checking for other dependencies"
 	log $INFO "bazel: Already installed"
@@ -359,9 +347,7 @@ elif [[ $Python_Tensorflow_CPUOnly -eq 1 ]]; then
 	export TF_NEED_CUDA=0
 fi
 
-## PUt the Build Blocks here
-pwd
-read -p "wow" wow
+## Build!
 case $MODE in 
 	"clean")
 		$dry_echo bazel clean;
