@@ -2,10 +2,12 @@
 . br_util.sh ${*}
 
 disp "Unity Bloat Removal Script"
-splash_msg="
--------------------------------------
-Removing packages, followed by softwares:
-"
+
+splash_msg="----------------------------------------------
+Removing unneeded packages, followed by default software:
+----------------------------------------------\n"
+echo -e "$splash_msg"
+
 pkgs="
 account-plugin-aim \
 account-plugin-facebook \
@@ -129,7 +131,6 @@ $dry_echo sudo apt -y autoremove
 #sudo apt-get purge -y contact-lookup-applet
 #log $INFO "openoffice:"
 #sudo apt-get purge -y openoffice.org-calc openoffice.org-draw openoffice.org-impress openoffice.org-writer openoffice.org-base-core
-
 
 log $INFO "stage 3: Disable evolution-services"
 $dry_echo cd /usr/share/dbus-1/services

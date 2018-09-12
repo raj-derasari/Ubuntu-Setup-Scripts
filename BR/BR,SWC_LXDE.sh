@@ -3,13 +3,15 @@
 
 # called from main menu
 if [ -z $Master_RemoveBloatware ]; then
-	_help_
+	_help_;
+	#exit 5;
 fi
-## literally bloatware, in my opinion
+
 splash_msg="----------------------------------------------
 Removing unneeded packages, followed by default software:
 ----------------------------------------------\n"
 echo -e "$splash_msg"
+
 # pkg to remove, remove lines or add packages below with a backslash (\) at the end, to uninstall
 # Make sure that there is no space after the backslash!
 pkgs="
@@ -18,7 +20,7 @@ gnome-mplayer \
 simple-scan \
 xfburn"
 
-# pkg to remove, same as above
+# pkgs to remove, same as above, but many more dependency/packages coz these are full software
 sws="
 abiword* \
 alsa* \
@@ -43,3 +45,4 @@ $apt_prefix -f
 # makes the mute button TOGGLE mute/unmute instead of FORCING mute every time its pressed
 $apt_prefix alsa-utils
 $dry_echo sed -i 's/amixer -q sset Master toggle/amixer -D pulse set Master toggle/g' ~/.config/openbox/lubuntu-rc.xml && openbox --reconfigure
+exit 0

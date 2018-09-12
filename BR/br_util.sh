@@ -77,6 +77,4 @@ Recommended software after this script completes:
     Thunderbird for email client
     UGet and Qbittorrent for download-management
     LibreOffice for an office suite";
-    exit 5;
 }
-
