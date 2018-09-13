@@ -19,3 +19,8 @@ Make it so that every script can write its finished-status onto /tmp/<> - So tha
 Mozilla Thunderbird
 VPN setup ?
 Can extract Tempaltes to user templates (maybe ask maybe make variable IDK)
+
+Test
+sed 'a/dns-nameservers.\*/dns-nameservers 1.1.1.1 208.67.222.222 208.67.220.220 4.4.4.4/g' /etc/network/interfaces
+Deploy
+sed -i 'a//' /etc/network/interfaces
