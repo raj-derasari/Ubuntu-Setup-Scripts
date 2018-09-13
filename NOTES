@@ -22,5 +22,6 @@ Can extract Tempaltes to user templates (maybe ask maybe make variable IDK)
 
 Test
 sed 'a/dns-nameservers.\*/dns-nameservers 1.1.1.1 208.67.222.222 208.67.220.220 4.4.4.4/g' /etc/network/interfaces
-Deploy
-sed -i 'a//' /etc/network/interfaces
+
+Maybe Refer
+https://unix.stackexchange.com/questions/128220/how-do-i-set-my-dns-when-resolv-conf-is-being-overwritten
