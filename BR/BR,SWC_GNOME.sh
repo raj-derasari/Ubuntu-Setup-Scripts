@@ -1,7 +1,7 @@
 #!/bin/bash 
 . br_util.sh ${*}
 
-disp "Unity Bloat Removal Script"
+disp "GNOME Bloat Removal Script"
 
 splash_msg="----------------------------------------------
 Removing unneeded packages, followed by default software:
@@ -132,10 +132,16 @@ $dry_echo sudo apt -y autoremove
 #log $INFO "openoffice:"
 #sudo apt-get purge -y openoffice.org-calc openoffice.org-draw openoffice.org-impress openoffice.org-writer openoffice.org-base-core
 
+
+## disables evolution services that are not too helpful anyway
 log $INFO "stage 3: Disable evolution-services"
 $dry_echo cd /usr/share/dbus-1/services
 $dry_echo sudo ln -snf /dev/null  org.gnome.evolution.dataserver.AddressBook.service  
 $dry_echo sudo ln -snf /dev/null  org.gnome.evolution.dataserver.Calendar.service 
 $dry_echo sudo ln -snf /dev/null  org.gnome.evolution.dataserver.Sources.service 
-$dry_echo sudo ln -snf /dev/null  org.gnome.evolution.dataserver.UserPrompter.service 
+$dry_echo sudo ln -snf /dev/null  org.gnome.evolution.dataserver.UserPrompter.service
+
+## clicking on dock icons toggles minimizes the application
+$dry_echo gsettings set org.gnome.shell.extensions.dash-to-dock click-action 'minimize'
+
 exit 0
