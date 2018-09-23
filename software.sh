@@ -161,6 +161,7 @@ fi
 if [ $Install_Flux -eq 1 ]; then
 	log $INFO "install Flatpak"
 	$apt_prefix flatpak
+	flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 fi
 if [ $Install_Flux -eq 1 ]; then
 	log $INFO "install Flux"
