@@ -5,7 +5,7 @@
 . util.sh ${*}
 
 # use the display function to print this
-disp "Software Setup Script - Raj Derasari"
+disp "Ubuntu - Software Setup Script"
 
 ## If you want to automate this script and add a config file here itself, uncomment the next line
 # CFGFILE=""
@@ -39,7 +39,13 @@ if [ -z $CFGFILE ]; then
 	## CFG file is not defined
 	echo "Error - Configuration file is not loaded or defined!
 	Please use the \"-f\" argument and pass a valid Configuration File!
-	Alternatively you can refer `basename $0` and define the variable CFGFILE"
+	Alternatively you can edit the file `basename $0` and define the variable CFGFILE"
+	exit 3
+elif [ -e $CFGFILE ]; then
+	## CFG file is not defined
+	echo "Error - Configuration file does not exist!
+	Please use the \"-f\" argument and pass a valid Configuration File!
+	Alternatively you can edit the file `basename $0` and define the variable CFGFILE"
 	exit 3
 fi
 		
@@ -53,6 +59,9 @@ if [ $? -eq 127 ]; then
 fi
 
 log $INFO "Begin"
+if [ $Install_Flatpak -eq 1 ]; then
+	$addaptrepo ppa:alexlarsson/flatpak
+fi
 if [ $Install_Flux -eq 1 ]; then
 	$addaptrepo ppa:nathan-renniewaldock/flux
 fi
@@ -149,6 +158,10 @@ if [ $Install_ZSH -eq 1 ]; then
 	$apt_prefix zsh
 fi
 
+if [ $Install_Flux -eq 1 ]; then
+	log $INFO "install Flatpak"
+	$apt_prefix flatpak
+fi
 if [ $Install_Flux -eq 1 ]; then
 	log $INFO "install Flux"
 	$apt_prefix fluxgui
