@@ -67,8 +67,10 @@ export Do_CleanupAfterExec=1
 # All of the following are affected based on the value of Master_Software being 1
 # ExFat file system utilites
 export Install_EXFatUtils=1
-# Flux is recommended for programmers during evening/night times.
+# Flux is recommended for users evening/night times.
 export Install_Flux=1
+# Flatpak is a software and package installation utility which will be meta real soon
+export Install_Flatpak=1
 # Gparted is a partition utility which is highly useful, and most recommended
 export Install_GParted=1
 # 7-zip and other archive types support (Not a GUI, integrates with default archive applications)
