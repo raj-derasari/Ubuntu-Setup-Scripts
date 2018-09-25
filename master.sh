@@ -200,7 +200,7 @@ if [ $Master_Dependencies -eq 1 ]; then
 	#sudo apt-key update && 
 	disp "Master - Executing Dependencies Install"
 	log $INFO "Setting up lib* and dependencies"
-	bash libsdeps.sh $DRYFLAG 2>>"${ERRORFILE}"
+	bash dependencies.sh $DRYFLAG 2>>"${ERRORFILE}"
 else
 	log $INFO "NOT setting up lib* and dependencies"
 fi
