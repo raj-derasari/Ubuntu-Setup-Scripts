@@ -69,6 +69,8 @@ export Do_CleanupAfterExec=0
 export Install_EXFatUtils=0
 # Flux is recommended for programmers during evening/night times.
 export Install_Flux=0
+# Flatpak is a software and package installation utility which will be meta real soon
+export Install_Flatpak=0
 # Gparted is a partition utility which is highly useful, and most recommended
 export Install_GParted=0
 # 7-zip and other archive types support (Not a GUI, integrates with default archive applications)
