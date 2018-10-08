@@ -181,6 +181,12 @@ export Install_VisualStudioCode=1
 # TODO: IF possible, install the Octave Sourceforge packages directly via this script.
 export Install_Octave=0
 
+## Scientific Coding "IDE" hah
+# R studio and R are open source tools
+# TODO: IF possible, install the Octave Sourceforge packages directly via this script.
+export Install_R_Base_3.5=0
+export Install_R_Studio=0
+
 ### 11. PYTHON SETUP - VERSION, LIBRARIES SELECTION
 ## -------------------------------------------------------------------------------------------------------------------
 ## Python Setup - installing python libraries
