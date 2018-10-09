@@ -41,7 +41,7 @@ if [ -z $CFGFILE ]; then
 	Please use the \"-f\" argument and pass a valid Configuration File!
 	Alternatively you can edit the file `basename $0` and define the variable CFGFILE"
 	exit 3
-elif [ -e $CFGFILE ]; then
+elif [ ! -e $CFGFILE ]; then
 	## CFG file is not defined
 	echo "Error - Configuration file does not exist!
 	Please use the \"-f\" argument and pass a valid Configuration File!
