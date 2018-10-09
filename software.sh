@@ -131,16 +131,16 @@ if [ $DRY_MODE -ne 1 ]; then
 		curl https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
 		echo 'deb $_architecture http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list
 	fi
-	if [ $Install_R_Base_3.5 -eq 1 ]; then
-		gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
-		gpg -a --export E298A3A825C0D65DFD57CBB651716619E084DAB9 | sudo apt-key add -
-		echo 'https://cloud.r-project.org/bin/linux/ubuntu `lsb_release -cs`-cran35/' > /etc/apt/sources.list.d/r-base.list
+#	if [ $Install_R_Base_3.5 -eq 1 ]; then
+#		gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+##		gpg -a --export E298A3A825C0D65DFD57CBB651716619E084DAB9 | sudo apt-key add -
+	#	echo 'https://cloud.r-project.org/bin/linux/ubuntu `lsb_release -cs`-cran35/' > /etc/apt/sources.list.d/r-base.list
 
 		# $dry_echo sudo add-apt-repository -y "https://cloud.r-project.org/bin/linux/ubuntu `lsb_release -cs`-cran35/" # &> /dev/null
 		# $dry_echo echo "https://cloud.r-project.org/bin/linux/ubuntu `lsb_release -cs`-cran35/" >> /etc/apt/sources.list
 
 
-	fi
+#	fi
 fi
 
 ## Update sources
