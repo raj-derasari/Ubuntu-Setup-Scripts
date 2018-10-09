@@ -11,23 +11,20 @@ if [ $DRY_MODE -eq 1 ]; then
 	echo "Dry-running installation of dependencies!"
 fi
 
-## begin
-Prefix="$dry_echo sudo apt-get install -y "
-
 log $INFO "Adding default ubuntu repositories!"
-$Prefix sudo add-apt-repository -y universe
-$Prefix sudo add-apt-repository -y restricted
-$Prefix sudo add-apt-repository -y multiverse
+$dry_echo sudo add-apt-repository -y universe
+$dry_echo sudo add-apt-repository -y restricted
+$dry_echo sudo add-apt-repository -y multiverse
 #sudo apt-key update && 
 $dry_echo sudo apt-get update
 
 # get ifconfig working on Ubuntu Unity/Budgie/gnome
 log $INFO "IFCONFIG"
-$Prefix --install-recommends net-tools
+$apt_prefix --install-recommends net-tools
 
 # build tools
 log $INFO "Build Tools - cmake, etc."
-$Prefix --install-recommends \
+$apt_prefix --install-recommends \
 build-essential \
 cmake \
 curl \
@@ -37,7 +34,7 @@ libgtk2.0-dev
 
 # better stuff
 log $INFO "C/C++ SO files"
-$Prefix --install-recommends \
+$apt_prefix --install-recommends \
 gcc-6-base:i386 \
 libbz2-1.0:i386 \
 libc6:i386 \
@@ -51,14 +48,14 @@ lib32ncurses5 \
 lib32z1 \
 libtinfo5:i386
 
-$Prefix --install-recommends \
+$apt_prefix --install-recommends \
 libbz2-dev \
 libssl-dev \
 libreadline-dev \
 libsqlite3-dev tk-dev
 
 log $INFO "gconf "
-$Prefix --install-recommends \
+$apt_prefix --install-recommends \
 gconf2 \
 gconf2-common \
 gconf-service \
