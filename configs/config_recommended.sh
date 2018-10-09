@@ -30,7 +30,7 @@ export BF=~/.bashrc
 # Github setup - This is independent of every other installation given above
 export Install_Git=1
 # IF you set this as 1, you will have to enter your email and name in Git_Email and Git_YourName
-export Install_Git_SSHKeys=1
+export Install_Git_SSHKeys=0
 # Remember to unset this to some random values, or delete this file when done (If you create a pull request, to save your data)
 export Git_Email="user.name@example.com"
 export Git_YourName="User Name"
@@ -66,9 +66,9 @@ export Do_CleanupAfterExec=1
 # Strongly recommended packages
 # All of the following are affected based on the value of Master_Software being 1
 # ExFat file system utilites
-export Install_EXFatUtils=1
+export Install_EXFatUtils=0
 # Flux is recommended for users evening/night times.
-export Install_Flux=1
+export Install_Flux=0
 # Flatpak is a software and package installation utility which will be meta real soon
 export Install_Flatpak=1
 # Gparted is a partition utility which is highly useful, and most recommended
@@ -78,13 +78,13 @@ export Install_P7Zip=1
 # Torrent Client
 export Install_QBitTorrent=1
 # PDF Viewer which is incredibly fast and lightweight
-export Install_QPDFView=1
+export Install_QPDFView=0
 # Uget is a download manager
-export Install_UGET=1
+export Install_UGET=0
 # VLC is the go-to media player for Linux, with various alternatives (however, I recommend VLC)
 export Install_VLCMediaPlayer=1
 # Z-shell, alternative for bash
-export Install_ZSH=1
+export Install_ZSH=0
 
 ### 5. SOFTWARE TOOLS SETUP - WEB BROWSERS
 ## -------------------------------------------------------------------------------------------------------------------
@@ -100,9 +100,9 @@ export Install_Vivaldi=0
 export Install_Audacity=0
 export Install_WinFF=0
 # grive is an open source, third-party, command line Google-Drive tool.
-export Install_Grive_GoogleDrive=1
+export Install_Grive_GoogleDrive=0
 # keepass password manager, for all your random password needs!
-export Install_KeepassPasswordManager=1
+export Install_KeepassPasswordManager=0
 # Teamviewer is a remoting software, you probably knew that already didn't ya?
 export Install_TeamViewer=1
 # Okular is a heavy-featured PDF Suite
@@ -129,7 +129,7 @@ export Install_Thunderbird=0
 ### 7. SOFTWARE TOOLS SETUP - LIBREOFFICE SUITE
 ## -------------------------------------------------------------------------------------------------------------------
 # Libre Office
-export Install_LibreOffice=1
+export Install_LibreOffice=0
 # Base is like MS Access, database software
 export LibreOffice_Base=1
 # Draw is for .. drawing?
@@ -173,7 +173,7 @@ export Install_Atom=0
 # Lightweight alternative to Atom - Sublime Text (Free Edition)
 export Install_SublimeText=1
 # VS Code is also a great programming IDE
-export Install_VisualStudioCode=1
+export Install_VisualStudioCode=0
 ## TODO: Add emacs here, and... anything else?
 
 ## Scientific Coding "IDE" hah
@@ -184,7 +184,7 @@ export Install_Octave=0
 ## Scientific Coding "IDE" hah
 # R studio and R are open source tools
 # TODO: IF possible, install the Octave Sourceforge packages directly via this script.
-export Install_R_Base_3.5=0
+#export Install_R_Bas=0
 export Install_R_Studio=0
 
 ### 11. PYTHON SETUP - VERSION, LIBRARIES SELECTION
@@ -203,7 +203,7 @@ export Python_InstallBasics=1
 export Python_InstallWebDevelopmentTools=1
 
 # the DJANGO framework and some aliases that make migrating and running your server easier
-export Python_InstallDjango=1
+export Python_InstallDjango=0
 
 # Jupyter Notebook, because it's a pretty handy tool
 export Python_InstallJupyter=1
