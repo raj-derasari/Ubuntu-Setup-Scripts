@@ -1,3 +1,5 @@
 Add a command --print-commands-only or something like that so that IF in dry-run mode, print ONLY the commands preceded by a $ sign
+DONE
 
 Can save these commands to a new text file and straightaway excute (especialy helpful in custom ISO creation)
+DONE

@@ -25,7 +25,7 @@
 # Your bashrc profile file - Most installations will come with this
 export USER_HOME=~
 # If you are working with LIVE ISO customization like me
-#export USER_HOME=/etc/skel
+#export USER_HOME=~
 export BF=${USER_HOME}/.bashrc
 # You can set this next line to 0 to not copy-paste templates from the templates.zip file in the project
 export Setup_Templates=0
@@ -245,6 +245,5 @@ export Python_InstallMachineLearningTools=0
 export Python_Compile_Tensorflow=0
 ## Select one of the next 3 as 1, if you don't select any of them as 1
 ## I will be really sad :(
-export Python_Tensorflow_CPUOnly=0
-export Python_Tensorflow_GPU=0
-export Python_Tensorflow_MKL=0
+## allowed values: cpu, gpu, mkl - Case sensitive (probably)
+export Python_Tensorflow_Target=mkl

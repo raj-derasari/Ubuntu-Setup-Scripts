@@ -4,13 +4,7 @@
 # called from main menu
 if [ -z $Master_RemoveBloatware ]; then
 	_help_;
-	#exit 5;
 fi
-
-splash_msg="----------------------------------------------
-Removing unneeded packages, followed by default software:
-----------------------------------------------\n"
-pprint "$splash_msg"
 
 # pkg to remove, remove lines or add packages below with a backslash (\) at the end, to uninstall
 # Make sure that there is no space after the backslash!
@@ -45,8 +39,7 @@ language-pack-es* language-pack-es-base* language-pack-gnome-es* language-pack-g
 language-pack-it* language-pack-it-base* language-pack-gnome-it* language-pack-gnome-it-base* \
 language-pack-pt* language-pack-pt-base* language-pack-gnome-pt* language-pack-gnome-pt-base* \
 language-pack-gnome-ru* language-pack-gnome-ru-base* language-pack-ru* language-pack-ru-base* \
-language-pack-zh-hans* language-pack-zh-hans-base* language-pack-gnome-zh-hans* language-pack-gnome-zh-hans-base*
-"
+language-pack-zh-hans* language-pack-zh-hans-base* language-pack-gnome-zh-hans* language-pack-gnome-zh-hans-base* "
 
 pprint "Packages: "$pkgs
 pprint "Softwares: "$sws
@@ -62,7 +55,7 @@ $dry_echo sudo dpkg --configure -a
 $dry_echo sudo apt -y autoremove
 $apt_prefix -f
 
-$apt_prefix alsa-utils
+$apt_prefix alsa-utils alsamixer
 if [ $DRY_MODE -eq 1 ]; then
 	$dry_echo sed -i \'s/amixer -q sset Master toggle/amixer -D pulse set Master toggle/g\' ${HOME}/.config/openbox/lubuntu-rc.xml && openbox --reconfigure
 else

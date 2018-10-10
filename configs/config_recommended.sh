@@ -25,7 +25,7 @@
 # Your bashrc profile file - Most installations will come with this
 export USER_HOME=~
 # If you are working with LIVE ISO customization like me
-#export USER_HOME=/etc/skel
+#export USER_HOME=~
 export BF=${USER_HOME}/.bashrc
 # You can set this next line to 0 to not copy-paste templates from the templates.zip file in the project
 export Setup_Templates=1
@@ -219,7 +219,7 @@ export Python_InstallWebDevelopmentTools=1
 export Python_InstallDjango=0
 
 # Jupyter Notebook, because it's a pretty handy tool
-export Python_InstallJupyter=1
+export Python_InstallJupyter=0
 
 # some OpenCV stuff that I haven't coded yet - there are scripts for it already.
 # if you need it check out this cool repository:
@@ -234,7 +234,7 @@ export Python_InstallNLTK=0
 # Installs ML tools - theano (Not Thanos), Tensorflow, Keras, etc - you can select your own tensorflow below if you want to
 # but to have tensorflow installed the next variable must definitely be 1
 # Must set to 1 if you want to install tensorflow!
-export Python_InstallMachineLearningTools=0
+export Python_InstallMachineLearningTools=1
 
 ### 12. PYTHON SETUP - TENSORFLOW COMPILATION/INSTALLATION
 ## -------------------------------------------------------------------------------------------------------------------
@@ -242,9 +242,8 @@ export Python_InstallMachineLearningTools=0
 ## and if you have a machine that can compile tensorflow;
 ## then you can select 1 below and choose any modes (CPU, CUDA/GPU, Intel MKL)
 ## -------------------------------------------------------------------------------------------------------------------
-export Python_Compile_Tensorflow=0
+export Python_Compile_Tensorflow=1
 ## Select one of the next 3 as 1, if you don't select any of them as 1
 ## I will be really sad :(
-export Python_Tensorflow_CPUOnly=0
-export Python_Tensorflow_GPU=0
-export Python_Tensorflow_MKL=0
+## allowed values: cpu, gpu, mkl - Case sensitive (probably)
+export Python_Tensorflow_Target=mkl

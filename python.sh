@@ -1,6 +1,4 @@
 #!/bin/bash
-#set -o errexit -o pipefail -o noclobber #-o nounset
-#. `which virtualenvwrapper.sh`
 ## get util functions loaded
 . util.sh ${*}
 
@@ -18,8 +16,8 @@ if [ -z $Setup_Python_Dev ]; then
 	BF=${USER_HOME}/.bashrc 
 	
 	# Enter the path to your virtualenv parent directory, eg. if you venv is "myVE" and path is
-	# ~/.virtualenvs/myVE/
-	# then enter ~/.virtualenvs WITHOUT QUOTES - THIS IS IMPORTANT!
+	# ${HOME}/.virtualenvs/myVE/
+	# then enter ${HOME}/.virtualenvs WITHOUT QUOTES - THIS IS IMPORTANT!
 	# The default value is set below as ${USER_HOME}/.virtualenvs
 	VirtualEnv_Directory=${USER_HOME}/.virtualenvs
 	
@@ -31,9 +29,8 @@ if [ -z $Setup_Python_Dev ]; then
 	Python_InstallMachineLearningTools=0
 	Python_InstallNLTK=0
 	Python_Compile_Tensorflow=1
-	Python_Tensorflow_GPU=1
-	Python_Tensorflow_MKL=0
-	Python_Tensorflow_CPUOnly=0
+	# allowed values: gpu, cpu, mkl
+	Python_Tensorflow_Target="gpu"
 fi
 
 ## Prints Help Message for command line (Tensorflow/Python)
@@ -50,38 +47,38 @@ Usage: bash python_util.sh <arguments>
 
 pprint "Parsing command line parameters."
 while true; do
-    case "$1" in
-        -h|--help) _help_
+	case "$1" in
+		-h|--help) _help_
 			shift
 			;;
 		-x|--print-commands-only)
 			DRYFLAG=`echo "$DRYFLAG -x"`
 			shift
 			;;
-        -d|--dry-run)
+		-d|--dry-run)
 			pprint "Dry-running installation of Python!"
 			DRYFLAG=`echo "$DRYFLAG -d"`
 			shift
 			;;
-        -v|--virtualenv)
+		-v|--virtualenv)
 			#Setup_VirtualEnv=1
 			VE="$2"
 			#venv_pip_prefix="$dry_echo python -m pip install --user --upgrade " # this is used if NOT using virtualenv
 			shift 2
 			;;
-        -p|--python-version)
+		-p|--python-version)
 			PV="$2"
 			shift 2
 			;;
-        --)
-            shift
-            break
-            ;;
-        *)
-            echo "Programming error"
-            exit 126
-            ;;
-    esac
+		--)
+			shift
+			break
+			;;
+		*)
+			echo "Programming error"
+			exit 126
+			;;
+	esac
 done
 ## PV sanity check
 if [[ -z $PV ]]; then
@@ -122,14 +119,13 @@ elif [ $Setup_VirtualEnv -eq 1 ]; then
 		VE=$VirtualEnv_Name
 	fi
 	if [[ -z $VirtualEnv_Directory ]]; then
+		echo "If you are seeing this, something is seriously wrong with my coding skills"
 		VirtualEnv_Directory=~/.virtualenvs/$VE
 	fi
-	#mkvirtualenv $VirtualEnv_Name
-	#workon $VirtualEnv_Name
-	## mkvirtualenv can be replaced with
-	#virtualenv --system-site-packages -p python2 ~/.virtualenvs/$VirtualEnv_Name
-	## workon $ENV$ can be replaced with
-	#source /$VENV_PATH$/$ENV$/bin/activate
+	## virtualenv: virtualenv --system-site-packages -p python ${HOME}/.virtualenvs/$VirtualEnv_Name
+	## wrapper: mkvirtualenv $VirtualEnv_Name
+	## virtualenv: source /$VENV_PATH$/$ENV$/bin/activate
+	## wrapper: workon $VirtualEnv_Name
 	if [ ! -e  $VirtualEnv_Directory/bin/activate ]; then
 		log $INFO "Creating virtualenv $VirtualEnv_Name"
 		pprint "Creating virtualenv $VE!"
@@ -137,7 +133,7 @@ elif [ $Setup_VirtualEnv -eq 1 ]; then
 	fi
 	$dry_echo source $VirtualEnv_Directory/bin/activate
 fi
-# ------------------------------------------------------------------------------------------------------------------
+
 Python_Pkg_List="\
 python-genshi \
 python-colorama \
@@ -222,16 +218,8 @@ if [ $Python_InstallMachineLearningTools -eq 1 ]; then
 		if [ $Setup_VirtualEnv -eq 1 ]; then 
 			VFlag=" -v $VE "
 		fi
-		if [ $Python_Tensorflow_GPU -eq 1 ]; then
-			log $INFO "Compiling Tensorflow - GPU"
-			bash tensorflow.sh -a -p $PV -b gpu -m all $DRYFLAG $VFlag
-		elif [ $Python_Tensorflow_MKL -eq 1 ]; then
-			log $INFO "Compiling Tensorflow - MKL"
-			bash tensorflow.sh -a -p $PV -b mkl -m all $DRYFLAG $VFlag
-		elif [ $Python_Tensorflow_CPUOnly -eq 1 ]; then
-			log $INFO "Compiling Tensorflow - CPU"
-			bash tensorflow.sh -a -p $PV -b cpu -m all $DRYFLAG $VFlag
-		fi
+		log $INFO "Compiling Tensorflow - " $Python_Tensorflow_Target
+		bash tensorflow.sh -a -p $PV -b $Python_Tensorflow_Target -m all $DRYFLAG $VFlag
 	else
 		log $INFO "Not compiling tensorflow, installing from pip"
 		$venv_pip_prefix tensorflow

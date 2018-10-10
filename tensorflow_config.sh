@@ -7,13 +7,13 @@
 # CUDA COMPUTE CAPABILITY of your GPU must be enterred -- IF you are building for NVIDIA GPU
 export TF_CUDA_COMPUTE_CAPABILITIES=6
 
-## if your pc doesn't have java, it will be installed here
+## if you don't have java installed, it will be installed in the script
 ## supported values; 8 and 10
 export TF_JAVA_VERSION=10
 
 # path where tensorflow is downloaded from github
 ## best to use an absolute/complete path here
-tfGitRoot=~/SetupScript/tensorflow_source
+tfGitRoot=${HOME}/SetupScript/tensorflow_source
 
 ## other TF variables - Not sure how it does whatever it does, Never used these
 export TF_DOWNLOAD_MKL=0
