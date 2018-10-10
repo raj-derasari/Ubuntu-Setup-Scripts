@@ -216,12 +216,14 @@ if [ $Master_RemoveBloatware -eq 1 ]; then
 		Unity|LXDE|GNOME) #|XFCE|KDE|Pantheon)  # have to work on the rest
 		pprint "Running bloatremove for ${XDG_CURRENT_DESKTOP}"
 		cd ./BR/
+		BR_FLAGS=""
 		if [ $Bloatware_Remove_Themes -eq 1 ]; then
-			bash BR,SWC_${XDG_CURRENT_DESKTOP}.sh $DRYFLAG --remove-themes 2>>"${ERRORFILE}";
-		else
-			bash BR,SWC_${XDG_CURRENT_DESKTOP}.sh $DRYFLAG 2>>"${ERRORFILE}";
+			BR_FLAGS="`echo $BR_FLAGS` --remove-themes"
 		fi
-		
+		if [ $Bloatware_Remove_LanguagePacks -eq 1 ]; then
+			BR_FLAGS="`echo $BR_FLAGS` --remove-language-packs "
+		fi
+			bash BR,SWC_${XDG_CURRENT_DESKTOP}.sh $DRYFLAG $BR_FLAGS 2>>"${ERRORFILE}";
 		cd ..
 	;;
 	esac

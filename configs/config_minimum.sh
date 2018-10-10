@@ -56,8 +56,9 @@ export VirtualEnv_Directory=${USER_HOME}/.virtualenvs/$VirtualEnv_Name
 # Dependencies and Libraries - Highly recommended keep this as 1
 export Master_Dependencies=0
 # Bloatware removal script that checks your Desktop Environment and uninstalls bloatware based on that
-export Master_RemoveBloatware=1
+export Master_RemoveBloatware=0
 export Bloatware_Remove_Themes=0
+export Bloatware_Remove_LanguagePacks=0
 # Software setup script - Common Software, Java, Programming Tools, etc.
 export Master_Software=0
 # Python Libraries setup - For Python 2/3 Development, Both are supported.

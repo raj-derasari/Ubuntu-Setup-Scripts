@@ -28,6 +28,8 @@ pprint(){
     echo ${*}
 }
 
+additional_remove="echo "
+
 #####################################################################
 # Command line arguments parsing
 
@@ -38,8 +40,8 @@ if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
     exit 127
 fi
 
-OPTIONS=hxdtcaf:v:p:b:m:
-LONGOPTS=help,print-commands-only,dry-run,remove-themes,clear-logs,automated,file:,virtualenv:,python-version:,build-for:,mode:
+OPTIONS=hxdltcaf:
+LONGOPTS=help,print-commands-only,dry-run,remove-language-packs,remove-themes,clear-logs,automated,file
 
 # -use ! and PIPESTATUS to get exit code with errexit set
 # -temporarily store output to be able to check for errors
@@ -75,8 +77,8 @@ do
         }
         dry_echo="echo "
     fi
-    if [ "$var" = "-r " ] ||  [ "$var" = "--remove-themes" ]; then
-        themes_remove="$dry_echo sudo apt-get purge -y --auto-remove "
+    if [ "$var" = "-t " ] ||  [ "$var" = "--remove-themes" ] || [ "$var" = "-l " ] ||  [ "$var" = "--remove-language-packs" ];  then
+        additional_remove="$dry_echo sudo apt-get purge -y --auto-remove "
     fi
 done
 
