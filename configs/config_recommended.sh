@@ -49,17 +49,17 @@ export VirtualEnv_Directory=~/.virtualenvs/$VirtualEnv_Name
 ### 3. MASTER SETUP - REQUIRED TO SET EITHER 1 OR 0 HERE
 ## -------------------------------------------------------------------------------------------------------------------
 # Dependencies and Libraries - Highly recommended keep this as 1
-export Master_Dependencies=1
+export Master_Dependencies=0
 # Bloatware removal script that checks your Desktop Environment and uninstalls bloatware based on that
-export Master_RemoveBloatware=1
+export Master_RemoveBloatware=0
 # Software setup script - Common Software, Java, Programming Tools, etc.
-export Master_Software=1
+export Master_Software=0
 # Python Libraries setup - For Python 2/3 Development, Both are supported.
 export Master_Python=1
 # Executes sudo apt-get upgrade after installing software
-export Do_AptGetUpgradeLast=1
+export Do_AptGetUpgradeLast=0
 # cleans up your /tmp, pip cache and 
-export Do_CleanupAfterExec=1
+export Do_CleanupAfterExec=0
 
 ### 4. SOFTWARE TOOLS SETUP - RECOMMENDED UTILITIES
 ## -------------------------------------------------------------------------------------------------------------------

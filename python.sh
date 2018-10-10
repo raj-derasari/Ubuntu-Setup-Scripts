@@ -20,13 +20,13 @@ if [ -z $Setup_Python_Dev ]; then
 	VirtualEnv_Directory=~/.virtualenvs
 	
 	## Python installation params
-	Python_InstallBasics=1
-	Python_InstallWebDevelopmentTools=1
-	Python_InstallDjango=1
-	Python_InstallJupyter=1
-	Python_InstallMachineLearningTools=1
-	Python_InstallNLTK=1
-	Python_Compile_Tensorflow=1
+	Python_InstallBasics=0
+	Python_InstallWebDevelopmentTools=0
+	Python_InstallDjango=0
+	Python_InstallJupyter=0
+	Python_InstallMachineLearningTools=0
+	Python_InstallNLTK=0
+	Python_Compile_Tensorflow=0
 	Python_Tensorflow_GPU=1
 	Python_Tensorflow_MKL=0
 	Python_Tensorflow_CPUOnly=0
@@ -54,7 +54,7 @@ while true; do
 			shift
 			;;
         -v|--virtualenv)
-			Setup_VirtualEnv=1
+			#Setup_VirtualEnv=1
 			VE="$2"
 			#venv_pip_prefix="$dry_echo python -m pip install --user --upgrade " # this is used if NOT using virtualenv
 			shift 2
