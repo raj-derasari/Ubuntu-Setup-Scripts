@@ -10,7 +10,7 @@ fi
 splash_msg="----------------------------------------------
 Removing unneeded packages, followed by default software:
 ----------------------------------------------\n"
-echo -e "$splash_msg"
+pprint "$splash_msg"
 
 # pkg to remove, remove lines or add packages below with a backslash (\) at the end, to uninstall
 # Make sure that there is no space after the backslash!
@@ -29,20 +29,34 @@ gnome-mpv \
 gnumeric* \
 leafpad \
 pidgin* \
+slypheed* \
 transmission*"
 
-echo "Packages: "$pkgs
-echo "Softwares: "$sws
+themes="
+adwaita-icon-theme \
+dmz-cursor-theme \
+gnome-icon-theme \
+gtk-update-icon-cache \
+humanity-icon-theme \
+hicolor-icon-theme \
+"
+
+pprint "Packages: "$pkgs
+pprint "Softwares: "$sws
+pprint "Themes: "$themes
 
 $br_purge $pkgs
 $br_purge $sws
+$themes_remove $themes
 
 $dry_echo sudo dpkg --configure -a
 $dry_echo sudo apt -y autoremove
 $apt_prefix -f
 
-# to fix mute button problems in Lubuntu
-# makes the mute button TOGGLE mute/unmute instead of FORCING mute every time its pressed
 $apt_prefix alsa-utils
-$dry_echo sed -i 's/amixer -q sset Master toggle/amixer -D pulse set Master toggle/g' ~/.config/openbox/lubuntu-rc.xml && openbox --reconfigure
+if [ $DRY_MODE -eq 1 ]; then
+	$dry_echo sed -i \'s/amixer -q sset Master toggle/amixer -D pulse set Master toggle/g\' ${HOME}/.config/openbox/lubuntu-rc.xml && openbox --reconfigure
+else
+	sed -i 's/amixer -q sset Master toggle/amixer -D pulse set Master toggle/g\' ${HOME}/.config/openbox/lubuntu-rc.xml && openbox --reconfigure
+fi
 exit 0

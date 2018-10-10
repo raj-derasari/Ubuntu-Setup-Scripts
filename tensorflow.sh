@@ -76,15 +76,20 @@ while true; do
 		-f|--file)
 			CONFIGFILE="$2"
 			if [ -e "$2" ]; then
-				echo "Configuration file loaded."
+				pprint "Configuration file loaded."
 			else
-				echo "The configuration file does not exist."
+				pprint "The configuration file does not exist."
 				exit 5
 			fi
 			shift 2
 			;;
+		-x|--print-commands-only)
+			DRYFLAG=`echo "$DRYFLAG -x"`
+			shift
+			;;
 		-d|--dry-run)
-			echo "Executing installation of Tensorfow in dry-run mode"
+			pprint "Executing installation of Tensorfow in dry-run mode"
+			DRYFLAG=`echo "$DRYFLAG -d"`
 			log $INFO $DEBUG "Running in dry mode"
 			shift
 			;;
@@ -109,7 +114,7 @@ while true; do
 			;;
 		-a|--automated)
 			AUTOMODE=1
-			echo "Running in fully automated Tensorflow setup mode - All prompts disabled"
+			pprint "Running in fully automated Tensorflow setup mode - All prompts disabled"
 			shift
 			;;
         --)
@@ -189,9 +194,11 @@ if [[ -z $Setup_VirtualEnv ]]; then
 	## wasnt passed in master-script OR in command line
 	Setup_VirtualEnv=0
 	## DO other venv stuff here
-	PIP_PREFIX="sudo -H python$PV -m pip install --upgrade"
-elif [ $Setup_VirtualEnv -eq 1 ]; then
-	PIP_PREFIX="python$PV -m pip install --upgrade"
+	PIP_PREFIX="sudo -H python$PV -m pip install --user --upgrade"
+elif [ $Setup_VirtualEnv -eq 0 ]; then
+	PIP_PREFIX="sudo -H python$PV -m pip install --user --upgrade"
+else
+	PIP_PREFIX="python$PV -m pip install --user --upgrade"
 fi
 if [[ -z $AUTOMODE ]]; then
 	## NOT in AUTOMODE, yes in interactive mode
@@ -215,67 +222,68 @@ if [ "$BUILDFOR" = "gpu" ]; then
 			echo -e "Download CUDA: https://developer.nvidia.com/cuda-downloads \nDownload CUDNN: https://developer.nvidia.com/cudnn"
 			echo "You will also have to restart your computer after installing nvcc, and re-run this script"
 			echo -e "Fatal error: nvcc not installed. \nCould not install tensorflow"
-			exit
+			exit 3
 	else
 		## nvcc found AND CUDA COMP is nonzero
-		echo "Seems like nvcc is installed fine!"
-		echo "You have set TF_CUDA_COMPUTE_CAPABILITIES as:" $TF_CUDA_COMPUTE_CAPABILITIES
+		pprint "Seems like nvcc is installed fine!"
+		pprint "You have set TF_CUDA_COMPUTE_CAPABILITIES as:" $TF_CUDA_COMPUTE_CAPABILITIES
 		Python_Tensorflow_GPU=1	
 		Python_Tensorflow_MKL=0
 		Python_Tensorflow_CPUOnly=0
 	fi
 elif [ $"BUILDFOR" = "mkl" ]; then
-	echo "Building tensorflow with MKL optimizations"
-	echo "I assume you have already installed Intel MKL on your system!"
-	echo "Download Intel MKL: https://software.seek.intel.com/performance-libraries"
+	pprint "Building tensorflow with MKL optimizations"
+	pprint "I assume you have already installed Intel MKL on your system!"
+	pprint "Download Intel MKL: https://software.seek.intel.com/performance-libraries"
 	Python_Tensorflow_GPU=0	
 	Python_Tensorflow_MKL=1
 	Python_Tensorflow_CPUOnly=0
 elif [ $"BUILDFOR" = "cpu" ]; then
-	echo "Building tensorflow with CPU optimizations"
+	pprint "Building tensorflow with CPU optimizations"
 	Python_Tensorflow_GPU=0	
 	Python_Tensorflow_MKL=0
 	Python_Tensorflow_CPUOnly=1
 fi
 
 if [ $AUTOMODE -eq 0 ]; then
-	echo "Steps that will be executed now:"
-	echo "Download dependencies via apt-get; Clone TF from Github; Compile from there; and execution mode: --"$MODE
+	pprint "Steps that will be executed now:"
+	pprint "Download dependencies via apt-get; Clone TF from Github; Compile from there; and execution mode: --"$MODE
 	read -p "Press (y) or Enter to continue setting up, or anything else to exit." exitQn
 	if [ "$exitQn" = "y" ] | [ "$exitQn" = "" ] ; then
-		echo "Building tensorflow from source..."
+		pprint "Building tensorflow from source..."
 	else
 		exit 6
 	fi
 fi
 
-echo "Setting up bazel and build tools"
+pprint "Setting up bazel and build tools"
 if [[ -z `which bazel` ]]; then
-	echo "bazel not found, installing bazel by apt-get"
+	pprint "bazel not found, installing bazel by apt-get"
 	log $INFO "bazel: Installing from this script"
-	echo "installing bazel-dependencies"
-	
-	# echo "DE:" $dry_echo
-	$apt_update
-	$apt_prefix build-essential cmake git python${PV}-dev python${PV}-distutils pylint libcupti-dev curl
+	pprint "installing bazel-dependencies"
+	if [[ -z `which curl` ]]; then
+		pprint "installing curl!"
+		$apt_update
+		$apt_prefix build-essential cmake git python${PV}-dev python${PV}-distutils pylint libcupti-dev curl
+	fi
 	if [ $DRY_MODE -eq 1 ]; then
-		echo "Add apt-repositories for bazel"
+		echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8 | sudo tee /etc/apt/sources.list.d/bazel.list"
+		echo "curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -"
 	else
 		echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
 		curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
 	fi
-	#sudo apt-key update && 
 	$apt_update
 	#$dry_echo sudo apt-get -o Dpkg::Options::="--force-overwrite" install -y openjdk-9-jdk
 	if [[ -z `which javac` ]]; then
 		if [ $AUTOMODE -eq 1 ]; then
-			echo "Javac not installed, Installing oracle javac-10"
+			pprint "Javac not installed, Installing oracle javac-10"
 		else
 			read -p "Install oracle javac 10? (Enter/y to continue, n to exit)" install_javac
 			if [ "$install_javac" = "y" ] | [ "$install_javac" = "" ]; then
-				echo "installing javac!"
+				pprint "installing javac!"
 			elif [ "$install_javac" = "n" ]; then
-				echo "Not installing javac, Exiting!"
+				pprint "Not installing javac, Exiting!"
 				exit 122
 			fi
 		fi
@@ -288,13 +296,16 @@ if [[ -z `which bazel` ]]; then
 		if [ $DRY_MODE -ne 1 ]; then 
 			echo "oracle-java${TF_JAVA_VERSION}-installer shared/accepted-oracle-license-v1-1 select true" | sudo /usr/bin/debconf-set-selections
 			echo "oracle-java${TF_JAVA_VERSION}-installer shared/accepted-oracle-license-v1-1 seen true" | sudo /usr/bin/debconf-set-selections
+		else
+			echo "oracle-java${TF_JAVA_VERSION}-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections"
+			echo "oracle-java${TF_JAVA_VERSION}-installer shared/accepted-oracle-license-v1-1 seen true | sudo /usr/bin/debconf-set-selections"
 		fi
 		$apt_prefix oracle-java${TF_JAVA_VERSION}-installer
 		$apt_prefix oracle-java${TF_JAVA_VERSION}-set-default
 	fi
 	$apt_prefix bazel
 else
-	echo "seems like bazel is installed, only checking for other dependencies"
+	pprint "seems like bazel is installed, only checking for other dependencies"
 	log $INFO "bazel: Already installed"
 	# $dry_echo sudo apt-get install -y build-essential cmake git python${PV}-dev python${PV}-distutls pylint libcupti-dev curl 
 fi
@@ -304,7 +315,7 @@ fi
 $dry_echo mkdir -p $tfGitRoot
 $dry_echo cd $tfGitRoot;
 if [[ ! -e ./tensorflow/README.md ]]; then
-	echo "Git repo is not cloned yet!"
+	pprint "Git repo is not cloned yet!"
 	$dry_echo git clone https://github.com/tensorflow/tensorflow
 fi
 $dry_echo cd tensorflow;
@@ -314,7 +325,7 @@ log $INFO "Successfully cloned from git"
 export TF_ROOT=$tfGitRoot/tensorflow
 export PYTHON_BIN_PATH=$(which python${PV})
 log $INFO "python bin path: "$PYTHON_BIN_PATH
-echo "Setup_VirtualEnv:" $Setup_VirtualEnv
+pprint "Setup_VirtualEnv:" $Setup_VirtualEnv
 if [ $Setup_VirtualEnv -eq 1 ]; then
 	export PYTHON_LIB_PATH="$($PYTHON_BIN_PATH -c 'from distutils.sysconfig import get_python_lib; print(get_python_lib())')"
 	log $INFO "venv python lib path: "$PYTHON_LIB_PATH
@@ -387,25 +398,23 @@ case $MODE in
 		$dry_echo $PIP_PREFIX --ignore-installed /tmp/tensorflow_pkg/tensorflow*.whl
 	;;
 	*)
-		echo "come again?"
-	;;
+		echo "Programming Error";
+		exit 126;
+		;;
 esac
 
 
 #########################################################################################################################
 
-
-
-
 if [ -e /tmp/tensorflow_pkg ]; then
 	if [ `sudo cp /tmp/tensorflow_pkg/tensorflow*.whl "$startDir" 2>/dev/null` ]; then
 		log $INFO "Backing up tensorflow whl!"
-		echo "Your tensorflow.whl file that was built, has been backuped in $startDir!"
+		pprint "Your tensorflow.whl file that was built, has been backuped in $startDir!"
 	else
-		echo "Did NOT back up tensorflow.whl. It may not be present in /tmp/tensorflow_pkg/"
+		pprint "Did NOT back up tensorflow.whl. It may not be present in /tmp/tensorflow_pkg/"
 	fi
 else
-	echo "the path /tmp/tensorflow_pkg/ does not seem to exist. huh."
+	pprint "the path /tmp/tensorflow_pkg/ does not seem to exist. huh."
 	#exit 5
 fi
 #log $INFO "running tensorflow test script!"

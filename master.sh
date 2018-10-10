@@ -3,9 +3,6 @@
 ## get util functions loaded
 . util.sh ${*}
 
-# use the display function to print this
-disp "Ubuntu Master Script"
-
 ## help message
 _help_="Ubuntu Setup Scripts - Master script made by Raj Derasari
 Available at:  https://www.github.com/raj-derasari/My-Ubuntu-Setup-Scripts/
@@ -15,9 +12,6 @@ Usage:
 	-d            or --dry-run           | Dry-run the script, doesn't have any user prompt, displays commands that will be executed.
 	-c            or --clear-logs        | Clears the folder of *.log files before execution"
 
-### TODOS
-# check out byobu
-
 ## Command line options parsing
 while true; do
     case "$1" in
@@ -26,19 +20,23 @@ while true; do
 		shift
 		exit 0
 		;;
-        -c|--clear-logs)
-		echo "Clearing log files."
+	-x|--print-commands-only)
+		DRYFLAG=`echo "$DRYFLAG -x"`
+		shift
+		;;
+    -c|--clear-logs)
+		pprint "Clearing log files."
 		rm *.log 2>&1 > /dev/null && log $INFO "cleared all logs. Time// `date`"
 		if [ $? -eq 0 ]; then 
-			echo "Logs have been cleared"
+			pprint "Logs have been cleared"
 		else
-			echo "Logs could not be cleared. Some files may not have been deleted."
+			pprint "Logs could not be cleared. Some files may not have been deleted."
 		fi
 		shift
 		;;
 	-d|--dry-run)
-		DRYFLAG="-d"
-		echo "Dry-run mode!"
+		DRYFLAG=`echo "$DRYFLAG -d"`
+		# pprint "Dry-run mode! dafadsfadsf"
 		shift
 		;;
 	-f|--file)
@@ -46,25 +44,28 @@ while true; do
 		log $INFO "exec custom config file" $CONFIG_FILE
 		shift 2
 		;;
-        --)
-            shift
-            break
-            ;;
-        *)
-            echo "Programming error"
-            exit 126
-            ;;
+    --)
+        shift
+        break
+        ;;
+    *)
+		echo "Programming error"
+        exit 126
+        ;;
     esac
 done
+
+# use the display function to print this
+disp "Ubuntu Master Script"
 
 if [[ -z $CONFIG_FILE ]]; then
 	CONFIG_FILE=./configs/config_recommended.sh
 fi
 
-echo "Executing with the default Configuration-File: ${CONFIG_FILE}"
+pprint "Executing with the default Configuration-File: ${CONFIG_FILE}"
 . "${CONFIG_FILE}"
 if [ $? -ne 0 ]; then
-	echo "Errors in completing configuration! Cannot continue!"
+	pprint "Errors in completing configuration! Cannot continue!"
 	exit 5
 fi
 
@@ -73,7 +74,7 @@ export startDir=`pwd`
 export ERRORFILE=`pwd`/log_errors.log
 
 ## Configuration loaded, run apt-get update first things first
-echo "Running sudo apt-get update"
+pprint "Running sudo apt-get update"
 $apt_update
 log $INFO "first run of apt-get update in masterscript"
 
@@ -146,7 +147,7 @@ fi
 if [ $Python_PreferredVersion -eq 3 ] | [ $Python_PreferredVersion -eq 2 ]; then
 	checkBash="`grep \"alias python=python${Python_PreferredVersion}\" ~/.bashrc`"
 	if [[ ! -z $checkBash ]]; then
-		echo "\"python${Python_PreferredVersion}\" is already linked to \"python\" in this Ubuntu installation"
+		pprint "\"python${Python_PreferredVersion}\" is already linked to \"python\" in this Ubuntu installation"
 		log $INFO "python${Python_PreferredVersion} is already linked as python for terminals"
 	else
 		echo "# Python aliases----------------------------------
@@ -154,7 +155,7 @@ if [ $Python_PreferredVersion -eq 3 ] | [ $Python_PreferredVersion -eq 2 ]; then
 		alias pip3install=python3 -m pip install --user --upgrade
 		alias pip2install=python2 -m pip install --user --upgrade
 		" >> ${BF}
-		echo "Aliases for Python have been setup"
+		pprint "Aliases for Python have been setup"
 		log $INFO "Make python${Python_PreferredVersion} default python in bashrc"
 	fi
 fi
@@ -173,15 +174,15 @@ if [ $Install_Git -eq 1 ]; then
 	$apt_prefix vcsh git
 	if [ $Install_Git_SSHKeys -eq 1 ]; then
 		if [ -e ${Github_SSH_File} ]; then
-    		echo "you have already generated the ssh-key, displaying Pub-Key:"
+    		pprint "you have already generated the ssh-key, displaying Pub-Key:"
 		else
 			$dry_echo ssh-keygen -t rsa -b 4096 -C "${Git_Email}" -f "${Github_SSH_File}"
 			$dry_echo eval "$(ssh-agent -s)"
 			$dry_echo ssh-add ${Github_SSH_File}
 		fi
 		
-		echo "You can copypasta your Github key, refer Desktop/Git_PublicKey.txt"
-		echo "Visit https://github.com/settings/keys and add this key in your SSH keys: " >| ~/Desktop/Git_PublicKey.txt
+		pprint "You can copypasta your Github key, refer Desktop/Git_PublicKey.txt"
+		pprint "Visit https://github.com/settings/keys and add this key in your SSH keys: " >| ~/Desktop/Git_PublicKey.txt
 		cat ${Github_SSH_File}.pub >>~/Desktop/Git_PublicKey.txt
 		
 		$dry_echo git config --global user.name "${Git_YourName}"
@@ -190,8 +191,8 @@ if [ $Install_Git -eq 1 ]; then
 		$dry_echo git config --global alias.ls 'log --pretty=format:"%C(green)%h\\ %C(yellow)[%ad]%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative'
     	$dry_echo git config --global alias.ll 'log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat'
     	$dry_echo git config --global alias.lnc 'log --pretty=format:"%h\\ %s\\ [%cn]"'
-		echo -e "Git aliases set up.\nYou can use this to directly commit a directory:\n\tgit add-commit '<Commit-Message>'\n"
-		echo -e "You can use this to see lists of commits:\n\tgit ls\n\tgit ll\n\tgit lnc"
+		pprint -e "Git aliases set up.\nYou can use this to directly commit a directory:\n\tgit add-commit '<Commit-Message>'\n"
+		pprint -e "You can use this to see lists of commits:\n\tgit ls\n\tgit ll\n\tgit lnc"
 	fi
 fi
 
@@ -208,14 +209,19 @@ fi
 ## bloatremove
 if [ $Master_RemoveBloatware -eq 1 ]; then
 	disp "Master - Executing Bloatware Removal"
-	echo "Detected Desktop Environment: " $XDG_CURRENT_DESKTOP
-	echo "------------------------------------------"
+	pprint "Detected Desktop Environment: " $XDG_CURRENT_DESKTOP
+	pprint "------------------------------------------"
 	log $INFO "Bloatremove: Detected Desktop:" ${XDG_CURRENT_DESKTOP}
 	case $XDG_CURRENT_DESKTOP in
 		Unity|LXDE|GNOME) #|XFCE|KDE|Pantheon)  # have to work on the rest
-		echo "Running bloatremove for ${XDG_CURRENT_DESKTOP}"
+		pprint "Running bloatremove for ${XDG_CURRENT_DESKTOP}"
 		cd ./BR/
-		bash BR,SWC_${XDG_CURRENT_DESKTOP}.sh $DRYFLAG 2>>"${ERRORFILE}";
+		if [ $Bloatware_Remove_Themes -eq 1 ]; then
+			bash BR,SWC_${XDG_CURRENT_DESKTOP}.sh $DRYFLAG --remove-themes 2>>"${ERRORFILE}";
+		else
+			bash BR,SWC_${XDG_CURRENT_DESKTOP}.sh $DRYFLAG 2>>"${ERRORFILE}";
+		fi
+		
 		cd ..
 	;;
 	esac
@@ -230,7 +236,7 @@ source ${BF} && log $INFO "Updated .bashrc profile and loaded in bash"
 ## softwares
 if [ $Master_Software -eq 1 ]; then
 	#sudo apt-key update && 
-	echo "Running sudo apt-get update" && log $INFO "APT-GET-UPDATE - before Software Script" &&  $apt_update
+	#pprint "Running sudo apt-get update" && log $INFO "APT-GET-UPDATE - before Software Script" &&  $apt_update
 	disp "Master - Executing Software Installation"
 	log $INFO "Setting up software"
 	bash software.sh -f $CONFIG_FILE $DRYFLAG 2>>"${ERRORFILE}"
@@ -241,7 +247,7 @@ fi
 ## python
 if [ $Master_Python -eq 1 ]; then
 	#sudo apt-key update && 
-	echo "Running sudo apt-get update" && log $INFO "APT-GET-UPDATE - before Python Script" && $apt_update
+	#pprint "Running sudo apt-get update" && log $INFO "APT-GET-UPDATE - before Python Script" && $apt_update
 	disp "Master - Setting up Python"
 	log $INFO "Setting up python"
 	bash python.sh $DRYFLAG -p $Python_PreferredVersion -v $VirtualEnv_Name 
@@ -253,7 +259,7 @@ fi
 ##                    APT-GET-UPGRADE
 if [ $Do_AptGetUpgradeLast -eq 1 ]; then
 	log $INFO "apt-get upgrade before exit"
-	$apt_update
+	#$apt_update
 	$dry_echo sudo apt upgrade -y
 	$dry_echo sudo apt -y autoremove
 fi
@@ -265,21 +271,22 @@ if [ $Do_CleanupAfterExec -eq 1 ]; then
 	$apt_prefix -f  2>>"${ERRORFILE}"; # fix dependencies, install/uninstall stuff
 	$dry_echo sudo apt -y autoclean > /dev/null 2>>"${ERRORFILE}"; # removes extra cache files
 	$dry_echo sudo apt -y autoremove 2>>"${ERRORFILE}"; # removes deb packages but not all of them sadly
-	$dry_echo rm -rfd ~/.cache/pip > /dev/null  2>&1;   # removes pip packages
-	$dry_echo rm -rfd /tmp/ > /dev/null  2>&1  # removes temp files made only by the user, keeps system etc. files
+	$dry_echo rm -rfd ~/.cache/pip  &>/dev/null   # removes pip packages
+	$dry_echo rm -rfd /tmp/ &>/dev/null  # removes temp files made only by the user, keeps system etc. files
+	$dry_echo sudo rm -rfd /var/lib/apt/lists/* &>/dev/null # Cleans the apt-get update list, only the cache nothing else
 	## Todo: This is safe to execute - I know that from results - but do i keep this
 	# sudo rm -f /var/cache/apt/archives/*.deb   # removes deb files apt cache
 fi
 
 disp "Completed"
-echo "It is highly recommended to restart your computer now."
+pprint "It is highly recommended to restart your computer now."
 $dry_echo read -p "Press Enter, or y/Y to restart right now, or anything else to exit. - " shut
 if test "$shut" = "y" -o "$shut" = ""; then
-	log $INFO "Finish_With_Reboot" && echo "REBOOTING"
+	log $INFO "Finish_With_Reboot" && pprint "REBOOTING"
 	$dry_echo sudo shutdown -r 0
 else
 	log $INFO "Finish_No_Reboot"
-	echo "Not restarting your computer."
-	echo "Logs are stored in ${startDir}"
+	pprint "Not restarting your computer."
+	pprint "Logs are stored in ${startDir}"
 fi
 exit 0

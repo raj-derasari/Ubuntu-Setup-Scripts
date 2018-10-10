@@ -13,23 +13,23 @@ AUTO=0
 #disp "Docker REINSTALLATION Script"
 ## If you are running docker directly from here, please set the SUDO choice here.
 if [ -z $Install_Docker ]; then
-	echo "Not called from master script, setup variables here in docker.sh!"
+	pprint "Not called from master script, setup variables here in docker.sh!"
 	
 	## This is the variable to set - if you set this to 1 you don't have to "sudo docker" everytime
 	export Docker_Remove_SUDO=0
 	if [ $AUTO -eq 0 ]; then
 		read -p "Press Enter to exit, or any other key to continue: - " exitqn
 		if test "$exitqn" = ""; then
-			echo "Exiting"; exit 127
+			pprint "Exiting" && exit 127
 		else
-			echo "Continuing Docker Installation"
+			pprint "Continuing Docker Installation"
 		fi
 		
 		read -p "Uninstall previous versions of Docker? (y/Y for yes) - " uninstqn
 		if [ "$uninstqn" = "n" ]; then
-			echo "Not uninstalling previous versions of Docker.";
+			pprint "Not uninstalling previous versions of Docker.";
 		else
-			echo "Uninstalling previous versions of Docker.";
+			pprint "Uninstalling previous versions of Docker.";
 			$dry_echo sudo apt-get remove -y docker docker-engine docker.io
 		fi
 	fi
@@ -40,15 +40,16 @@ fi
 $dry_echo sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common;
 if [ "$dry_echo" = "" ]; then 
 	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+else
+	echo "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -"
 fi
-echo "Adding docker repository to lists";
+pprint "Adding docker repository to lists";
 $dry_echo sudo add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" # &> /dev/null
 #$dry_echo sudo add-apt-repository "deb https://apt.dockerproject.org/repo/ ubuntu-$(lsb_release -cs) main"
 
-#echo "Running apt-get update"; 
 $dry_echo sudo apt-get update
-#echo "Running apt-get install docker"
 $dry_echo sudo apt-get install -y docker docker-compose docker-ce docker-doc docker-registry
+
 disp "Testing Docker"
 if [ $Docker_Remove_SUDO -eq 1 ]; then
 	# -f will suppress output if group already exists, and $? will echo 0

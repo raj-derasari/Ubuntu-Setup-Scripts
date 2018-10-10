@@ -6,15 +6,40 @@ import shutil
 import os
 import re
 
-DEBUG=1
+'''
+latest problem reports
+current version of this script is pretty decent but 
+realvnc mac download link - ".com/... reavnc/macos" < bad
+teamviewer : "mac-os" < bad
+veracrypt: "mac" <which is the good one
+can work around this or nah? lets see later!
+'''
+DEBUG=0
+
+OS="mac"
+#OS="linux"
+#OS="windows"
+
+## todo
+#architecture=64
+#architecture=86
+
+OS_formats={
+	"mac":"dmg",
+	"linux":("tar.bz2","tar.gz","deb","rpm",),
+	"windows":"exe",
+}
 
 # download pages of the following applications which I wanna download!
 urls={
 	"sublime-text-3":"https://www.sublimetext.com/3",
 	"octave": "",
-	"realvnc-viewer":"https://www.realvnc.com/en/connect/download/viewer/linux/",
-	"teamviewer":"https://www.teamviewer.com/en/download/linux/",
+	"realvnc-viewer":"https://www.realvnc.com/en/connect/download/viewer/"+OS.lower(),
+	"teamviewer":"https://www.teamviewer.com/en/download/"+OS.lower(),
 	"veracrypt":"https://www.veracrypt.fr/en/Downloads.html",
+	"pycharm-community":"https://www.jetbrains.com/pycharm/download/download-thanks.html?platform="+OS.lower()+"&code=PCC",
+	"pycharm-edu":"https://www.jetbrains.com/pycharm-edu/download/download-thanks.html?platform="+OS.lower()
+
 ## rexdl links do not work :()
 #	"nova-prime":"http://rexdlfile.com/index.php?id=nova-launcher-prime-apk-download",
 }
@@ -22,10 +47,12 @@ urls={
 ## check for these URLS as download links, to satisfy the download condition
 dl_urls={
 	"sublime-text-3":"download.sublimetext.com",
-	"octave":"sdasd",
+	"octave":"",
 	"realvnc-viewer":"/download/file/viewer.files",
 	"teamviewer":"download.teamviewer.com",
 	"veracrypt":"launchpad.net",
+	"pycharm-community":"data.services.jetbrains.com/products/download?code=PCP",
+	"pycharm-edu":"data.services.jetbrains.com/products/download?code=PCE"
 }
 
 # conditions are priority wise - First checks for the first tuple, and so on!
@@ -33,11 +60,13 @@ dl_urls={
 # comparisons in the algorithm below are case insensitive so feel free
 # but avoid any typing mistakes!
 dl_conditions={
-	"sublime-text-3":(".tar.bz2","x64",),
-	"octave":"sdafs",
-	"realvnc-viewer":(".deb","x64"),
-	"teamviewer":(".rpm","86",),
-	"veracrypt":(".tar.bz2",), # add  x86 here if you want for old CPU
+	"sublime-text-3":(OS_formats[OS.lower()],"x64",),
+	"octave":"",
+	"realvnc-viewer":(OS_formats[OS.lower()],"x64"),
+	"teamviewer":(OS_formats[OS.lower()],"86",),
+	"veracrypt":(OS_formats[OS.lower()],), # add  x86 here if you want for old CPU
+	"pycharm-community":(),
+	"pycharm-edu":(),
 }
 
 #Get filename from content-disposition
@@ -67,6 +96,8 @@ def validate_url(url=None):
 	if re.match(regex, url):
 		return 0
 	else:
+		if url[0]=="/" and url[1]=="/":
+			return 2
 		return -1
 
 # Download file from URL into file_name
@@ -75,9 +106,13 @@ def downloadFile(url=None,file_name=None,parent_site=None):
 		print("File name not passed, not downloading")
 	elif isinstance(file_name,str):
 		print(url)
-		if validate_url(url) < 0:
+		keepo=validate_url(url)
+		if keepo < 0:
 			print("URL cannot be validated, needs parent site!")
 			url=parent_site+url
+			print(url)
+		elif keepo == 2:
+			url="https:"+url
 			print(url)
 	with urllib.request.urlopen(url) as response, open(file_name, 'wb') as out_file:
 		shutil.copyfileobj(response, out_file)
@@ -138,7 +173,10 @@ def DownloadTargetApp(TargetApp=None,allow_redirects=None):
 						return 4
 					else:
 						print("Downloading!")
-						downloadFile(dl_url,file_name,website)
+						if TargetApp=="pycharm-community" or TargetApp=="pycharm-edu":
+							downloadFile(dl_url+"&platform="+OS.lower(),file_name,website)
+						else:
+							downloadFile(dl_url,file_name,website)
 						return 0
 				elif choice=="n":
 					print("Finished scanning links for "+TargetApp)
@@ -156,8 +194,10 @@ def __test__(target=None,allow_redirects=None):
 	print(DownloadTargetApp(target,allow_redirects))
 	return 0
 
-#__test__("sublime-text-3") # works
-#__test__("realvnc-viewer") # works
-#__test__("octave")
-#__test__("teamviewer") # works
-__test__("veracrypt") # works
+#__test__("octave") # not implemented
+__test__("sublime-text-3") # works
+__test__("realvnc-viewer") # works
+__test__("teamviewer") # works
+__test__("veracrypt")
+__test__("pycharm-community") # works
+__test__("pycharm-edu") # works

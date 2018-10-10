@@ -8,7 +8,7 @@
 disp "Ubuntu Dependency/Package Script"
 
 if [ $DRY_MODE -eq 1 ]; then
-	echo "Dry-running installation of dependencies!"
+	pprint "Dry-running installation of dependencies!"
 fi
 
 log $INFO "Adding default ubuntu repositories!"

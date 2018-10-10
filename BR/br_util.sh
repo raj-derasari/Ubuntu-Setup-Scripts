@@ -23,6 +23,11 @@ log() {
 disp() {
 	echo -e "----------------------------------------------------\n\t\t${*}\n----------------------------------------------------"
 }
+
+pprint(){
+    echo ${*}
+}
+
 #####################################################################
 # Command line arguments parsing
 
@@ -33,8 +38,8 @@ if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
     exit 127
 fi
 
-OPTIONS=hdcaf:v:p:b:m:
-LONGOPTS=help,dry-run,clear-logs,automated,file:,virtualenv:,python-version:,build-for:,mode:
+OPTIONS=hxdtcaf:v:p:b:m:
+LONGOPTS=help,print-commands-only,dry-run,remove-themes,clear-logs,automated,file:,virtualenv:,python-version:,build-for:,mode:
 
 # -use ! and PIPESTATUS to get exit code with errexit set
 # -temporarily store output to be able to check for errors
@@ -51,28 +56,47 @@ fi
 eval set -- "$PARSED"
 #####################################################################
 DRY_MODE=0
-dry_echo=""
 # if any cmdline arg is -d . run in drymode
 for var in "$@"
 do
-    if [ "$var" = "-d" ]; then
+    if [ "$var" = "-d" ] ||  [ "$var" = "--dry-run" ]; then
         DRY_MODE=1
-        dry_echo="echo \$ "
+        if [[ -z $dry_echo ]]; then
+            dry_echo="echo \$ "
+        fi
+    fi
+    if [ "$var" = "-x" ] ||  [ "$var" = "--print-commands-only" ]; then
+        DRY_MODE=1
+        disp() {
+            echo "a" > /dev/null
+        }
+        pprint(){
+            echo 'a' > /dev/null
+        }
+        dry_echo="echo "
+    fi
+    if [ "$var" = "-r " ] ||  [ "$var" = "--remove-themes" ]; then
+        themes_remove="$dry_echo sudo apt-get purge -y --auto-remove "
     fi
 done
 
+#echo ${*}
+
+######################################################################
 addaptrepo="$dry_echo sudo add-apt-repository -y "
 # Maybe add sudo apt-key update depending on lsb_release
 apt_update="$dry_echo sudo apt-get update "
 apt_prefix="$dry_echo sudo apt-get install -y "
-br_purge="$dry_echo sudo apt-get purge -y "
+apt_prefix_rec="$dry_echo sudo apt-get install -y --install-recommends "
+
+br_purge="$dry_echo sudo apt-get purge -y --auto-remove "
 _help_(){
     echo "
 Ubuntu Bloatremove/Configuration-Fixing script
 Recommended software after this script completes:
     Sublime Text 3/emacs for editing text files
     VLC Media Player for media files
-    Gparted for partition configuration
+    Gparted for disk management
     QPDFView (lightweight) and Okular (features) for PDF suites
     Thunderbird for email client
     UGet and Qbittorrent for download-management
