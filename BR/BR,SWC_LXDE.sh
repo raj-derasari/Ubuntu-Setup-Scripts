@@ -23,7 +23,7 @@ gnome-mpv \
 gnumeric* \
 leafpad \
 pidgin* \
-slypheed* \
+sylpheed* \
 transmission*"
 
 themes="

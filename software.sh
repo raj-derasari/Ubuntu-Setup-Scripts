@@ -307,13 +307,12 @@ if [ $Install_PulseAudioEqualizer -eq 1 ]; then
 		log $INFO "qpaeq modules are now being setup"
 		pprint "qpaeq modules are now being setup"
 		if [ $DRY_MODE -eq 1 ]; then
-			echo "load-module module-equalizer-sink | sudo tee -a $pulse_config_file"
-			echo "load-module module-dbus-protocol | sudo tee -a $pulse_config_file"
+			echo "echo load-module module-equalizer-sink | sudo tee -a $pulse_config_file"
+			echo "echo load-module module-dbus-protocol | sudo tee -a $pulse_config_file"
 		else
 			echo "load-module module-equalizer-sink" | sudo tee -a $pulse_config_file
 			echo "load-module module-dbus-protocol" | sudo tee -a $pulse_config_file
 		fi
-		
 	fi
 fi
 if [ $Install_QBitTorrent -eq 1 ]; then
