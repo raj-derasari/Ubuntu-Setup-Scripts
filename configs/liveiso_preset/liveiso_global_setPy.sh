@@ -28,24 +28,24 @@ export USER_HOME=/etc/skel
 #export USER_HOME=~
 export BF=${USER_HOME}/.bashrc
 # You can set this next line to 0 to not copy-paste templates from the templates.zip file in the project
-export Setup_Templates=1
+export Setup_Templates=0
 
 ### 1. GITHUB
 ## -------------------------------------------------------------------------------------------------------------------
 # Github setup - This is independent of every other installation given above
-export Install_Git=1
+export Install_Git=0
 # IF you set this as 1, you will have to enter your email and name in Git_Email and Git_YourName
 export Install_Git_SSHKeys=0
 # Remember to unset this to some random values, or delete this file when done (If you create a pull request, to save your data)
-#export Git_Email="user.name@example.com"
-#export Git_YourName="User Name"
+export Git_Email="user.name@example.com"
+export Git_YourName="User Name"
 # Path to your github ssh-key (Private key below, and Public key is the "private-key"+".pub" file)
-#export Github_SSH_File=${USER_HOME}/.ssh/github_key
+export Github_SSH_File=${USER_HOME}/.ssh/github_key
 
 ### 2. VIRTUALENV SETUP
 ## -------------------------------------------------------------------------------------------------------------------
 # virtualenv - if you are using Ubuntu 18 or above, it is highly recommended to use virtualenv with Python3 - And ditch Python2!
-export Setup_VirtualEnv=1
+export Setup_VirtualEnv=0
 
 # if 1 above, consider setting up the next two parameters
 export VirtualEnv_Name="venv1"
@@ -54,17 +54,17 @@ export VirtualEnv_Directory=${USER_HOME}/.virtualenvs/$VirtualEnv_Name
 ### 3. MASTER SETUP - REQUIRED TO SET EITHER 1 OR 0 HERE
 ## -------------------------------------------------------------------------------------------------------------------
 # Dependencies and Libraries - Highly recommended keep this as 1
-export Master_Dependencies=1
+export Master_Dependencies=0
 # Bloatware removal script that checks your Desktop Environment and uninstalls bloatware based on that
-export Master_RemoveBloatware=1
-export Bloatware_Remove_Themes=1
-export Bloatware_Remove_LanguagePacks=1
+export Master_RemoveBloatware=0
+export Bloatware_Remove_Themes=0
+export Bloatware_Remove_LanguagePacks=0
 # Software setup script - Common Software, Java, Programming Tools, etc.
-export Master_Software=1
+export Master_Software=0
 # Python Libraries setup - For Python 2/3 Development, Both are supported.
 export Master_Python=1
 # Executes sudo apt-get upgrade after installing software
-export Do_AptGetUpgradeLast=1
+export Do_AptGetUpgradeLast=0
 # cleans up your /tmp, pip cache and 
 export Do_CleanupAfterExec=1
 
@@ -73,40 +73,40 @@ export Do_CleanupAfterExec=1
 # Strongly recommended packages
 # All of the following are affected based on the value of Master_Software being 1
 # ExFat file system utilites
-export Install_EXFatUtils=1
+export Install_EXFatUtils=0
 # Flatpak is a software and package installation utility which will be meta real soon
-export Install_Flatpak=1
+export Install_Flatpak=0
 # Flux is recommended for users evening/night times.
-export Install_Flux=1
+export Install_Flux=0
 # Gparted is a partition utility which is highly useful, and most recommended
-export Install_GParted=1
+export Install_GParted=0
 # Graphical Firewall configuration Utility
-export Install_GUFW=1
+export Install_GUFW=0
 # 7-zip and other archive types support (Not a GUI, integrates with default archive applications)
-export Install_P7Zip=1
+export Install_P7Zip=0
 # QPAEQ and PulseAudioEqualizer are utilities to work as audio equalizers for system/all output sounds
 export Install_PulseAudioEqualizer=0
 # Torrent Client
-export Install_QBitTorrent=1
+export Install_QBitTorrent=0
 # PDF Viewer which is incredibly fast and lightweight
-export Install_QPDFView=1
+export Install_QPDFView=0
 # slurm is a network usage monitoring utility
-export Install_Slurm=1
+export Install_Slurm=0
 # Thunderbird is an email client
-export Install_Thunderbird=1
+export Install_Thunderbird=0
 # Uget is a download manager
-export Install_UGET=1
+export Install_UGET=0
 # VLC is the go-to media player for Linux, with various alternatives (however, I recommend VLC)
-export Install_VLCMediaPlayer=1
+export Install_VLCMediaPlayer=0
 # Z-shell, alternative for bash
-export Install_ZSH=1
+export Install_ZSH=0
 
 ### 5. SOFTWARE TOOLS SETUP - WEB BROWSERS
 ## -------------------------------------------------------------------------------------------------------------------
 # Choose a web browser
 export Install_Chromium=0
 export Install_GoogleChrome=0
-export Install_MozillaFirefox=1
+export Install_MozillaFirefox=0
 export Install_Vivaldi=0
 
 ### 6. SOFTWARE TOOLS SETUP - HANDY TOOLS
@@ -142,19 +142,19 @@ export Install_RealVNC=0
 ### 7. SOFTWARE TOOLS SETUP - LIBREOFFICE SUITE
 ## -------------------------------------------------------------------------------------------------------------------
 # Libre Office
-export Install_LibreOffice=1
+export Install_LibreOffice=0
 # Base is like MS Access, database software
-export LibreOffice_Base=1
+export LibreOffice_Base=0
 # Draw is for .. drawing?
 export LibreOffice_Draw=0
 # Impress is Presentation software
-export LibreOffice_Impress=1
+export LibreOffice_Impress=0
 # Math is Workboot/Spreadsheet software
-export LibreOffice_Math=1
+export LibreOffice_Math=0
 # Calc is like MS Excel, spreadsheet software
-export LibreOffice_Calc=1
+export LibreOffice_Calc=0
 # Writer is a document software
-export LibreOffice_Writer=1
+export LibreOffice_Writer=0
 
 ### 8. PROGRAMMING TOOLS - DOCKER
 ## -------------------------------------------------------------------------------------------------------------------
@@ -166,14 +166,14 @@ export Docker_Remove_SUDO=0
 ### 9. PROGRAMMING TOOLS - JAVA/JDK
 ## -------------------------------------------------------------------------------------------------------------------
 # Java SE and JDK - They come combined together in Java 10
-export Install_Oracle_Java=1
+export Install_Oracle_Java=0
 ## JAVA VERSION - I allow 2 possible values - 8 and 10. IF oracle keeps their naming scheme
 ## for the packages oracle-java(X)-installer and oracle-java(X)-set-default; then
 ## this script may work in the future too. For now, it is confirmed to work for Java 8 and Java 10
 ## IF you are installing a version other than 8 or 10, please be careful about setting Purge_OpenJDK to 1
-export Install_Java_Version=10
+export Install_Java_Version=00
 # This line uninstalls any inbuilt Java that comes with your Ubuntu/Debian installation
-export Purge_OpenJDK=1
+export Purge_OpenJDK=0
 
 ### 10. PROGRAMMING TOOLS - IDE
 ## -------------------------------------------------------------------------------------------------------------------
@@ -184,7 +184,7 @@ export Install_GEdit=0
 # From my experience, apt-install atom will be a PRETTY SLOW DOWNLOAD
 export Install_Atom=0
 # Lightweight alternative to Atom - Sublime Text (Free Edition)
-export Install_SublimeText=1
+export Install_SublimeText=0
 # VS Code is also a great programming IDE
 export Install_VisualStudioCode=0
 ## TODO: Add emacs here, and... anything else?
@@ -196,7 +196,8 @@ export Install_Octave=0
 
 ## Scientific Coding "IDE" hah
 # R studio and R are open source tools
-# TODO: IF possible, install the Octave Sourceforge packages directly via this script.
+# TODO: havent implemented
+export Install_R_Base=0
 export Install_R_Base_Version=3.5
 export Install_R_Studio=0
 
@@ -219,7 +220,7 @@ export Python_InstallWebDevelopmentTools=1
 export Python_InstallDjango=0
 
 # Jupyter Notebook, because it's a pretty handy tool
-export Python_InstallJupyter=0
+export Python_InstallJupyter=1
 
 # some OpenCV stuff that I haven't coded yet - there are scripts for it already.
 # if you need it check out this cool repository:
@@ -246,4 +247,4 @@ export Python_Compile_Tensorflow=0
 ## Select one of the next 3 as 1, if you don't select any of them as 1
 ## I will be really sad :(
 ## allowed values: cpu, gpu, mkl - Case sensitive (probably)
-export Python_Tensorflow_Target=mkl
+export Python_Tensorflow_Target=cpu

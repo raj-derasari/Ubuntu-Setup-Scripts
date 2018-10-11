@@ -196,7 +196,8 @@ export Install_Octave=1
 
 ## Scientific Coding "IDE" hah
 # R studio and R are open source tools
-# TODO: IF possible, install the Octave Sourceforge packages directly via this script.
+# TODO: havent implemented
+export Install_R_Base=1
 export Install_R_Base_Version=3.5
 export Install_R_Studio=1
 
@@ -246,4 +247,4 @@ export Python_Compile_Tensorflow=1
 ## Select one of the next 3 as 1, if you don't select any of them as 1
 ## I will be really sad :(
 ## allowed values: cpu, gpu, mkl - Case sensitive (probably)
-export Python_Tensorflow_Target=mkl
+export Python_Tensorflow_Target=cpu

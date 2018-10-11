@@ -54,7 +54,7 @@ fi
 #begin
 # Copy paste templates and begin proceedings
 if [ $Setup_Templates -eq 1 ]; then
-	$dry_echo unzip -n -qq Templates.zip -d ${HOME}/Templates
+	$dry_echo unzip -n -qq Templates.zip -d ${USER_HOME}/Templates
 fi
 
 #Check if curl is installed, if not then install it
@@ -295,10 +295,10 @@ if [ $Install_PulseAudioEqualizer -eq 1 ]; then
 	if [[ ! -z $checkBash ]]; then
 		log $INFO "qpaeq setup, not modifying /etc/pulse/default.pa"
 		pprint "qpaeq setup, not modifying /etc/pulse/default.pa"
-		## make sure that theese lines are uncommented
+		## make sure that the lines which enable the equalizer are uncommented
 		if [ $DRY_MODE -eq 0 ]; then
-			sed -i 's/#load-module module-equalizer-sink/load-module module-equalizer-sink/g' $pulse_config_file
-			sed -i 's/#load-module module-dbus-protocol/load-module module-dbus-protocol/g' $pulse_config_file
+			sudo sed -i 's/#load-module module-equalizer-sink/load-module module-equalizer-sink/g' $pulse_config_file
+			sudo sed -i 's/#load-module module-dbus-protocol/load-module module-dbus-protocol/g' $pulse_config_file
 		else
 			echo sed -i \'s/#load-module module-equalizer-sink/load-module module-equalizer-sink/g\' $pulse_config_file
 			echo sed -i \'s/#load-module module-dbus-protocol/load-module module-dbus-protocol/g\' $pulse_config_file
@@ -306,8 +306,14 @@ if [ $Install_PulseAudioEqualizer -eq 1 ]; then
 	else
 		log $INFO "qpaeq modules are now being setup"
 		pprint "qpaeq modules are now being setup"
-		echo "load-module module-equalizer-sink" >> $pulse_config_file
-		echo "load-module module-dbus-protocol" >> $pulse_config_file
+		if [ $DRY_MODE -eq 1 ]; then
+			echo "load-module module-equalizer-sink | sudo tee -a $pulse_config_file"
+			echo "load-module module-dbus-protocol | sudo tee -a $pulse_config_file"
+		else
+			echo "load-module module-equalizer-sink" | sudo tee -a $pulse_config_file
+			echo "load-module module-dbus-protocol" | sudo tee -a $pulse_config_file
+		fi
+		
 	fi
 fi
 if [ $Install_QBitTorrent -eq 1 ]; then
