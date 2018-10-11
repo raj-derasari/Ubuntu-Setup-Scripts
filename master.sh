@@ -325,32 +325,37 @@ if [ $Do_CleanupAfterExec -eq 1 ]; then
 	$apt_prefix -f 2>>"${ERRORFILE}"
 	
 	# removes pip packages
+	pprint "Cleaning up pip cache"
 	$dry_echo rm -rfd ${USER_HOME}/.cache/pip 2>>"${ERRORFILE}"
 	
 	# removes pip packages
 	$dry_echo rm -rfd ~/.cache/pip 2>>"${ERRORFILE}"
 
 	# removes temp files made only by the user, keeps system etc. files	
+	pprint "Cleaning up /tmp/ files which I can access"
 	$dry_echo yes n | $dry_echo rm -rd /tmp &>/dev/null
 
 	# Cleans the apt-get update list, only the cache nothing else
+	pprint "Cleaning up oracle-jdk cached installers (300MB size)"
 	$dry_echo sudo rm -rfd /var/cache/oracle-jdk*-installer/jdk*.tar.gz 2>>"${ERRORFILE}"
 	
 	# Cleans apt-get update list cache
+	pprint "Cleaning up apt lists - you can comment out this line, or run sudo apt-get update to rebuild the lists!"
 	$dry_echo sudo rm -rfd /var/lib/apt/lists/ 2>>"${ERRORFILE}"
 	
 	# removes extra deb/cache archives
+	pprint "Cleaning up apt cache"
 	$dry_echo sudo apt clean
 fi
 disp "Completed"
 pprint "It is highly recommended to restart your computer now."
-$dry_echo read -p "Press Enter, or y/Y to restart right now, or anything else to exit. - " shut
-if test "$shut" = "y" -o "$shut" = ""; then
-	log $INFO "Finish_With_Reboot" && pprint "REBOOTING"
-	$dry_echo sudo reboot
-else
-	log $INFO "Finish_No_Reboot"
-	pprint "Not restarting your computer."
-	pprint "Logs are stored in ${startDir}"
-fi
+# $dry_echo read -p "Press Enter, or y/Y to restart right now, or anything else to exit. - " shut
+# if test "$shut" = "y" -o "$shut" = ""; then
+# 	log $INFO "Finish_With_Reboot" && pprint "REBOOTING"
+# 	$dry_echo sudo reboot
+# else
+# 	log $INFO "Finish_No_Reboot"
+# 	pprint "Not restarting your computer."
+# 	pprint "Logs are stored in ${startDir}"
+# fi
 exit 0
