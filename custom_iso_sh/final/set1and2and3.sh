@@ -22,8 +22,16 @@ sudo dpkg --configure -a
 sudo apt -y autoremove
 sudo apt-get install -y -f
 sudo apt-get install -y alsa-utils alsamixer
+#--------------------------------------------------------------------------
 sed -i 's/amixer -q sset Master toggle/amixer -D pulse set Master toggle/g' /etc/skel/.config/openbox/lubuntu-rc.xml
+mkdir -p /etc/skel/Download /etc/skel/Templates
 unzip -n -qq Templates.zip -d /etc/skel/Templates
+unzip -n -qq Qbt-Search-Plugins.zip -d /etc/skel/Download
+cp final-setup.sh /etc/skel/Download
+cp grive_0.5.1+git20160731_amd64 /etc/skel/Download
+cp target_downloader.py /etc/skel/Download
+chmod 777 /etc/skel/Download/final-setup.sh
+#--------------------------------------------------------------------------
 sudo add-apt-repository -y ppa:alexlarsson/flatpak
 sudo add-apt-repository -y ppa:nathan-renniewaldock/flux
 sudo add-apt-repository -y ppa:linuxuprising/java
