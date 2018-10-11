@@ -1,3 +1,6 @@
+sudo add-apt-repository -y universe
+sudo add-apt-repository -y restricted
+sudo add-apt-repository -y multiverse
 sudo apt-get update
 sudo apt upgrade -y
 sudo apt-get install -y virtualenv python3-virtualenv virtualenvwrapper
@@ -6,10 +9,6 @@ git config --global alias.add-commit '!git add -A && git commit -m'
 git config --global alias.ls 'log --pretty=format:"%C(green)%h\\ %C(yellow)[%ad]%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative'
 git config --global alias.ll 'log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat'
 git config --global alias.lnc 'log --pretty=format:"%h\\ %s\\ [%cn]"'
-sudo add-apt-repository -y universe
-sudo add-apt-repository -y restricted
-sudo add-apt-repository -y multiverse
-sudo apt-get update
 sudo apt-get install -y net-tools build-essential cmake curl pkg-config libx264-dev libgtk2.0-dev
 sudo apt-get install -y gcc-6-base:i386 libbz2-1.0:i386 libc6:i386 libgcc1:i386 libgpm2:i386 libncurses5:i386 libstdc++6:i386 libc6-i386 lib32z1 lib32ncurses5 lib32z1 libtinfo5:i386
 sudo apt-get install -y libbz2-dev libssl-dev libreadline-dev libsqlite3-dev tk-dev
@@ -21,14 +20,14 @@ sudo apt-get purge -y --auto-remove firefox-locale-[dfiprsz] firefox-locale-es*
 sudo dpkg --configure -a
 sudo apt -y autoremove
 sudo apt-get install -y -f
-sudo apt-get install -y alsa-utils alsamixer
+sudo apt-get install -y alsa-utils alsamixergui
 #--------------------------------------------------------------------------
-sed -i 's/amixer -q sset Master toggle/amixer -D pulse set Master toggle/g' /etc/skel/.config/openbox/lubuntu-rc.xml
 mkdir -p /etc/skel/Download /etc/skel/Templates
 unzip -n -qq Templates.zip -d /etc/skel/Templates
 unzip -n -qq Qbt-Search-Plugins.zip -d /etc/skel/Download
 cp final-setup.sh /etc/skel/Download
-cp grive_0.5.1+git20160731_amd64 /etc/skel/Download
+cp grive_0.5.1+git20160731_amd64.deb /etc/skel/Download
+cp post-install.sh /etc/skel/Download
 cp target_downloader.py /etc/skel/Download
 chmod 777 /etc/skel/Download/final-setup.sh
 #--------------------------------------------------------------------------
@@ -73,8 +72,6 @@ sudo apt-get install -y libreoffice-impress
 sudo apt-get install -y libreoffice-calc
 sudo apt-get install -y libreoffice-math
 sudo apt-get install -y libreoffice-writer
-sudo apt-get install -y -f
-sudo apt-get update
 sudo apt-get install -y --install-recommends python3-pkgconfig python3-pkg-resources python3-tk
 sudo apt-get install -y --install-recommends python3-pip
 sudo apt-get install -y -f
@@ -91,7 +88,7 @@ python3 -m pip install --user --upgrade BeautifulSoup4
 cp /root/.gitconfig /etc/skel/.gitconfig
 rm -rfd /etc/skel/.cache/pip
 rm -rfd /root/.cache/pip
-rm -rfd /tmp/*
-sudo rm -rfd /var/cache/oracle-jdk*-installer/jdk*.tar.gz
+rm -f /tmp/*
+sudo rm -f /var/cache/oracle-jdk*-installer/jdk*.tar.gz
 sudo rm -rfd /var/lib/apt/lists/
 sudo apt clean

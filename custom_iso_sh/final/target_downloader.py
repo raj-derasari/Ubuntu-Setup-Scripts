@@ -159,7 +159,7 @@ def __test__(target=None,allow_redirects=None):
 	return 0
 
 #__test__("sublime-text-3") # works
-#__test__("realvnc-viewer") # works
 #__test__("octave")
 #__test__("teamviewer") # works
 __test__("veracrypt") # works
+__test__("realvnc-viewer") # works

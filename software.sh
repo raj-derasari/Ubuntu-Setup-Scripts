@@ -361,30 +361,33 @@ fi
 ## LARGE installations
 if [ $Install_LibreOffice -eq 1 ]; then
 	log $INFO "install libreoffice-stuff"
+	libre_stuff=""
 	if [ $LibreOffice_Base -eq 1 ]; then
 		log $INFO "install libreoffice-base"
-	 	$apt_prefix libreoffice-base
+		libre_stuff="`echo $libre_stuff` libreoffice-base"
 	fi
 	if [ $LibreOffice_Draw -eq 1 ]; then
 		log $INFO "install libreoffice-draw"
-	 	$apt_prefix libreoffice-draw
+		libre_stuff="`echo $libre_stuff` libreoffice-draw"
 	fi
 	if [ $LibreOffice_Impress -eq 1 ]; then
 		log $INFO "install libreoffice-impress"
-	 	$apt_prefix libreoffice-impress
+		libre_stuff="`echo $libre_stuff` libreoffice-impress"
 	fi
 	if [ $LibreOffice_Calc -eq 1 ]; then
 		log $INFO "install libreoffice-calc"
-	 	$apt_prefix libreoffice-calc
+		libre_stuff="`echo $libre_stuff` libreoffice-calc"
 	fi
 	if [ $LibreOffice_Math -eq 1 ]; then
 		log $INFO "install libreoffice-math"
-	 	$apt_prefix libreoffice-math
+		libre_stuff="`echo $libre_stuff` libreoffice-math"
 	fi
 	if [ $LibreOffice_Writer -eq 1 ]; then
 		log $INFO "install libreoffice-writer"
-	 	$apt_prefix libreoffice-writer
+		libre_stuff="`echo $libre_stuff` libreoffice-writer"
 	fi
+	pprint "Installing: " $libre_stuff
+	$apt_prefix $libre_stuff
 	$apt_prefix -f
 fi
 if [ $Install_TexStudio -eq 1 ]; then
