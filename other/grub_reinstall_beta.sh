@@ -3,9 +3,9 @@ sudo fdisk -l ## here note down the ubuntu partition
 
 # mount partitions
 # this may work - BUT - what if there are many linux distros? what if the text is NOT Linux ?
-# Z=`sudo fdisk -l | grep Linux | cut -d ' '  -f 1`
-# sudo mount ${Z} /mnt
-sudo mount /dev/sda5 /mnt
+Z=`sudo fdisk -l | grep Linux | cut -d ' '  -f 1`
+sudo mount ${Z} /mnt
+#sudo mount /dev/sda5 /mnt
 
 sudo mount /dev/sda2 /mnt/boot/efi
 
