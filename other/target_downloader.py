@@ -14,10 +14,10 @@ teamviewer : "mac-os" < bad
 veracrypt: "mac" <which is the good one
 can work around this or nah? lets see later!
 '''
-DEBUG=0
+DEBUG=1
 
-OS="mac"
-#OS="linux"
+#OS="mac"
+OS="linux"
 #OS="windows"
 
 ## todo
@@ -64,7 +64,7 @@ dl_conditions={
 	"octave":"",
 	"realvnc-viewer":(OS_formats[OS.lower()],"x64"),
 	"teamviewer":(OS_formats[OS.lower()],"86",),
-	"veracrypt":(OS_formats[OS.lower()],), # add  x86 here if you want for old CPU
+	"veracrypt":"", # add  x86 here if you want for old CPU
 	"pycharm-community":(),
 	"pycharm-edu":(),
 }
@@ -153,15 +153,22 @@ def DownloadTargetApp(TargetApp=None,allow_redirects=None):
 		if dl_url.lower().find(dl_urls[TargetApp].lower()) >= 0:
 			Found_DL_URL=True
 			for Z in dl_conditions[TargetApp]:
-				if dl_url.lower().find(Z.lower()) < 0:
-					# means the condition was not found in the download URL
-					#print("Condition not satisfied!: "+Z+" > Cannot download from "+dl_url)
-					Failed=True
-					break
+				if isinstance(Z,tuple):
+					for X in Z:
+						if dl_url.lower().find(X.lower()) > 0:
+							Failed=False
+							break
+						else:
+							pass
 				else:
-					pass
-					#print("Condition satisfied: ",Z)
-
+					if dl_url.lower().find(Z.lower()) < 0:
+						# means the condition was not found in the download URL
+						#print("Condition not satisfied!: "+Z+" > Cannot download from "+dl_url)
+						Failed=True
+						break
+					else:
+						pass
+	
 			if not Failed:
 				print("Found a download link:"+dl_url)
 				file_name=get_filename_from_url(dl_url)
@@ -195,9 +202,9 @@ def __test__(target=None,allow_redirects=None):
 	return 0
 
 #__test__("octave") # not implemented
-__test__("sublime-text-3") # works
+#__test__("sublime-text-3") # works
 __test__("realvnc-viewer") # works
-__test__("teamviewer") # works
-__test__("veracrypt")
-__test__("pycharm-community") # works
-__test__("pycharm-edu") # works
+#__test__("teamviewer") # works
+#__test__("veracrypt")
+#__test__("pycharm-community") # works
+#__test__("pycharm-edu") # works

@@ -45,10 +45,10 @@ export Github_SSH_File=${USER_HOME}/.ssh/github_key
 ### 2. VIRTUALENV SETUP
 ## -------------------------------------------------------------------------------------------------------------------
 # virtualenv - if you are using Ubuntu 18 or above, it is highly recommended to use virtualenv with Python3 - And ditch Python2!
-export Setup_VirtualEnv=0
+export Setup_VirtualEnv=1
 
 # if 1 above, consider setting up the next two parameters
-export VirtualEnv_Name="venv1"
+export VirtualEnv_Name="mars"
 export VirtualEnv_Directory=${USER_HOME}/.virtualenvs/$VirtualEnv_Name
 
 ### 3. MASTER SETUP - REQUIRED TO SET EITHER 1 OR 0 HERE
@@ -62,7 +62,7 @@ export Bloatware_Remove_LanguagePacks=0
 # Software setup script - Common Software, Java, Programming Tools, etc.
 export Master_Software=0
 # Python Libraries setup - For Python 2/3 Development, Both are supported.
-export Master_Python=0
+export Master_Python=1
 # Executes sudo apt-get upgrade after installing software
 export Do_AptGetUpgradeLast=0
 # cleans up your /tmp, pip cache and 
@@ -204,7 +204,7 @@ export Install_R_Studio=0
 ## -------------------------------------------------------------------------------------------------------------------
 ## Python Setup - installing python libraries
 # setting up python-dev tools
-export Setup_Python_Dev=0
+export Setup_Python_Dev=1
 
 # set one value from 2 and 3
 export Python_PreferredVersion=3
@@ -213,10 +213,10 @@ export Python_PreferredVersion=3
 export Python_InstallBasics=0
 
 # This includes web-dev tools 
-export Python_InstallWebDevelopmentTools=0
+export Python_InstallWebDevelopmentTools=1
 
 # the DJANGO framework and some aliases that make migrating and running your server easier
-export Python_InstallDjango=0
+export Python_InstallDjango=1
 
 # Jupyter Notebook, because it's a pretty handy tool
 export Python_InstallJupyter=0
