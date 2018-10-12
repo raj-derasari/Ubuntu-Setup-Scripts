@@ -50,13 +50,13 @@ eval set -- "$PARSED"
 DRY_MODE=0
 for var in "$@"
 do
-	if [ "$var" = "-d" ]; then
+	if [ "$var" = "-d" ] ||  [ "$var" = "--dry-run" ]; then
 		DRY_MODE=1
 		if [[ -z $dry_echo ]]; then
 			dry_echo="echo \$ "
 		fi
 	fi
-	if [ "$var" = "-x" ]; then
+	if [ "$var" = "-x" ] ||  [ "$var" = "--print-commands-only" ]; then
 		DRY_MODE=1
 		disp() {
 			:
@@ -71,13 +71,15 @@ done
 # actual utility functions
 
 addaptrepo="$dry_echo sudo add-apt-repository -y "
-# Maybe add sudo apt-key update depending on lsb_release
-apt_update="$dry_echo sudo apt-get update "
 
+# add sudo apt-key update to apt-get update, depending on lsb_release
+apt_update="$dry_echo sudo apt-get update "
 ub_ver=`lsb_release -rs`
 int=${ub_ver%.*}
 if [[ $int -lt 18 ]]; then
 	apt_update="`echo $apt_update` && sudo apt-key update"
 fi
+
+# other apt prefixes
 apt_prefix="$dry_echo sudo apt-get install -y "
 apt_prefix_rec="$dry_echo sudo apt-get install -y --install-recommends "
