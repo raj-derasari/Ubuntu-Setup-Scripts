@@ -33,12 +33,12 @@ export Setup_Templates=0
 ### 1. GITHUB
 ## -------------------------------------------------------------------------------------------------------------------
 # Github setup - This is independent of every other installation given above
-export Install_Git=0
+export Install_Git=1
 # IF you set this as 1, you will have to enter your email and name in Git_Email and Git_YourName
-export Install_Git_SSHKeys=0
+export Install_Git_SSHKeys=1
 # Remember to unset this to some random values, or delete this file when done (If you create a pull request, to save your data)
-export Git_Email="user.name@example.com"
-export Git_YourName="User Name"
+#export Git_Email="user.name@example.com"
+#export Git_YourName="User Name"
 # Path to your github ssh-key (Private key below, and Public key is the "private-key"+".pub" file)
 export Github_SSH_File=${USER_HOME}/.ssh/github_key
 
