@@ -3,10 +3,13 @@
 
 disp "GNOME Bloat Removal Script"
 
-splash_msg="----------------------------------------------
+splash_msg="
+----------------------------------------------
 Removing unneeded packages, followed by default software:
-----------------------------------------------\n"
-echo -e "$splash_msg"
+----------------------------------------------
+
+"
+pprint "$splash_msg"
 
 pkgs="
 account-plugin-aim \
@@ -113,8 +116,8 @@ totem* \
 ubuntu-desktop* \
 unity-webapps-*"
 
-echo "Packages: "$pkgs
-echo "Softwares: "$sws
+pprint "Packages: "$pkgs
+pprint "Softwares: "$sws
 
 $br_purge $pkgs
 $br_purge $sws
