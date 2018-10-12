@@ -228,7 +228,7 @@ fi
 # git and vcsh - vcsh allows you to manage multiple git repos in one directory
 if [ $Install_Git -eq 1 ]; then
 	disp "Git Setup"
-	log $INFO "install Git"
+	log $INFO "install Git VCSH"
 	$apt_prefix vcsh git
 	if [ $Install_Git_SSHKeys -eq 1 ]; then
 		if [ ! -e ${Github_SSH_File} ]; then

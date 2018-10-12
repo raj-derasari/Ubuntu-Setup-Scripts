@@ -35,10 +35,10 @@ export Setup_Templates=0
 # Github setup - This is independent of every other installation given above
 export Install_Git=0
 # IF you set this as 1, you will have to enter your email and name in Git_Email and Git_YourName
-export Install_Git_SSHKeys=0
+export Install_Git_SSHKeys=1
 # Remember to unset this to some random values, or delete this file when done (If you create a pull request, to save your data)
-export Git_Email="user.name@example.com"
-export Git_YourName="User Name"
+export Git_Email="raj.derasari@gmail.com"
+export Git_YourName="Raj Derasari"
 # Path to your github ssh-key (Private key below, and Public key is the "private-key"+".pub" file)
 export Github_SSH_File=${USER_HOME}/.ssh/github_key
 
@@ -85,7 +85,7 @@ export Install_GUFW=0
 # 7-zip and other archive types support (Not a GUI, integrates with default archive applications)
 export Install_P7Zip=0
 # QPAEQ and PulseAudioEqualizer are utilities to work as audio equalizers for system/all output sounds
-export Install_PulseAudioEqualizer=0
+export Install_PulseAudioEqualizer=1
 # Torrent Client
 export Install_QBitTorrent=0
 # PDF Viewer which is incredibly fast and lightweight
@@ -105,7 +105,7 @@ export Install_ZSH=0
 ## -------------------------------------------------------------------------------------------------------------------
 # Choose a web browser
 export Install_Chromium=0
-export Install_GoogleChrome=0
+export Install_GoogleChrome=1
 export Install_MozillaFirefox=0
 export Install_Vivaldi=0
 
@@ -117,7 +117,7 @@ export Install_WinFF=0
 # grive is an open source, third-party, command line Google-Drive tool.
 export Install_Grive_GoogleDrive=0
 # keepass password manager, for all your random password needs!
-export Install_KeepassPasswordManager=0
+export Install_KeepassPasswordManager=1
 # Teamviewer is a remoting software, you probably knew that already didn't ya?
 export Install_TeamViewer=0
 # Okular is a heavy-featured PDF Suite
@@ -127,7 +127,7 @@ export Install_TildaTmux=0
 # TexStudio is LaTeX software for writing up college assignments and research papers
 # It's most likely not going to be used anywhere else
 # Why am I even installing it I'm not even in college right now...
-export Install_TexStudio=0
+export Install_TexStudio=1
 ## -------------------------------------------------------------------------------------------------------------------
 ## TODO, haven't done these yet.
 # Terminal management, Kinda like Tmux/Tilda

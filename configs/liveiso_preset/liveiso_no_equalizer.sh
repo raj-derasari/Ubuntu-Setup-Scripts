@@ -85,7 +85,7 @@ export Install_GUFW=1
 # 7-zip and other archive types support (Not a GUI, integrates with default archive applications)
 export Install_P7Zip=1
 # QPAEQ and PulseAudioEqualizer are utilities to work as audio equalizers for system/all output sounds
-export Install_PulseAudioEqualizer=1
+export Install_PulseAudioEqualizer=0
 # Torrent Client
 export Install_QBitTorrent=1
 # PDF Viewer which is incredibly fast and lightweight
