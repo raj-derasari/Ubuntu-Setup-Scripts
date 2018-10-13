@@ -237,7 +237,7 @@ if [[ -z `which bazel` ]]; then
 	if [[ -z `which curl` ]]; then
 		pprint "installing curl!"
 		$apt_update
-		$apt_prefix build-essential cmake git python${PV}-dev python${PV}-distutils pylint libcupti-dev curl
+		$apt_prefix build-essential cmake git python${PV}-dev python${PV}-setuptools pylint libcupti-dev curl
 	fi
 	if [ $DRY_MODE -eq 1 ]; then
 		echo "echo deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8 | sudo tee /etc/apt/sources.list.d/bazel.list"
@@ -299,10 +299,14 @@ log $INFO "python bin path: "$PYTHON_BIN_PATH
 pprint "Setup_VirtualEnv:" $Setup_VirtualEnv
 if [ $Setup_VirtualEnv -eq 1 ]; then
 	$dry_echo workon $VE
-	export PYTHON_LIB_PATH="$($PYTHON_BIN_PATH -c 'from distutils.sysconfig import get_python_lib; print(get_python_lib())')"
+	export PYTHON_LIB_PATH=`$PYTHON_BIN_PATH -c "import setuptools;import scipy;print(scipy.__file__)" | cut -d/ -f1-6`
+	#"$($PYTHON_BIN_PATH -c 'from .sysconfig import get_python_lib; print(get_python_lib())')"
 	log $INFO "venv python lib path: "$PYTHON_LIB_PATH
 else
 	export PYTHON_LIB_PATH="$($PYTHON_BIN_PATH -c 'import site; print(site.getsitepackages()[0])')"
+#	import sys
+#site_packages = next(p for p in sys.path if 'site-packages' in p)
+#print site_packages
 	log $INFO "sys python lib path: "$PYTHON_LIB_PATH
 fi
 

@@ -35,3 +35,4 @@ export TF_NEED_OPENCL_SYCL=0
 export TF_NEED_S3=0
 export TF_NEED_TENSORRT=0
 export TF_NEED_VERBS=0
+export TF_NEED_RTCOM=0
