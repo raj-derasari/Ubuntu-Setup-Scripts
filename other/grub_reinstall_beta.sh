@@ -7,7 +7,8 @@ Z=`sudo fdisk -l | grep Linux | cut -d ' '  -f 1`
 sudo mount ${Z} /mnt
 #sudo mount /dev/sda5 /mnt
 
-sudo mount /dev/sda2 /mnt/boot/efi
+##  check if EFI and mount EFI partition
+# sudo mount /dev/sda2 /mnt/boot/efi
 
 ## to get some efi vars
 # modprobe efivars
@@ -31,4 +32,8 @@ sudo grub-install --root-directory=/mnt /dev/sda
 #for i in /sys /proc /dev/pts /dev; do sudo umount /mnt$i; done
 
 # reboot
-sudo reboot
+read -p "Would you like to reboot now? Y/y to continue, N/n to exit" choice
+if [ "$choice" = "y" ] | [ "$choice" = "Y" ]; then
+	echo "REbooting"
+	sudo reboot
+fi
