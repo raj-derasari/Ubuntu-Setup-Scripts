@@ -12,19 +12,8 @@ Removing unneeded packages, followed by default software:
 pprint "$splash_msg"
 
 pkgs="
-account-plugin-aim \
-account-plugin-facebook \
-account-plugin-flickr \
-account-plugin-jabber \
-account-plugin-salut \
-account-plugin-twitter \
-account-plugin-windows-live \
-account-plugin-yahoo \
+account-plugin-* \
 aisleriot \
-bluez-audio \
-bluez-cups \
-bluez-gnome \
-bluez-utils \
 brltty \
 brltty-x11 \
 deja-dup \
@@ -56,8 +45,6 @@ gnome-video-effects \
 gnomine \
 landscape-common \
 libevolution \
-libfriends0 \
-libfriends0:amd64 \
 libreoffice-avmedia-backend-gstreamer \
 libreoffice-ogltrans \
 libsane \
@@ -114,6 +101,7 @@ wvdial"
 sws="
 totem* \
 ubuntu-desktop* \
+remmina* \
 unity-webapps-*"
 
 pprint "Packages: "$pkgs

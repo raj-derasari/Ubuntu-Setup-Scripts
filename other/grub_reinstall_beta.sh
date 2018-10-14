@@ -16,7 +16,9 @@ sudo mount ${Z} /mnt
 # apt-get install --reinstall grub-efi-amd64
 
 ## is an alternative to the commented-below part
-sudo grub-install --root-directory=/mnt /dev/sda
+
+alphb
+sudo grub-install --root-directory=/mnt /dev/sd${alphb}
 
 ## to make sure that your internet connection stays alive. Copy and paste this command line into the terminal:
 #sudo cp /etc/resolv.conf /mnt/etc/

@@ -26,21 +26,6 @@ pidgin* \
 sylpheed* \
 transmission*"
 
-themes="
-adwaita-icon-theme \
-dmz-cursor-theme \
-gnome-icon-theme \
-gtk-update-icon-cache \
-humanity-icon-theme"
-
-languagepacks="
-language-pack-de* language-pack-de-base* language-pack-gnome-de* language-pack-gnome-de-base* \
-language-pack-es* language-pack-es-base* language-pack-gnome-es* language-pack-gnome-es-base* \
-language-pack-it* language-pack-it-base* language-pack-gnome-it* language-pack-gnome-it-base* \
-language-pack-pt* language-pack-pt-base* language-pack-gnome-pt* language-pack-gnome-pt-base* \
-language-pack-gnome-ru* language-pack-gnome-ru-base* language-pack-ru* language-pack-ru-base* \
-language-pack-zh-hans* language-pack-zh-hans-base* language-pack-gnome-zh-hans* language-pack-gnome-zh-hans-base* "
-
 pprint "Packages: "$pkgs
 pprint "Softwares: "$sws
 pprint "Themes: "$themes
