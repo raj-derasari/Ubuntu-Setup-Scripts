@@ -87,7 +87,19 @@ apt_install_recommends(){ $dry_echo sudo apt-get install -y --install-recommends
 apt_purge(){ $dry_echo sudo apt-get purge -y ${*}; }
 apt_purge_autoremove(){ $dry_echo sudo apt-get purge --auto-remove -y ${*}; }
 
-apt_key_dl() { $wget_echo curl -fsSL ${*} " " | ( [ $DRY_MODE -eq 1 ] &&  cat | tr -d '\n');
-	$aptkey_echo sudo apt-key add -; }
-apt_src_add() { $wget_echo echo deb [arch=amd64] $1 | ( [ $DRY_MODE -eq 1 ] &&  cat | tr -d '\n');
-	$aptkey_echo sudo tee /etc/apt/sources.list.d/${2}.list; }
+apt_key_dl() { 
+	if [ $DRY_MODE -eq 1 ]; then
+		$wget_echo "curl -fsSL ${*} | sudo apt-key add -"
+	else
+		curl -fsSL ${*} |  sudo apt-key add -
+	fi
+}
+apt_src_add() {
+
+	if [ $DRY_MODE -eq 1 ]; then
+		echo "echo deb [arch=amd64] $1 | sudo tee /etc/apt/sources.list.d/${2}.list"
+	else
+		echo deb [arch=amd64] $1 | sudo tee /etc/apt/sources.list.d/${2}.list
+	fi
+	#$wget_echo echo deb [arch=amd64] $1 | ( [ $DRY_MODE -eq 1 ] &&  cat | tr -d '\n');
+}

@@ -10,8 +10,8 @@ alias sbrc="source ${BF}"
 # Makes bash the default instead of sh
 alias sh=bash
 # -------------------------------------
-# Python 3 instead of Python 2
-alias python=python3
+# Python 3 instead of Python 2 - uncomment if you'd like to
+# alias python=python3
 # -------------------------------------
 # apt aliases
 alias sau="sudo apt-get update"
