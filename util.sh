@@ -76,7 +76,7 @@ done
 release_version=`lsb_release -rs`
 int=${release_version%.*}
 if [[ $int -lt 18 ]]; then
-	apt_update(){ $dry_echo sudo apt-get update; sudo apt-key update; }
+	apt_update(){ $dry_echo sudo apt-get update; $dry_echo sudo apt-key update; }
 else
 	apt_update(){ $dry_echo sudo apt-get update; }
 fi
