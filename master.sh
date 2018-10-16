@@ -137,8 +137,8 @@ if [ $Python_PreferredVersion -eq 3 ] | [ $Python_PreferredVersion -eq 2 ]; then
 	else
 		echo "# Python aliases----------------------------------
 alias python=python${Python_PreferredVersion}
-alias pip3install=python3 -m pip install --user --upgrade
-alias pip2install=python2 -m pip install --user --upgrade" >> ${BF}
+alias pip3install=\"python3 -m pip install --user --upgrade\"
+alias pip2install=\"python2 -m pip install --user --upgrade\"" >> ${BF}
 	
 	pprint "Aliases for Python have been setup"
 	log $INFO "Make python${Python_PreferredVersion} default python in bashrc"
