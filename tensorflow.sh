@@ -258,8 +258,11 @@ if [[ -z `which bazel` ]]; then
 			add_apt_repository ppa:webupd8team/java
 		fi
 		apt_update
-		$dry_echo echo oracle-java${TF_JAVA_VERSION}-installer shared/accepted-oracle-license-v1-1 select true | ( [ $DRY_MODE -eq 1 ] &&  cat | tr -d '\n'); $dry_echo sudo /usr/bin/debconf-set-selections
-		$dry_echo echo oracle-java${TF_JAVA_VERSION}-installer shared/accepted-oracle-license-v1-1 seen true | ( [ $DRY_MODE -eq 1 ] &&  cat | tr -d '\n'); $dry_echo sudo /usr/bin/debconf-set-selections
+		[ $DRY_MODE -eq 1 ] && \
+			( echo "echo oracle-java${TF_JAVA_VERSION}-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections";   \
+			echo "echo oracle-java${TF_JAVA_VERSION}-installer shared/accepted-oracle-license-v1-1 seen true | sudo /usr/bin/debconf-set-selections" ) || \
+			( echo oracle-java${TF_JAVA_VERSION}-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections; \
+		    echo oracle-java${TF_JAVA_VERSION}-installer shared/accepted-oracle-license-v1-1 seen true | sudo /usr/bin/debconf-set-selections);
 		apt_install oracle-java${TF_JAVA_VERSION}-installer oracle-java${TF_JAVA_VERSION}-set-default
 	fi
 	apt_key_dl "https://bazel.build/bazel-release.pub.gpg"

@@ -17,11 +17,9 @@ log() {
 }
 disp() {
 	echo -e "----------------------------------------------------\n\t\t${*}\n----------------------------------------------------"
-	#:
 }
 pprint(){
-	echo ${*}
-	#:
+	echo -e ${*}
 }
 
 #####################################################################
@@ -54,21 +52,13 @@ do
 		DRY_MODE=1
 		if [[ -z $dry_echo ]]; then
 			dry_echo="echo \$ "
-			wget_echo="echo -e "
-			aptkey_echo="echo | "
 		fi
 	fi
 	if [ "$var" = "-x" ] ||  [ "$var" = "--print-commands-only" ]; then
 		DRY_MODE=1
-		disp() {
-			:
-		}
-		pprint(){
-			:
-		}
+		disp() { :; }
+		pprint(){ :; }
 		dry_echo="echo "
-		wget_echo="echo -e "
-		aptkey_echo="echo | "
 	fi
 done
 ######################################################################
@@ -88,18 +78,14 @@ apt_purge(){ $dry_echo sudo apt-get purge -y ${*}; }
 apt_purge_autoremove(){ $dry_echo sudo apt-get purge --auto-remove -y ${*}; }
 
 apt_key_dl() { 
-	if [ $DRY_MODE -eq 1 ]; then
-		$wget_echo "curl -fsSL ${*} | sudo apt-key add -"
-	else
-		curl -fsSL ${*} |  sudo apt-key add -
-	fi
+	## if true, executes second line, or else, executes third line
+	[ $DRY_MODE -eq 1 ] && \
+	echo "curl -fsSL ${*} | sudo apt-key add -" || \
+	curl -fsSL ${*} |  sudo apt-key add -;
 }
 apt_src_add() {
-
-	if [ $DRY_MODE -eq 1 ]; then
-		echo "echo deb [arch=amd64] $1 | sudo tee /etc/apt/sources.list.d/${2}.list"
-	else
-		echo deb [arch=amd64] $1 | sudo tee /etc/apt/sources.list.d/${2}.list
-	fi
-	#$wget_echo echo deb [arch=amd64] $1 | ( [ $DRY_MODE -eq 1 ] &&  cat | tr -d '\n');
+	## if true, executes second line, or else, executes third line
+	[ $DRY_MODE -eq 1 ] && \
+	echo "echo deb [arch=amd64] $1 | sudo tee /etc/apt/sources.list.d/${2}.list" || \
+	echo deb [arch=amd64] $1 | sudo tee /etc/apt/sources.list.d/${2}.list;
 }
