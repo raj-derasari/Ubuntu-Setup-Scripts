@@ -14,4 +14,5 @@ done
 
 # rm -Rf .git/refs/original; rm -Rf .git/logs/; git gc --aggressive --prune=now
 
-_git_remove("*.deb*")
+_git_remove '*.deb*'
+#_git_remove '*.deb*'
