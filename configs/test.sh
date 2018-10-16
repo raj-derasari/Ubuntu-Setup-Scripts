@@ -61,9 +61,9 @@ export Master_RemoveBloatware=0
 export Bloatware_Remove_Themes=0
 export Bloatware_Remove_LanguagePacks=0
 # Software setup script - Common Software, Java, Programming Tools, etc.
-export Master_Software=0
+export Master_Software=1
 # Python Libraries setup - For Python 2/3 Development, Both are supported.
-export Master_Python=1
+export Master_Python=0
 # Executes sudo apt-get upgrade after installing software
 export Do_AptGetUpgradeLast=0
 # cleans up your /tmp, pip cache and 
@@ -78,7 +78,7 @@ export Install_EXFatUtils=0
 # Flatpak is a software and package installation utility which will be meta real soon
 export Install_Flatpak=0
 # Flux is recommended for users evening/night times.
-export Install_Flux=0
+export Install_Flux=1
 # Gparted is a partition utility which is highly useful, and most recommended
 export Install_GParted=0
 # Graphical Firewall configuration Utility
@@ -108,7 +108,7 @@ export Install_ZSH=0
 export Install_Chromium=0
 export Install_GoogleChrome=0
 export Install_MozillaFirefox=0
-export Install_Vivaldi=0
+export Install_Vivaldi=1
 
 ### 6. SOFTWARE TOOLS SETUP - HANDY TOOLS
 ## -------------------------------------------------------------------------------------------------------------------
@@ -118,7 +118,7 @@ export Install_WinFF=0
 # grive is an open source, third-party, command line Google-Drive tool.
 export Install_Grive_GoogleDrive=0
 # keepass password manager, for all your random password needs!
-export Install_KeepassPasswordManager=0
+export Install_KeepassPasswordManager=1
 # Teamviewer is a remoting software, you probably knew that already didn't ya?
 export Install_TeamViewer=0
 # Okular is a heavy-featured PDF Suite
@@ -128,7 +128,7 @@ export Install_TildaTmux=0
 # TexStudio is LaTeX software for writing up college assignments and research papers
 # It's most likely not going to be used anywhere else
 # Why am I even installing it I'm not even in college right now...
-export Install_TexStudio=0
+export Install_TexStudio=1
 ## -------------------------------------------------------------------------------------------------------------------
 ## TODO, haven't done these yet.
 # Terminal management, Kinda like Tmux/Tilda
@@ -161,7 +161,7 @@ export LibreOffice_Writer=0
 ## -------------------------------------------------------------------------------------------------------------------
 # Docker - If you select one, the docker installation script will be executed
 # Be careful, because the script does a complete reinstall of any existing Docker installation
-export Install_Docker=0
+export Install_Docker=1
 export Docker_Remove_SUDO=0
 
 ### 9. PROGRAMMING TOOLS - JAVA/JDK
@@ -172,7 +172,7 @@ export Install_Oracle_Java=0
 ## for the packages oracle-java(X)-installer and oracle-java(X)-set-default; then
 ## this script may work in the future too. For now, it is confirmed to work for Java 8 and Java 10
 ## IF you are installing a version other than 8 or 10, please be careful about setting Purge_OpenJDK to 1
-export Install_Java_Version=10
+export Install_Java_Version=00
 # This line uninstalls any inbuilt Java that comes with your Ubuntu/Debian installation
 export Purge_OpenJDK=0
 
@@ -236,7 +236,7 @@ export Python_InstallNLTK=0
 # Installs ML tools - theano (Not Thanos), Tensorflow, Keras, etc - you can select your own tensorflow below if you want to
 # but to have tensorflow installed the next variable must definitely be 1
 # Must set to 1 if you want to install tensorflow!
-export Python_InstallMachineLearningTools=1
+export Python_InstallMachineLearningTools=0
 
 ### 12. PYTHON SETUP - TENSORFLOW COMPILATION/INSTALLATION
 ## -------------------------------------------------------------------------------------------------------------------
@@ -244,7 +244,7 @@ export Python_InstallMachineLearningTools=1
 ## and if you have a machine that can compile tensorflow;
 ## then you can select 1 below and choose any modes (CPU, CUDA/GPU, Intel MKL)
 ## -------------------------------------------------------------------------------------------------------------------
-export Python_Compile_Tensorflow=1
+export Python_Compile_Tensorflow=0
 ## Select one of the next 3 as 1, if you don't select any of them as 1
 ## I will be really sad :(
 ## allowed values: cpu, gpu, mkl - Case sensitive (probably)
