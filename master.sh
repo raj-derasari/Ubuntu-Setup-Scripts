@@ -55,13 +55,24 @@ done
 # use the display function to print this
 disp "Ubuntu Master Script"
 if [[ -z $CONFIG_FILE ]]; then
+	# config file used is the default/recommended one
 	CONFIG_FILE=./configs/config_recommended.sh
-fi
-pprint "Executing with the default Configuration-File: ${CONFIG_FILE}"
-. "${CONFIG_FILE}"
-if [ $? -ne 0 ]; then
-	pprint "Errors in completing configuration! Cannot continue!"
-	exit 5
+	read -p "Using the recommended configuration file (./configs/config_recommended.sh) 
+Press (Enter) to continue, and the (Ctrl+C) combination to exit
+" DMMYDMMY
+	pprint "Executing with the default Configuration-File: ${CONFIG_FILE}"
+elif [ ! -e $CONFIG_FILE ]; then
+	## CFG file does not exist
+	echo "Error - Configuration file does not exist!
+	Please pass a valid Configuration File with the \"-f\" argument."
+	exit 3
+else
+	# config file exists and can be loaded - probably is a good file, I should add some validation for that
+	. "${CONFIG_FILE}"
+	if [ $? -ne 0 ]; then
+		pprint "Errors in completing configuration! Cannot continue!"
+		exit 5
+	fi
 fi
 
 ##begin
@@ -70,114 +81,23 @@ export ERRORFILE=`pwd`/log_errors.log
 ## Configuration loaded, run apt-get update first things first
 pprint "Running sudo apt-get update"
 
-$apt_update && log $INFO "first run of apt-get update in masterscript"
+apt_update && log $INFO "first run of apt-get update in masterscript"
+
 ## ALIAS SETUP
 checkBash="`grep \"alias brc=\" ${BF}`"
 if [[ ! -z $checkBash ]]; then
 	log $INFO "common-aliases - Seems like aliases are already setup. Not modifying ${BF}"
+	pprint "Common aliases and commands are already setup for you, not modifying profile"
 else
 	log $INFO "common-aliases - UPDATING ${BF}"
+	pprint "Setting up aliases and commands in your profile!"
 	## redirecting output to your bashrc file
 	## the first line permanently sets the BF variable as your bash profile
-	cat <<EOT >> ${BF}
-# Stores the bashrc file in BF
-export BF=${BF}
-# -------------------------------------
-# You can later replace nano with a text editor of your choice - gedit, subl, vim, emacs, ...
-#alias brc="sudo nano \${BF}"
-alias brc="subl \${BF}"
-alias sbrc="source \${BF}"
-# -------------------------------------
-# Makes bash the default instead of sh
-alias sh=bash
-# -------------------------------------
-# Python 3 instead of Python 2
-alias python=python3
-# -------------------------------------
-# apt aliases
-alias sau="sudo apt-get update"
-alias sai="sudo apt-get install"
-alias aptgetupgrade="sudo apt-get upgrade"
-alias sarm="sudo apt-get remove "
-alias sap="sudo apt-get purge"
-# If you ever get APT lock errors aptreset will do your work for ya
-alias aptreset="sudo rm -rf ~/locks; mkdir -p ~/locks/apt/list ~/locks/dpkg; sudo mv /var/lib/apt/lists/lock ~/locks/apt/list; sudo mv /var/lib/dpkg/lock ~/locks/dpkg/lock; sudo mv /var/cache/apt/archives/lock ~/locks/apt; sudo dpkg --configure -a"
-# -------------------------------------
-# Aliases to replace your pip installs easier
-alias py2install="python2 -m pip install --user "
-alias py3install="python3 -m pip install --user "
-# -------------------------------------
-# function for apt completion, currently doesn't work
-_sai_complete() {
-	mapfile -t COMPREPLY < <(apt-cache --no-generate pkgnames "");
-}
-complete -F _sai_complete sai
-complete -F _sai_complete saiy
-# -------------------------------------
-# other shell aliases
-# to find the PID of any process
-alias psfind = "ps aux | grep"
-# Network utilities
-alias listen="lsof -P -i -n"
-alias port='netstat -tulanp'
-alias ipinfo="curl ifconfig.me && curl ifconfig.me/host"
-# -------------------------------------
-# utility functions
-# generates a random password of length \$1
-genpasswd() { strings /dev/urandom | grep -o '[[:alnum:]]' | head -n \$1 | tr -d '\n'; echo; }
-# sorts directory items, by size
-sbs() { du -b --max-depth 1 \$1 | sort -nr | perl -pe 's{([0-9]+)}{sprintf "%.1f%s", \$1>=2**30? (\$1/2**30, "G"): \$1>=2**20? (\$1/2**20, "M"): \$1>=2**10? (\$1/2**10, "K"): (\$1, "")}e';}
-# list of directorys under arg1, sorted by size
-dir_size_list() { du -h --max-depth=1 \$1 | sort -hr; }
-# make directory and switch to it
-mcd() { mkdir -p "\$1"; cd "\$1";}
-# quickly backup a file
-bak() { cp "\$1"{,.bak};}
-## extracts any archive
-extract() {
-	if [ -f '\$1' ]; then
-		case \$1 in
-		*.tar.bz2)	tar xjf \$1 ;;
-		*.tar.gz)	tar xzf \$1 ;;
-		*.bz2)		bunzip2 \$1 ;;
-		*.rar)		unrar e \$1 ;;
-		*.gz)		gunzip \$1 ;;
-		*.tar)		tar xf \$1 ;;
-		*.tbz2)		tar xjf \$1 ;;
-		*.tgz)		tar xzf \$1 ;;
-		*.zip)		unzip \$1  ;;
-		*.Z)		uncompress \$1  ;;
-		*.7z)		7z x \$1  ;;
-		*)	 echo "'\$1' cannot be extracted via extract()" ;;
-		esac
-	else
-		echo "'\$1' is not a valid file"
-	fi
-
-# Execute bash instead of sh
-alias sh=bash
-# You can later replace nano with a text editor of your choice - gedit, subl, vim, emacs, ...
-alias brc="sudo nano \${BF}"
-# Loads the bashrc profile
-alias sbrc="source \${BF}"
-alias sau="sudo apt-get update"
-alias sai="sudo apt-get install"
-alias saiy="sudo apt-get -y install"
-alias aptgetupgrade="sudo apt-get upgrade"
-#Aliases to replace your pip install hardwork
-alias py2install="python2 -m pip install --user "
-alias py3install="python3 -m pip install --user "
-# If you ever get APT lock errors aptreset will do your work for ya
-LOCKDIR=~/locks
-alias aptreset="mkdir -p ${LOCKDIR}/apt/list ${LOCKDIR}/dpkg; sudo mv /var/lib/apt/lists/lock ${LOCKDIR}/apt/list; sudo mv /var/lib/dpkg/lock ${LOCKDIR}/dpkg/lock; sudo mv /var/cache/apt/archives/lock ${LOCKDIR}/apt; sudo dpkg --configure -a"
-# for some reason, this breaks beyond Ubuntu 16, 18 but worked perfecto on my Lubuntu 16 - No idea how I'll fix this
-_sai_complete() {
-	mapfile -t COMPREPLY < <(apt-cache --no-generate pkgnames "$2")
-}
-complete -F _sai_complete sai
-complete -F _sai_complete saiy
-EOT
+	cat bash_aliases.txt >> ${BF}
+	## alternative:
+	# mv bash_aliases.txt ~/.bash_aliases
 fi
+
 ## virtualenv aliases
 if [ $Setup_VirtualEnv -eq 1 ]; then
 	log $INFO "installing virtualenv for python"
@@ -201,9 +121,9 @@ fi
 EOT
 	fi
 	if [ $Python_PreferredVersion -eq 2 ]; then
-		$apt_prefix virtualenv python-virtualenv virtualenvwrapper
+		apt_install_recommends virtualenv python-virtualenv virtualenvwrapper
 	elif [ $Python_PreferredVersion -eq 3 ]; then
-		$apt_prefix virtualenv python3-virtualenv virtualenvwrapper
+		apt_install_recommends virtualenv python3-virtualenv virtualenvwrapper
 	fi
 else
 	log $INFO "Not setting up virtualenv"
@@ -225,33 +145,36 @@ alias pip2install=python2 -m pip install --user --upgrade" >> ${BF}
 	fi
 fi
 
+################################################################################################
 # git and vcsh - vcsh allows you to manage multiple git repos in one directory
 if [ $Install_Git -eq 1 ]; then
 	disp "Git Setup"
 	log $INFO "install Git VCSH"
-	$apt_prefix vcsh git
-	if [ $Install_Git_SSHKeys -eq 1 ]; then
-		if [ ! -e ${Github_SSH_File} ]; then
-			$dry_echo ssh-keygen -t rsa -b 4096 -C "${Git_Email}" -f "${Github_SSH_File}"
-			$dry_echo eval "$(ssh-agent -s)"
-			$dry_echo ssh-add ${Github_SSH_File}
-		else
-			pprint "you have already generated the ssh-key, displaying Pub-Key:"
-			pprint "You can copypasta your Github key, refer Desktop/Git_PublicKey.txt"
-			echo "Visit https://github.com/settings/keys and add this key in your SSH keys: " >| ${USER_HOME}/Desktop/Git_PublicKey.txt
-			cat ${Github_SSH_File}.pub >> ${USER_HOME}/Desktop/Git_PublicKey.txt
-		fi
+	apt_install vcsh git
+	$dry_echo git config --global user.name "${Git_YourName}"
+	$dry_echo git config --global user.email "${Git_Email}"
+fi
+if [ $Setup_Git_SSHKeys -eq 1 ]; then
+	if [ ! -e ${Github_SSH_File} ]; then
+		$dry_echo ssh-keygen -t rsa -b 4096 -C "${Git_Email}" -f "${Github_SSH_File}"
+		$dry_echo eval "$(ssh-agent -s)"
+		$dry_echo ssh-add ${Github_SSH_File}
+	else
+		pprint "you have already generated the ssh-key, displaying Pub-Key:"
+		pprint "You can copypasta your Github key, refer Desktop/Git_PublicKey.txt"
+		echo "Visit https://github.com/settings/keys and add this key in your SSH keys: " >| ${USER_HOME}/Desktop/Git_PublicKey.txt
+		cat ${Github_SSH_File}.pub >> ${USER_HOME}/Desktop/Git_PublicKey.txt
 	fi
-	
-	#$dry_echo git config --global user.name "${Git_YourName}"
-	#$dry_echo git config --global user.email "${Git_Email}"
+fi
+if [ $Setup_Git_Aliases -eq 1 ]; then
 	$dry_echo git config --global alias.add-commit '!git add -A && git commit -m '
 	$dry_echo git config --global alias.ls 'log --pretty=format:"%C(green)%h\\ %C(yellow)[%ad]%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative'
 	$dry_echo git config --global alias.ll 'log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat'
 	$dry_echo git config --global alias.lnc 'log --pretty=format:"%h\\ %s\\ [%cn]"'
-	pprint -e "Git aliases set up.\nYou can use this to directly commit a directory:\n\tgit add-commit '<Commit-Message>'\n"
-	pprint -e "You can use this to see lists of commits:\n\tgit ls\n\tgit ll\n\tgit lnc"
+	pprint "Git aliases set up.\nYou can use this to directly commit a directory:\n\tgit add-commit '<Commit-Message>'\n"
+	pprint "You can use this to see lists of commits:\n\tgit ls\n\tgit ll\n\tgit lnc"
 fi
+################################################################################################
 
 ## libsdeps
 if [ $Master_Dependencies -eq 1 ]; then
@@ -322,7 +245,7 @@ if [ $Do_CleanupAfterExec -eq 1 ]; then
 	$dry_echo sudo apt -y autoremove 2>>"${ERRORFILE}"
 
 	# fix dependencies, install/uninstall stuff
-	$apt_prefix -f 2>>"${ERRORFILE}"
+	apt_install -f 2>>"${ERRORFILE}"
 	
 	# removes pip packages
 	pprint "Cleaning up pip cache"

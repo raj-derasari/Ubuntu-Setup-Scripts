@@ -33,13 +33,14 @@ export Setup_Templates=0
 ### 1. GITHUB
 ## -------------------------------------------------------------------------------------------------------------------
 # Github setup - This is independent of every other installation given above
-export Install_Git=1
+export Install_Git=0
+export Setup_Git_Aliases=0
+export Setup_Git_SSHKeys=0
 # IF you set this as 1, you will have to enter your email and name in Git_Email and Git_YourName
-export Install_Git_SSHKeys=1
-# Remember to unset this to some random values, or delete this file when done (If you create a pull request, to save your data)
-export Git_Email="raj.derasari@example.com"
-export Git_YourName="Raj Derasari"
-# Path to your github ssh-key (Private key below, and Public key is the "private-key"+".pub" file)
+# Remember to unset this to some random values, or delete this file when done (If you are sharing the file, to save your data)
+export Git_Email="user.name@example.com"
+export Git_YourName="User Name"
+# Path to your github ssh-key (Enter a private key path below, the public key will be saved as {private_key}+".pub'
 export Github_SSH_File=${USER_HOME}/.ssh/github_key
 
 ### 2. VIRTUALENV SETUP
@@ -60,7 +61,7 @@ export Master_RemoveBloatware=0
 export Bloatware_Remove_Themes=0
 export Bloatware_Remove_LanguagePacks=0
 # Software setup script - Common Software, Java, Programming Tools, etc.
-export Master_Software=1
+export Master_Software=0
 # Python Libraries setup - For Python 2/3 Development, Both are supported.
 export Master_Python=0
 # Executes sudo apt-get upgrade after installing software
@@ -77,7 +78,7 @@ export Install_EXFatUtils=0
 # Flatpak is a software and package installation utility which will be meta real soon
 export Install_Flatpak=0
 # Flux is recommended for users evening/night times.
-export Install_Flux=1
+export Install_Flux=0
 # Gparted is a partition utility which is highly useful, and most recommended
 export Install_GParted=0
 # Graphical Firewall configuration Utility
@@ -117,7 +118,7 @@ export Install_WinFF=0
 # grive is an open source, third-party, command line Google-Drive tool.
 export Install_Grive_GoogleDrive=0
 # keepass password manager, for all your random password needs!
-export Install_KeepassPasswordManager=1
+export Install_KeepassPasswordManager=0
 # Teamviewer is a remoting software, you probably knew that already didn't ya?
 export Install_TeamViewer=0
 # Okular is a heavy-featured PDF Suite
@@ -127,7 +128,7 @@ export Install_TildaTmux=0
 # TexStudio is LaTeX software for writing up college assignments and research papers
 # It's most likely not going to be used anywhere else
 # Why am I even installing it I'm not even in college right now...
-export Install_TexStudio=1
+export Install_TexStudio=0
 ## -------------------------------------------------------------------------------------------------------------------
 ## TODO, haven't done these yet.
 # Terminal management, Kinda like Tmux/Tilda
@@ -184,9 +185,9 @@ export Install_GEdit=0
 # From my experience, apt-install atom will be a PRETTY SLOW DOWNLOAD
 export Install_Atom=0
 # Lightweight alternative to Atom - Sublime Text (Free Edition)
-export Install_SublimeText=1
+export Install_SublimeText=0
 # VS Code is also a great programming IDE
-export Install_VisualStudioCode=1
+export Install_VisualStudioCode=0
 ## TODO: Add emacs here, and... anything else?
 
 ## Scientific Coding "IDE" hah

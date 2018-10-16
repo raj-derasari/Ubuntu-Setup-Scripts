@@ -233,27 +233,19 @@ pprint "Setting up bazel and build tools"
 if [[ -z `which bazel` ]]; then
 	pprint "bazel not found, installing bazel by apt-get"
 	log $INFO "bazel: Installing from this script"
-	pprint "installing bazel-dependencies"
-	if [[ -z `which curl` ]]; then
-		pprint "installing curl!"
-		$apt_update
-		$apt_prefix build-essential cmake git python${PV}-dev python${PV}-setuptools pylint libcupti-dev curl
-	fi
-	if [ $DRY_MODE -eq 1 ]; then
-		echo "echo deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8 | sudo tee /etc/apt/sources.list.d/bazel.list"
-		echo "curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -"
-	else
-		echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
-		curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
-	fi
-	$apt_update
+	pprint "installing bazel dependencies: curl, python-dev, javac"
+	
+	pprint "Installing and Verifying Tensorflow dependencies: Curl, Javac, Python-Dev"
+	apt_install build-essential cmake git python${PV}-dev python${PV}-setuptools pylint libcupti-dev curl
+	
 	#$dry_echo sudo apt-get -o Dpkg::Options::="--force-overwrite" install -y openjdk-9-jdk
 	if [[ -z `which javac` ]]; then
 		if [ $AUTOMODE -eq 1 ]; then
-			pprint "Javac not installed, Installing oracle javac-10"
+			pprint "Javac not installed; Auto mode; Installing oracle-java${TF_JAVA_VERSION}-installer"
 		else
-			read -p "Install oracle javac 10? (Enter/y to continue, n to exit)" install_javac
-			if [ "$install_javac" = "y" ] | [ "$install_javac" = "" ]; then
+			read -p "Install Oracle Java $TF_JAVA_VERSION? [package: oracle-java${TF_JAVA_VERSION}-installer]
+			(Enter/y to continue, n to exit)" install_javac
+			if [ "$install_javac" = "y" ] | [ "$install_javac" = "" ] | [ "$install_javac" = "Y" ]; then
 				pprint "installing javac!"
 			elif [ "$install_javac" = "n" ]; then
 				pprint "Not installing javac, Exiting!"
@@ -261,22 +253,19 @@ if [[ -z `which bazel` ]]; then
 			fi
 		fi
 		if [ $TF_JAVA_VERSION -eq 10 ]; then
-			$dry_echo sudo add-apt-repository -y ppa:linuxuprising/java
+			add_apt_repository ppa:linuxuprising/java
 		elif [ $TF_JAVA_VERSION -eq 8 ]; then
-			$dry_echo sudo add-apt-repository -y ppa:webupd8team/java
+			add_apt_repository ppa:webupd8team/java
 		fi
-		$apt_update
-		if [ $DRY_MODE -eq 1 ]; then 
-			echo "echo oracle-java${TF_JAVA_VERSION}-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections"
-			echo "echo oracle-java${TF_JAVA_VERSION}-installer shared/accepted-oracle-license-v1-1 seen true | sudo /usr/bin/debconf-set-selections"
-		else
-			echo "oracle-java${TF_JAVA_VERSION}-installer shared/accepted-oracle-license-v1-1 select true" | sudo /usr/bin/debconf-set-selections
-			echo "oracle-java${TF_JAVA_VERSION}-installer shared/accepted-oracle-license-v1-1 seen true" | sudo /usr/bin/debconf-set-selections
-		fi
-		$apt_prefix oracle-java${TF_JAVA_VERSION}-installer
-		$apt_prefix oracle-java${TF_JAVA_VERSION}-set-default
+		apt_update
+		$dry_echo echo oracle-java${TF_JAVA_VERSION}-installer shared/accepted-oracle-license-v1-1 select true | ( [ $DRY_MODE -eq 1 ] &&  cat | tr -d '\n'); $dry_echo sudo /usr/bin/debconf-set-selections
+		$dry_echo echo oracle-java${TF_JAVA_VERSION}-installer shared/accepted-oracle-license-v1-1 seen true | ( [ $DRY_MODE -eq 1 ] &&  cat | tr -d '\n'); $dry_echo sudo /usr/bin/debconf-set-selections
+		apt_install oracle-java${TF_JAVA_VERSION}-installer oracle-java${TF_JAVA_VERSION}-set-default
 	fi
-	$apt_prefix bazel
+	apt_key_dl "https://bazel.build/bazel-release.pub.gpg"
+	apt_src_add "http://storage.googleapis.com/bazel-apt stable jdk1.8" "bazel"
+	apt_update
+	apt_install bazel
 else
 	pprint "seems like bazel is installed, only checking for other dependencies"
 	log $INFO "bazel: Already installed"
@@ -347,14 +336,14 @@ case $MODE in
 		$dry_echo ./configure; 
 	;;
 	"build-only")
-		$dry_echo _bazel_build;
+		_bazel_build;
 	;;
 	"build-and-wheel")
-		$dry_echo _bazel_build;
+		_bazel_build;
 		$dry_echo bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
 	;;
 	"build-and-install")
-		$dry_echo _bazel_build;
+		_bazel_build;
 		$dry_echo bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
 		$dry_echo $PIP_PREFIX  --ignore-installed  /tmp/tensorflow_pkg/tensorflow*.whl
 	;;
@@ -369,7 +358,7 @@ case $MODE in
 		#echo "bazel clean; ./configure; bazel build; bazel-bin; $PIP_PREFIX pip insall"
 		$dry_echo bazel clean;
 		$dry_echo ./configure;
-		$dry_echo _bazel_build;
+		_bazel_build;
 		$dry_echo bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
 		$dry_echo $PIP_PREFIX --ignore-installed /tmp/tensorflow_pkg/tensorflow*.whl
 	;;
@@ -386,6 +375,4 @@ if [ -e /tmp/tensorflow_pkg ]; then
 else
 	pprint "the path /tmp/tensorflow_pkg/ does not seem to exist. huh."
 fi
-cd "$startDir"
-# $dry_echo python$python_version convolutional_test.py
-#exit $?
+## you will be in {TF_GIT_ROOT}/tensorflow/tensorflow when the execution of this script completes

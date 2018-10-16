@@ -61,9 +61,7 @@ while true; do
 			shift
 			;;
 		-v|--virtualenv)
-			#Setup_VirtualEnv=1
 			VE="$2"
-			#venv_pip_prefix="$dry_echo python -m pip install --user --upgrade " # this is used if NOT using virtualenv
 			shift 2
 			;;
 		-p|--python-version)
@@ -104,17 +102,17 @@ if [[ -z $Setup_VirtualEnv ]]; then
 	## called from terminal, Venv wasnt used
 	log "DEBUG: line 96 Py"
 	Setup_VirtualEnv=0
-	venv_pip_prefix="$dry_echo sudo -H python${PV} -m pip install --user --upgrade " # this is used if NOT using virtualenv
+	pip_install() { $dry_echo sudo -H python${PV} -m pip install --user --upgrade ${*}; } # this is used if NOT using virtualenv
 	pprint "Not installing to any virtualenv!"
 elif [ $Setup_VirtualEnv -eq 0 ]; then
 	log "DEBUG: line 119 Py"
 	Setup_VirtualEnv=0
-	venv_pip_prefix="$dry_echo sudo -H python${PV} -m pip install --user --upgrade " # this is used if NOT using virtualenv
+	pip_install() { $dry_echo sudo -H python${PV} -m pip install --user --upgrade ${*}; } # this is used if NOT using virtualenv
 	pprint "Not installing to any virtualenv!"
 # called from either source, but venv was used - hence name is definitely known
 elif [ $Setup_VirtualEnv -eq 1 ]; then
 	Setup_VirtualEnv=1
-	venv_pip_prefix="$dry_echo python${PV} -m pip install --user --upgrade " # this is used if NOT using virtualenv
+	pip_install() { $dry_echo python${PV} -m pip install --user --upgrade ${*}; } # this is used if NOT using virtualenv
 	if [[ -z $VE ]]; then
 		VE=$VirtualEnv_Name
 	fi
@@ -138,40 +136,41 @@ Python_Pkg_List="\
 python-genshi \
 python-colorama \
 python-distlib \
+python-setuptools \
 python-pkg-resources \
 python-tk
 "
-$apt_update
-$apt_prefix_rec $Python_Pkg_List	
+apt_update
+apt_install $Python_Pkg_List	
 
 if [ $PV -eq 2 ]; then
-	$apt_prefix_rec python-pip
+	apt_install_recommends python-pip
 elif [ $PV -eq 3 ]; then
-	$apt_prefix_rec python3-pip
+	apt_install_recommends python3-pip
 fi
 
 log $INFO "Upgrade pip (globally)"
-$venv_pip_prefix pip
+pip_install pip
 
 if [ $Setup_VirtualEnv -eq 1 ]; then
 	log $INFO "Install virtualenvwrapper"
-	$venv_pip_prefix virtualenvwrapper
+	pip_install virtualenvwrapper
 fi
 
 if [ $Python_InstallBasics -eq 1 ]; then
 	log $INFO "Requests, matplotlib, pandas, h5py"
-	$venv_pip_prefix Requests
-	$venv_pip_prefix scipy
-	$venv_pip_prefix sklearn
-	$venv_pip_prefix matplotlib
-	$venv_pip_prefix pandas
-	$venv_pip_prefix h5py
+	pip_install Requests
+	pip_install scipy
+	pip_install sklearn
+	pip_install matplotlib
+	pip_install pandas
+	pip_install h5py
 fi
 
 if [ $Python_InstallDjango -eq 1 ]; then
 	log $INFO "Django"
-	$venv_pip_prefix django
-	$venv_pip_prefix geoip2
+	pip_install django
+	pip_install geoip2
 	## setup aliases
 	checkBash="`grep \"alias django_runserver=\" ${BF}`"
 	if [[ ! -z $checkBash ]]; then
@@ -189,27 +188,27 @@ fi
 
 if [ $Python_InstallWebDevelopmentTools -eq 1 ]; then
 	log $INFO "flask, BeautifulSoup, Twisted"
-	$venv_pip_prefix flask
-	$venv_pip_prefix Twisted
+	pip_install flask
+	pip_install Twisted
 	# html,xml parser
-	$venv_pip_prefix lxml
+	pip_install lxml
 	if [ $PV -eq 2 ]; then 
-		$venv_pip_prefix BeautifulSoup
+		pip_install BeautifulSoup
 	elif [ $PV -eq 3 ]; then 
-		$venv_pip_prefix BeautifulSoup4
+		pip_install BeautifulSoup4
 	fi	
 fi
 
 if [ $Python_InstallJupyter -eq 1 ]; then
 	log $INFO "IPython and Jupyter-Notebook"
 	# Please Note ipython 6.x wont work with python2, needs python 3 - This is automated though
-	$venv_pip_prefix IPython
-	$venv_pip_prefix jupyter
+	pip_install IPython
+	pip_install jupyter
 fi
 
 if [ $Python_InstallNLTK -eq 1 ]; then
 	log $INFO "NLTK"
-	$venv_pip_prefix nltk
+	pip_install nltk
 fi
 
 if [ $Python_InstallMachineLearningTools -eq 1 ]; then
@@ -219,12 +218,12 @@ if [ $Python_InstallMachineLearningTools -eq 1 ]; then
 			VFlag=" -v $VE "
 		fi
 		log $INFO "Compiling Tensorflow - " $Python_Tensorflow_Target
-		bash tensorflow.sh -a -p $PV -b $Python_Tensorflow_Target -m all $DRYFLAG $VFlag
+		bash tensorflow.sh -a $DRYFLAG -p $PV -b $Python_Tensorflow_Target -m all $VFlag
 	else
 		log $INFO "Not compiling tensorflow, installing from pip"
-		$venv_pip_prefix tensorflow
+		pip_install tensorflow
 	fi
-	$venv_pip_prefix theano
-	$venv_pip_prefix keras
+	pip_install theano
+	pip_install keras
 fi
 exit 0

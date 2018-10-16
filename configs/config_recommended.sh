@@ -34,12 +34,13 @@ export Setup_Templates=1
 ## -------------------------------------------------------------------------------------------------------------------
 # Github setup - This is independent of every other installation given above
 export Install_Git=1
+export Setup_Git_Aliases=1
+export Setup_Git_SSHKeys=0
 # IF you set this as 1, you will have to enter your email and name in Git_Email and Git_YourName
-export Install_Git_SSHKeys=0
-# Remember to unset this to some random values, or delete this file when done (If you create a pull request, to save your data)
+# Remember to unset this to some random values, or delete this file when done (If you are sharing the file, to save your data)
 export Git_Email="user.name@example.com"
 export Git_YourName="User Name"
-# Path to your github ssh-key (Private key below, and Public key is the "private-key"+".pub" file)
+# Path to your github ssh-key (Enter a private key path below, the public key will be saved as {private_key}+".pub'
 export Github_SSH_File=${USER_HOME}/.ssh/github_key
 
 ### 2. VIRTUALENV SETUP

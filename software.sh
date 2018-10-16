@@ -122,29 +122,6 @@ fi
 # 	apt_install pycharm
 # fi
 #fi
-# if [ $DRY_MODE -eq 0 ]; then
-# 	if [ $Install_Docker -eq 1 ]; then
-# 		curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-# 		echo "deb $_architecture https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list
-# 		fi
-# 	if [ $Install_GoogleChrome -eq 1 ]; then
-# 		curl https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-# 		echo "deb $_architecture http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
-# 	fi
-# 	if [ $Install_SublimeText -eq 1 ]; then
-# 		curl https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
-# 		echo "deb $_architecture https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
-# 	fi
-# 	if [ $Install_VisualStudioCode -eq 1 ]; then
-# 		curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
-# 		echo "deb $_architecture https://packages.microsoft.com/repos/vscode stable main" | sudo tee /etc/apt/sources.list.d/vscode.list
-# 	fi
-# 	if [ $Install_Vivaldi -eq 1 ]; then
-# 		curl http://repo.vivaldi.com/stable/linux_signing_key.pub | sudo apt-key add -
-# 		echo "deb $_architecture http://repo.vivaldi.com/stable/deb/ stable main" | sudo tee /etc/apt/sources.list.d/vivaldi.list
-# 	fi
-# elif [ $DRY_MODE -eq 1 ]; then
-# 	fi
 if [ $Install_Docker -eq 1 ]; then
 	apt_key_dl https://download.docker.com/linux/ubuntu/gpg
 	apt_src_add "https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable " "docker"
@@ -152,20 +129,29 @@ if [ $Install_Docker -eq 1 ]; then
 #	$wget_echo | ( [ $DRY_MODE -eq 1 ] && cat | tr -d '\n'); $aptkey_echo sudo tee /etc/apt/sources.list.d/docker.list
 fi
 if [ $Install_GoogleChrome -eq 1 ]; then
-	$wget_echo curl -fsSL https://dl-ssl.google.com/linux/linux_signing_key.pub" " | ( [ $DRY_MODE -eq 1 ] && cat | tr -d '\n'); $aptkey_echo sudo apt-key add -
-	$wget_echo "echo deb $_architecture https://dl.google.com/linux/chrome/deb/ stable main " | ( [ $DRY_MODE -eq 1 ] && cat | tr -d '\n'); $aptkey_echo sudo tee /etc/apt/sources.list.d/google-chrome.list
+	apt_key_dl dl-ssl.google.com/linux/linux_signing_key.pub
+	apt_src_add "https://dl.google.com/linux/chrome/deb/ stable main" "google-chrome"
+#	$wget_echo curl -fsSL https://" " | ( [ $DRY_MODE -eq 1 ] && cat | tr -d '\n'); $aptkey_echo sudo apt-key add -
+#	$wget_echo "echo deb $_architecture  " | ( [ $DRY_MODE -eq 1 ] && cat | tr -d '\n'); $aptkey_echo sudo tee /etc/apt/sources.list.d/google-chrome.list
 fi
 if [ $Install_SublimeText -eq 1 ]; then
-	$wget_echo curl https://download.sublimetext.com/sublimehq-pub.gpg" " | ( [ $DRY_MODE -eq 1 ] && cat | tr -d '\n'); $aptkey_echo sudo apt-key add -
-	$wget_echo "echo deb $_architecture https://download.sublimetext.com/ apt/stable/ " | ( [ $DRY_MODE -eq 1 ] && cat | tr -d '\n'); $aptkey_echo sudo tee /etc/apt/sources.list.d/sublime-text.list
+	
+	apt_key_dl https://download.sublimetext.com/sublimehq-pub.gpg
+	apt_src_add "https://download.sublimetext.com/ apt/stable/" "sublime-text"
+#	$wget_echo curl https://" " | ( [ $DRY_MODE -eq 1 ] && cat | tr -d '\n'); $aptkey_echo sudo apt-key add -
+#	$wget_echo "echo deb $_architecture https:// " | ( [ $DRY_MODE -eq 1 ] && cat | tr -d '\n'); $aptkey_echo sudo tee /etc/apt/sources.list.d/sublime-text.list
 fi
 if [ $Install_VisualStudioCode -eq 1 ]; then
-	$wget_echo curl https://packages.microsoft.com/keys/microsoft.asc" " | ( [ $DRY_MODE -eq 1 ] && cat | tr -d '\n'); $aptkey_echo sudo apt-key add -
-	$wget_echo "echo deb $_architecture https://packages.microsoft.com/repos/vscode stable main " | ( [ $DRY_MODE -eq 1 ] && cat | tr -d '\n'); $aptkey_echo sudo tee /etc/apt/sources.list.d/vscode.list
+	apt_key_dl https://packages.microsoft.com/keys/microsoft.asc
+	apt_src_add "https://packages.microsoft.com/repos/vscode stable main" "vscode"
+#	$wget_echo curl https://" " | ( [ $DRY_MODE -eq 1 ] && cat | tr -d '\n'); $aptkey_echo sudo apt-key add -
+#	$wget_echo "echo deb $_architecture  " | ( [ $DRY_MODE -eq 1 ] && cat | tr -d '\n'); $aptkey_echo sudo tee /etc/apt/sources.list.d/vscode.list
 fi
 if [ $Install_Vivaldi -eq 1 ]; then
-	$wget_echo curl http://repo.vivaldi.com/stable/linux_signing_key.pub" " | ( [ $DRY_MODE -eq 1 ] && cat | tr -d '\n'); $aptkey_echo sudo apt-key add -
-	$wget_echo "echo deb $_architecture http://repo.vivaldi.com/stable/deb/ stable main " | ( [ $DRY_MODE -eq 1 ] && cat | tr -d '\n'); $aptkey_echo sudo tee /etc/apt/sources.list.d/vivaldi.list
+	apt_key_dl https://repo.vivaldi.com/stable/linux_signing_key.pub
+	apt_src_add "http://repo.vivaldi.com/stable/deb/ stable main" "vivaldi"
+#	$wget_echo curl http://" " | ( [ $DRY_MODE -eq 1 ] && cat | tr -d '\n'); $aptkey_echo sudo apt-key add -
+#	$wget_echo "echo deb $_architecture  " | ( [ $DRY_MODE -eq 1 ] && cat | tr -d '\n'); $aptkey_echo sudo tee /etc/apt/sources.list.d/vivaldi.list
 fi
 
 #	if [ $Install_R_Version -eq 3.5 ]; then

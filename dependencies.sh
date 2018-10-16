@@ -12,19 +12,19 @@ if [ $DRY_MODE -eq 1 ]; then
 fi
 
 log $INFO "Adding default ubuntu repositories!"
-$dry_echo sudo add-apt-repository -y universe
-$dry_echo sudo add-apt-repository -y restricted
-$dry_echo sudo add-apt-repository -y multiverse
-#sudo apt-key update && 
-$dry_echo sudo apt-get update
+add_apt_repository universe
+add_apt_repository restricted
+add_apt_repository multiverse
+
+apt_update
 
 # get ifconfig working on Ubuntu Unity/Budgie/gnome
 log $INFO "IFCONFIG"
-$apt_prefix --install-recommends net-tools
+apt_install_recommends net-tools
 
 # build tools
 log $INFO "Build Tools - cmake, etc."
-$apt_prefix --install-recommends \
+apt_install_recommends \
 build-essential \
 cmake \
 curl \
@@ -34,7 +34,7 @@ libgtk2.0-dev
 
 # better stuff
 log $INFO "C/C++ SO files"
-$apt_prefix --install-recommends \
+apt_install \
 gcc-6-base:i386 \
 libbz2-1.0:i386 \
 libc6:i386 \
@@ -48,14 +48,14 @@ lib32ncurses5 \
 lib32z1 \
 libtinfo5:i386
 
-$apt_prefix --install-recommends \
+apt_install_recommends \
 libbz2-dev \
 libssl-dev \
 libreadline-dev \
 libsqlite3-dev tk-dev
 
 log $INFO "gconf "
-$apt_prefix --install-recommends \
+apt_install \
 gconf2 \
 gconf2-common \
 gconf-service \
