@@ -67,21 +67,22 @@ do
 			:
 		}
 		dry_echo="echo "
+		wget_echo="echo -e "
+		aptkey_echo="echo | "
 	fi
 done
 ######################################################################
-# actual utility functions
-
-addaptrepo="$dry_echo sudo add-apt-repository -y "
-
 # add sudo apt-key update to apt-get update, depending on lsb_release
-apt_update="$dry_echo sudo apt-get update "
-ub_ver=`lsb_release -rs`
-int=${ub_ver%.*}
+release_version=`lsb_release -rs`
+int=${release_version%.*}
 if [[ $int -lt 18 ]]; then
-	apt_update="`echo $apt_update` && sudo apt-key update"
+	apt_update(){ $dry_echo sudo apt-get update; sudo apt-key update }
+else
+	apt_update(){ $dry_echo sudo apt-get update; }
 fi
-
-# other apt prefixes
-apt_prefix="$dry_echo sudo apt-get install -y "
-apt_prefix_rec="$dry_echo sudo apt-get install -y --install-recommends "
+## additional declared functions
+add_apt_repository(){ $dry_echo sudo add-apt-repository -y $1; }
+apt_install(){ $dry_echo sudo apt-get install -y ${*}; }
+apt_install_recommends(){ $dry_echo sudo apt-get install -y --install-recommends ${*}; }
+apt_purge(){ $dry_echo sudo apt-get purge -y ${*}; }
+apt_purge_autoremove(){ $dry_echo sudo apt-get purge --auto-remove -y ${*}; }

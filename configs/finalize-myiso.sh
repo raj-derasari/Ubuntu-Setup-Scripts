@@ -33,7 +33,7 @@ export Setup_Templates=0
 ### 1. GITHUB
 ## -------------------------------------------------------------------------------------------------------------------
 # Github setup - This is independent of every other installation given above
-export Install_Git=0
+export Install_Git=1
 # IF you set this as 1, you will have to enter your email and name in Git_Email and Git_YourName
 export Install_Git_SSHKeys=1
 # Remember to unset this to some random values, or delete this file when done (If you create a pull request, to save your data)
@@ -77,7 +77,7 @@ export Install_EXFatUtils=0
 # Flatpak is a software and package installation utility which will be meta real soon
 export Install_Flatpak=0
 # Flux is recommended for users evening/night times.
-export Install_Flux=0
+export Install_Flux=1
 # Gparted is a partition utility which is highly useful, and most recommended
 export Install_GParted=0
 # Graphical Firewall configuration Utility
@@ -105,9 +105,9 @@ export Install_ZSH=0
 ## -------------------------------------------------------------------------------------------------------------------
 # Choose a web browser
 export Install_Chromium=0
-export Install_GoogleChrome=1
+export Install_GoogleChrome=0
 export Install_MozillaFirefox=0
-export Install_Vivaldi=1
+export Install_Vivaldi=0
 
 ### 6. SOFTWARE TOOLS SETUP - HANDY TOOLS
 ## -------------------------------------------------------------------------------------------------------------------
@@ -117,7 +117,7 @@ export Install_WinFF=0
 # grive is an open source, third-party, command line Google-Drive tool.
 export Install_Grive_GoogleDrive=0
 # keepass password manager, for all your random password needs!
-export Install_KeepassPasswordManager=0
+export Install_KeepassPasswordManager=1
 # Teamviewer is a remoting software, you probably knew that already didn't ya?
 export Install_TeamViewer=0
 # Okular is a heavy-featured PDF Suite
@@ -127,7 +127,7 @@ export Install_TildaTmux=0
 # TexStudio is LaTeX software for writing up college assignments and research papers
 # It's most likely not going to be used anywhere else
 # Why am I even installing it I'm not even in college right now...
-export Install_TexStudio=0
+export Install_TexStudio=1
 ## -------------------------------------------------------------------------------------------------------------------
 ## TODO, haven't done these yet.
 # Terminal management, Kinda like Tmux/Tilda
@@ -160,7 +160,7 @@ export LibreOffice_Writer=0
 ## -------------------------------------------------------------------------------------------------------------------
 # Docker - If you select one, the docker installation script will be executed
 # Be careful, because the script does a complete reinstall of any existing Docker installation
-export Install_Docker=1
+export Install_Docker=0
 export Docker_Remove_SUDO=0
 
 ### 9. PROGRAMMING TOOLS - JAVA/JDK

@@ -74,7 +74,7 @@ if [ $Install_Flatpak -eq 1 ]; then
 	$addaptrepo ppa:alexlarsson/flatpak
 fi
 if [ $Install_Flux -eq 1 ]; then
-	$addaptrepo ppa:nathan-renniewaldock/flux
+	addaptrepo ppa:nathan-renniewaldock/flux
 fi
 if [ $Install_Grive_GoogleDrive -eq 1 ]; then
 	$addaptrepo ppa:nilarimogard/webupd8
