@@ -76,7 +76,7 @@ done
 release_version=`lsb_release -rs`
 int=${release_version%.*}
 if [[ $int -lt 18 ]]; then
-	apt_update(){ $dry_echo sudo apt-get update; sudo apt-key update }
+	apt_update(){ $dry_echo sudo apt-get update; sudo apt-key update; }
 else
 	apt_update(){ $dry_echo sudo apt-get update; }
 fi
@@ -86,3 +86,6 @@ apt_install(){ $dry_echo sudo apt-get install -y ${*}; }
 apt_install_recommends(){ $dry_echo sudo apt-get install -y --install-recommends ${*}; }
 apt_purge(){ $dry_echo sudo apt-get purge -y ${*}; }
 apt_purge_autoremove(){ $dry_echo sudo apt-get purge --auto-remove -y ${*}; }
+
+apt_key_dl() { $wget_echo curl -fsSL ${*} | ( [ $DRY_MODE -eq 1 ] &&  cat | tr -d '\n'); $aptkey_echo sudo apt-key add -; }
+apt_src_add() { $wget_echo echo deb [arch=amd64] $1 | ( [ $DRY_MODE -eq 1 ] &&  cat | tr -d '\n'); $aptkey_echo sudo tee /etc/apt/sources.list.d/${2}.list; }
