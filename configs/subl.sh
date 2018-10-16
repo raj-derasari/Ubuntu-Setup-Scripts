@@ -35,10 +35,10 @@ export Setup_Templates=0
 # Github setup - This is independent of every other installation given above
 export Install_Git=0
 # IF you set this as 1, you will have to enter your email and name in Git_Email and Git_YourName
-export Install_Git_SSHKeys=0
+export Install_Git_SSHKeys=1
 # Remember to unset this to some random values, or delete this file when done (If you create a pull request, to save your data)
-export Git_Email="user.name@example.com"
-export Git_YourName="User Name"
+export Git_Email="raj.derasari@example.com"
+export Git_YourName="Raj Derasari"
 # Path to your github ssh-key (Private key below, and Public key is the "private-key"+".pub" file)
 export Github_SSH_File=${USER_HOME}/.ssh/github_key
 
@@ -60,7 +60,7 @@ export Master_RemoveBloatware=0
 export Bloatware_Remove_Themes=0
 export Bloatware_Remove_LanguagePacks=0
 # Software setup script - Common Software, Java, Programming Tools, etc.
-export Master_Software=0
+export Master_Software=1
 # Python Libraries setup - For Python 2/3 Development, Both are supported.
 export Master_Python=0
 # Executes sudo apt-get upgrade after installing software
@@ -105,9 +105,9 @@ export Install_ZSH=0
 ## -------------------------------------------------------------------------------------------------------------------
 # Choose a web browser
 export Install_Chromium=0
-export Install_GoogleChrome=0
+export Install_GoogleChrome=1
 export Install_MozillaFirefox=0
-export Install_Vivaldi=0
+export Install_Vivaldi=1
 
 ### 6. SOFTWARE TOOLS SETUP - HANDY TOOLS
 ## -------------------------------------------------------------------------------------------------------------------
@@ -160,7 +160,7 @@ export LibreOffice_Writer=0
 ## -------------------------------------------------------------------------------------------------------------------
 # Docker - If you select one, the docker installation script will be executed
 # Be careful, because the script does a complete reinstall of any existing Docker installation
-export Install_Docker=0
+export Install_Docker=1
 export Docker_Remove_SUDO=0
 
 ### 9. PROGRAMMING TOOLS - JAVA/JDK
@@ -184,9 +184,9 @@ export Install_GEdit=0
 # From my experience, apt-install atom will be a PRETTY SLOW DOWNLOAD
 export Install_Atom=0
 # Lightweight alternative to Atom - Sublime Text (Free Edition)
-export Install_SublimeText=0
+export Install_SublimeText=1
 # VS Code is also a great programming IDE
-export Install_VisualStudioCode=0
+export Install_VisualStudioCode=1
 ## TODO: Add emacs here, and... anything else?
 
 ## Scientific Coding "IDE" hah

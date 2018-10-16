@@ -54,6 +54,8 @@ do
 		DRY_MODE=1
 		if [[ -z $dry_echo ]]; then
 			dry_echo="echo \$ "
+			wget_echo="echo -e "
+			aptkey_echo="echo | "
 		fi
 	fi
 	if [ "$var" = "-x" ] ||  [ "$var" = "--print-commands-only" ]; then

@@ -187,7 +187,8 @@ def DownloadTargetApp(TargetApp=None,allow_redirects=None):
 						return 0
 				elif choice=="n":
 					print("Finished scanning links for "+TargetApp)
-					return 5
+					continue
+					#return 5
 
 	if not Found_DL_URL:
 		print("The download link "+dl_urls[TargetApp]+" was not found in the URLs on the page "+urls[TargetApp]);
@@ -205,6 +206,6 @@ def __test__(target=None,allow_redirects=None):
 #__test__("sublime-text-3") # works
 __test__("realvnc-viewer") # works
 #__test__("teamviewer") # works
-#__test__("veracrypt")
+__test__("veracrypt")
 #__test__("pycharm-community") # works
 #__test__("pycharm-edu") # works
