@@ -14,11 +14,10 @@ done
 
 # rm -Rf .git/refs/original; rm -Rf .git/logs/; git gc --aggressive --prune=now
 
-_git_remove "*Templates.zip*"
+_git_remove "*archives_live_iso_customization.zip*"
 _git_remove "*.deb*"
 _git_remove '*nasm_tensorflow*'
 _git_remove '*.bzl*'
 _git_remove '*convolutional*'
 _git_remove '*.log*'
 _git_remove '*veracrypt*'
-_git_remove "*.deb*"
