@@ -1,6 +1,0 @@
-tree 22cff33b63d0692e149b49003d6d4d3aedd3379f
-parent e3736e24ba4af40f316ef32af5bb854ad9ffb112
-author raj-derasari <raj.derasari@gmail.com> 1522429321 +0530
-committer raj-derasari <raj.derasari@gmail.com> 1522429321 +0530
-
-removed unnecessary print in bashrc additions
