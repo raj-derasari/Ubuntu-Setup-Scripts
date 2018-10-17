@@ -33,7 +33,7 @@ export Setup_Templates=1
 ### 1. GITHUB
 ## -------------------------------------------------------------------------------------------------------------------
 # Github setup - This is independent of every other installation given above
-export Install_Git=1
+export Install_Git=0
 export Setup_Git_Aliases=1
 export Setup_Git_SSHKeys=0
 # IF you set this as 1, you will have to enter your email and name in Git_Email and Git_YourName
@@ -49,7 +49,7 @@ export Github_SSH_File=${USER_HOME}/.ssh/github_key
 export Setup_VirtualEnv=1
 
 # if 1 above, consider setting up the next two parameters
-export VirtualEnv_Name="venv1"
+export VirtualEnv_Name="mars"
 export VirtualEnv_Directory=${USER_HOME}/.virtualenvs/$VirtualEnv_Name
 
 ### 3. MASTER SETUP - REQUIRED TO SET EITHER 1 OR 0 HERE
@@ -57,7 +57,7 @@ export VirtualEnv_Directory=${USER_HOME}/.virtualenvs/$VirtualEnv_Name
 # Dependencies and Libraries - Highly recommended keep this as 1
 export Master_Dependencies=1
 # Bloatware removal script that checks your Desktop Environment and uninstalls bloatware based on that
-export Master_RemoveBloatware=1
+export Master_RemoveBloatware=0
 export Bloatware_Remove_Themes=1
 export Bloatware_Remove_LanguagePacks=1
 # Software setup script - Common Software, Java, Programming Tools, etc.
@@ -74,9 +74,9 @@ export Do_CleanupAfterExec=1
 # Strongly recommended packages
 # All of the following are affected based on the value of Master_Software being 1
 # ExFat file system utilites
-export Install_EXFatUtils=1
+export Install_EXFatUtils=0
 # Flatpak is a software and package installation utility which will be meta real soon
-export Install_Flatpak=1
+export Install_Flatpak=0
 # Flux is recommended for users evening/night times.
 export Install_Flux=1
 # Gparted is a partition utility which is highly useful, and most recommended
@@ -86,7 +86,7 @@ export Install_GUFW=1
 # 7-zip and other archive types support (Not a GUI, integrates with default archive applications)
 export Install_P7Zip=1
 # QPAEQ and PulseAudioEqualizer are utilities to work as audio equalizers for system/all output sounds
-export Install_PulseAudioEqualizer=1
+export Install_PulseAudioEqualizer=0
 # Torrent Client
 export Install_QBitTorrent=1
 # PDF Viewer which is incredibly fast and lightweight
@@ -94,9 +94,9 @@ export Install_QPDFView=1
 # slurm is a network usage monitoring utility
 export Install_Slurm=1
 # Thunderbird is an email client
-export Install_Thunderbird=1
+export Install_Thunderbird=0
 # Uget is a download manager
-export Install_UGET=1
+export Install_UGET=0
 # VLC is the go-to media player for Linux, with various alternatives (however, I recommend VLC)
 export Install_VLCMediaPlayer=1
 # Z-shell, alternative for bash
@@ -105,22 +105,22 @@ export Install_ZSH=0
 ### 5. SOFTWARE TOOLS SETUP - WEB BROWSERS
 ## -------------------------------------------------------------------------------------------------------------------
 # Choose a web browser
-export Install_Chromium=1
-export Install_GoogleChrome=1
+export Install_Chromium=0
+export Install_GoogleChrome=0
 export Install_MozillaFirefox=1
-export Install_Vivaldi=1
+export Install_Vivaldi=0
 
 ### 6. SOFTWARE TOOLS SETUP - HANDY TOOLS
 ## -------------------------------------------------------------------------------------------------------------------
 # Audacity is an audio editing application, you can also choose to install the FFMpeg library in the second option
-export Install_Audacity=1
-export Install_WinFF=1
+export Install_Audacity=0
+export Install_WinFF=0
 # grive is an open source, third-party, command line Google-Drive tool.
 export Install_Grive_GoogleDrive=1
 # keepass password manager, for all your random password needs!
 export Install_KeepassPasswordManager=1
 # Teamviewer is a remoting software, you probably knew that already didn't ya?
-export Install_TeamViewer=1
+export Install_TeamViewer=0
 # Okular is a heavy-featured PDF Suite
 export Install_Okular=0
 # Terminal client/replacement for ctrl+alt+t
@@ -187,7 +187,7 @@ export Install_Atom=0
 # Lightweight alternative to Atom - Sublime Text (Free Edition)
 export Install_SublimeText=1
 # VS Code is also a great programming IDE
-export Install_VisualStudioCode=0
+export Install_VisualStudioCode=1
 ## TODO: Add emacs here, and... anything else?
 
 ## Scientific Coding "IDE" hah
@@ -209,7 +209,7 @@ export Install_R_Studio=0
 export Setup_Python_Dev=1
 
 # set one value from 2 and 3
-export Python_PreferredVersion=3
+export Python_PreferredVersion=2
 
 # basic libraries - Numpy, scipy, etc. stuff that you'll most likely need
 export Python_InstallBasics=1
@@ -218,10 +218,10 @@ export Python_InstallBasics=1
 export Python_InstallWebDevelopmentTools=1
 
 # the DJANGO framework and some aliases that make migrating and running your server easier
-export Python_InstallDjango=0
+export Python_InstallDjango=1
 
 # Jupyter Notebook, because it's a pretty handy tool
-export Python_InstallJupyter=0
+export Python_InstallJupyter=1
 
 # some OpenCV stuff that I haven't coded yet - there are scripts for it already.
 # if you need it check out this cool repository:
@@ -231,12 +231,12 @@ export Python_InstallJupyter=0
 export Python_InstallComputerGraphicsTools=0    ## TODO, not implemented
 
 # NLTK if you're into it
-export Python_InstallNLTK=0
+export Python_InstallNLTK=1
 
 # Installs ML tools - theano (Not Thanos), Tensorflow, Keras, etc - you can select your own tensorflow below if you want to
 # but to have tensorflow installed the next variable must definitely be 1
 # Must set to 1 if you want to install tensorflow!
-export Python_InstallMachineLearningTools=0
+export Python_InstallMachineLearningTools=1
 
 ### 12. PYTHON SETUP - TENSORFLOW COMPILATION/INSTALLATION
 ## -------------------------------------------------------------------------------------------------------------------
