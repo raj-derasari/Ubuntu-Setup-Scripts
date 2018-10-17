@@ -131,10 +131,7 @@ fi
 ## python=python3 alias if Python3 is the desired version
 if [ $Python_PreferredVersion -eq 3 ] | [ $Python_PreferredVersion -eq 2 ]; then
 	checkBash="`grep \"alias python=python${Python_PreferredVersion}\" ${BF}`"
-	if [[ ! -z $checkBash ]]; then
-		pprint "\"python${Python_PreferredVersion}\" is already linked to \"python\" in this Ubuntu installation"
-		log $INFO "python${Python_PreferredVersion} is already linked as python for terminals"
-	else
+	if [[ -z $checkBash ]]; then
 		echo "# Python aliases----------------------------------
 alias python=python${Python_PreferredVersion}
 alias pip3install=\"python3 -m pip install --user --upgrade\"
@@ -142,6 +139,9 @@ alias pip2install=\"python2 -m pip install --user --upgrade\"" >> ${BF}
 	
 	pprint "Aliases for Python have been setup"
 	log $INFO "Make python${Python_PreferredVersion} default python in bashrc"
+	else
+		pprint "\"python${Python_PreferredVersion}\" is already linked to \"python\" in this Ubuntu installation"
+		log $INFO "python${Python_PreferredVersion} is already linked as python for terminals"
 	fi
 fi
 
@@ -225,7 +225,10 @@ fi
 if [ $Master_Python -eq 1 ]; then
 	disp "Master - Setting up Python"
 	log $INFO "Setting up python"
-	bash python.sh $DRYFLAG -p $Python_PreferredVersion -v $VirtualEnv_Name
+	if [ $Setup_VirtualEnv -eq 1 ]; then
+		VE_Flag="-v $VirtualEnv_Name"
+	fi
+	bash python.sh $DRYFLAG -p $Python_PreferredVersion $VE_Flag
 else
 	log $INFO "NOT setting up python"
 fi

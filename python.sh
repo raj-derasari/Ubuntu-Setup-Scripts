@@ -22,13 +22,13 @@ if [ -z $Setup_Python_Dev ]; then
 	VirtualEnv_Directory=${USER_HOME}/.virtualenvs
 	
 	## Python installation params
-	Python_InstallBasics=0
-	Python_InstallWebDevelopmentTools=0
+	Python_InstallBasics=1
+	Python_InstallWebDevelopmentTools=1
 	Python_InstallDjango=0
 	Python_InstallJupyter=0
-	Python_InstallMachineLearningTools=0
-	Python_InstallNLTK=0
-	Python_Compile_Tensorflow=1
+	Python_InstallMachineLearningTools=1
+	Python_InstallNLTK=1
+	Python_Compile_Tensorflow=0
 	# allowed values: gpu, cpu, mkl
 	Python_Tensorflow_Target="gpu"
 fi
@@ -62,6 +62,7 @@ while true; do
 			;;
 		-v|--virtualenv)
 			VE="$2"
+			Setup_VirtualEnv=1
 			shift 2
 			;;
 		-p|--python-version)

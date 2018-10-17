@@ -46,10 +46,10 @@ export Github_SSH_File=${USER_HOME}/.ssh/github_key
 ### 2. VIRTUALENV SETUP
 ## -------------------------------------------------------------------------------------------------------------------
 # virtualenv - if you are using Ubuntu 18 or above, it is highly recommended to use virtualenv with Python3 - And ditch Python2!
-export Setup_VirtualEnv=0
+export Setup_VirtualEnv=1
 
 # if 1 above, consider setting up the next two parameters
-export VirtualEnv_Name="venv1"
+export VirtualEnv_Name="mars2"
 export VirtualEnv_Directory=${USER_HOME}/.virtualenvs/$VirtualEnv_Name
 
 ### 3. MASTER SETUP - REQUIRED TO SET EITHER 1 OR 0 HERE
@@ -61,9 +61,9 @@ export Master_RemoveBloatware=0
 export Bloatware_Remove_Themes=0
 export Bloatware_Remove_LanguagePacks=0
 # Software setup script - Common Software, Java, Programming Tools, etc.
-export Master_Software=1
+export Master_Software=0
 # Python Libraries setup - For Python 2/3 Development, Both are supported.
-export Master_Python=0
+export Master_Python=1
 # Executes sudo apt-get upgrade after installing software
 export Do_AptGetUpgradeLast=0
 # cleans up your /tmp, pip cache and 
@@ -78,7 +78,7 @@ export Install_EXFatUtils=0
 # Flatpak is a software and package installation utility which will be meta real soon
 export Install_Flatpak=0
 # Flux is recommended for users evening/night times.
-export Install_Flux=1
+export Install_Flux=0
 # Gparted is a partition utility which is highly useful, and most recommended
 export Install_GParted=0
 # Graphical Firewall configuration Utility
@@ -108,7 +108,7 @@ export Install_ZSH=0
 export Install_Chromium=0
 export Install_GoogleChrome=0
 export Install_MozillaFirefox=0
-export Install_Vivaldi=1
+export Install_Vivaldi=0
 
 ### 6. SOFTWARE TOOLS SETUP - HANDY TOOLS
 ## -------------------------------------------------------------------------------------------------------------------
@@ -118,7 +118,7 @@ export Install_WinFF=0
 # grive is an open source, third-party, command line Google-Drive tool.
 export Install_Grive_GoogleDrive=0
 # keepass password manager, for all your random password needs!
-export Install_KeepassPasswordManager=1
+export Install_KeepassPasswordManager=0
 # Teamviewer is a remoting software, you probably knew that already didn't ya?
 export Install_TeamViewer=0
 # Okular is a heavy-featured PDF Suite
@@ -128,7 +128,7 @@ export Install_TildaTmux=0
 # TexStudio is LaTeX software for writing up college assignments and research papers
 # It's most likely not going to be used anywhere else
 # Why am I even installing it I'm not even in college right now...
-export Install_TexStudio=1
+export Install_TexStudio=0
 ## -------------------------------------------------------------------------------------------------------------------
 ## TODO, haven't done these yet.
 # Terminal management, Kinda like Tmux/Tilda
@@ -161,7 +161,7 @@ export LibreOffice_Writer=0
 ## -------------------------------------------------------------------------------------------------------------------
 # Docker - If you select one, the docker installation script will be executed
 # Be careful, because the script does a complete reinstall of any existing Docker installation
-export Install_Docker=1
+export Install_Docker=0
 export Docker_Remove_SUDO=0
 
 ### 9. PROGRAMMING TOOLS - JAVA/JDK
@@ -206,19 +206,19 @@ export Install_R_Studio=0
 ## -------------------------------------------------------------------------------------------------------------------
 ## Python Setup - installing python libraries
 # setting up python-dev tools
-export Setup_Python_Dev=0
+export Setup_Python_Dev=1
 
 # set one value from 2 and 3
-export Python_PreferredVersion=3
+export Python_PreferredVersion=2
 
 # basic libraries - Numpy, scipy, etc. stuff that you'll most likely need
-export Python_InstallBasics=0
+export Python_InstallBasics=1
 
 # This includes web-dev tools 
-export Python_InstallWebDevelopmentTools=0
+export Python_InstallWebDevelopmentTools=1
 
 # the DJANGO framework and some aliases that make migrating and running your server easier
-export Python_InstallDjango=0
+export Python_InstallDjango=1
 
 # Jupyter Notebook, because it's a pretty handy tool
 export Python_InstallJupyter=0
@@ -231,7 +231,7 @@ export Python_InstallJupyter=0
 export Python_InstallComputerGraphicsTools=0    ## TODO, not implemented
 
 # NLTK if you're into it
-export Python_InstallNLTK=0
+export Python_InstallNLTK=1
 
 # Installs ML tools - theano (Not Thanos), Tensorflow, Keras, etc - you can select your own tensorflow below if you want to
 # but to have tensorflow installed the next variable must definitely be 1
