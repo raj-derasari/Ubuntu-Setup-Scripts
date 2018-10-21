@@ -24,7 +24,7 @@ if [ -d ./My-Ubuntu-Setup-Scripts ]; then
 fi
 
 git clone $gitURL
-cd $My-Ubuntu-Setup-Scripts
+cd My-Ubuntu-Setup-Scripts
 chmod 777 master.sh
 echo "READY"
 
