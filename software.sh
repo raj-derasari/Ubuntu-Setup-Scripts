@@ -38,6 +38,9 @@ while true; do
 done
 
 if [ -z $CFGFILE ]; then
+	if [ "$1" = "teamviewer" ]; then
+		echo "Installing only teamviewer!"
+	fi
 	## CFG file is not defined
 	echo "Error - Configuration file is not loaded or defined!
 	Please use the \"-f\" argument and pass a valid Configuration File!
@@ -65,51 +68,21 @@ if [[ -z `which curl` ]]; then
 fi
 
 log $INFO "Begin with software"
-if [ $Install_Atom -eq 1 ]; then
-	add_apt_repository ppa:webupd8team/atom
-fi
-if [ $Install_Audacity -eq 1 ]; then
-	add_apt_repository ppa:ubuntuhandbook1/audacity
-fi
-if [ $Install_Flatpak -eq 1 ]; then
-	add_apt_repository ppa:alexlarsson/flatpak
-fi
-if [ $Install_Flux -eq 1 ]; then
-	add_apt_repository ppa:nathan-renniewaldock/flux
-fi
-if [ $Install_Grive_GoogleDrive -eq 1 ]; then
-	add_apt_repository ppa:nilarimogard/webupd8
-fi
-if [ $Install_Octave -eq 1 ]; then
-	add_apt_repository ppa:octave/stable
-fi
-if [ $Install_Oracle_Java -eq 1 ]; then
-	if [ $Install_Java_Version -eq 8 ]; then
-		add_apt_repository ppa:webupd8team/java
-	fi
-	if [ $Install_Java_Version -eq 10 ]; then
-		add_apt_repository ppa:linuxuprising/java
-	fi
-fi
-if [ $Install_QPDFView -eq 1 ]; then
-	add_apt_repository ppa:adamreichold/qpdfview-dailydeb
-fi
-if [ $Install_QBitTorrent -eq 1 ]; then
-	add_apt_repository ppa:qbittorrent-team/qbittorrent-stable
-fi
-if [ $Install_UGET -eq 1 ]; then
-	add_apt_repository ppa:plushuang-tw/uget-stable
-fi
-if [ $Install_VLCMediaPlayer -eq 1 ]; then
-	add_apt_repository ppa:strukturag/libde265
-fi
 
-_architecture=`uname -m`
-if [ $_architecture = x86_64 ]; then
-	_architecture="[arch=amd64]"
-elif [ $_architecture = i386 ]; then
-	_architecture="[arch=i386]"
-fi
+[ `uname -m` = x86_64 ] && _architecture="[arch=amd64]" || _architecture="[arch=i386]";
+
+[ $Install_Atom -eq 1 ] && add_apt_repository ppa:webupd8team/atom;
+[ $Install_Audacity -eq 1 ] && add_apt_repository ppa:ubuntuhandbook1/audacity;
+[ $Install_Flatpak -eq 1 ] && add_apt_repository ppa:alexlarsson/flatpak;
+[ $Install_Flux -eq 1 ] && add_apt_repository ppa:nathan-renniewaldock/flux;
+[ $Install_Grive_GoogleDrive -eq 1 ] && add_apt_repository ppa:nilarimogard/webupd8;
+[ $Install_Octave -eq 1 ] && add_apt_repository ppa:octave/stable;
+[ $Install_Oracle_Java -eq 1 ] && ( [ $Install_Java_Version -ge 9 ] && add_apt_repository ppa:linuxuprising/java || add_apt_repository ppa:webupd8team/java )
+[ $Install_QPDFView -eq 1 ] && add_apt_repository ppa:adamreichold/qpdfview-dailydeb
+[ $Install_QBitTorrent -eq 1 ] && add_apt_repository ppa:qbittorrent-team/qbittorrent-stable;
+[ $Install_UGET -eq 1 ] && add_apt_repository ppa:plushuang-tw/uget-stable;
+[ $Install_VLCMediaPlayer -eq 1 ] && add_apt_repository ppa:strukturag/libde265;
+
 
 ## Pycharm installation not implemented yet - The PPA with pycharm is quite old
 #if [ $Install_PyCharm -eq 1 ]; then
@@ -122,38 +95,11 @@ fi
 # 	apt_install pycharm
 # fi
 #fi
-if [ $Install_Docker -eq 1 ]; then
-	apt_key_dl https://download.docker.com/linux/ubuntu/gpg
-	apt_src_add "https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable " "docker"
-#	$wget_echo curl -fsSL " " | ( [ $DRY_MODE -eq 1 ] && cat | tr -d '\n'); $aptkey_echo sudo apt-key add -
-#	$wget_echo | ( [ $DRY_MODE -eq 1 ] && cat | tr -d '\n'); $aptkey_echo sudo tee /etc/apt/sources.list.d/docker.list
-fi
-if [ $Install_GoogleChrome -eq 1 ]; then
-	apt_key_dl dl-ssl.google.com/linux/linux_signing_key.pub
-	apt_src_add "https://dl.google.com/linux/chrome/deb/ stable main" "google-chrome"
-#	$wget_echo curl -fsSL https://" " | ( [ $DRY_MODE -eq 1 ] && cat | tr -d '\n'); $aptkey_echo sudo apt-key add -
-#	$wget_echo "echo deb $_architecture  " | ( [ $DRY_MODE -eq 1 ] && cat | tr -d '\n'); $aptkey_echo sudo tee /etc/apt/sources.list.d/google-chrome.list
-fi
-if [ $Install_SublimeText -eq 1 ]; then
-	
-	apt_key_dl https://download.sublimetext.com/sublimehq-pub.gpg
-	apt_src_add "https://download.sublimetext.com/ apt/stable/" "sublime-text"
-#	$wget_echo curl https://" " | ( [ $DRY_MODE -eq 1 ] && cat | tr -d '\n'); $aptkey_echo sudo apt-key add -
-#	$wget_echo "echo deb $_architecture https:// " | ( [ $DRY_MODE -eq 1 ] && cat | tr -d '\n'); $aptkey_echo sudo tee /etc/apt/sources.list.d/sublime-text.list
-fi
-if [ $Install_VisualStudioCode -eq 1 ]; then
-	apt_key_dl https://packages.microsoft.com/keys/microsoft.asc
-	apt_src_add "https://packages.microsoft.com/repos/vscode stable main" "vscode"
-#	$wget_echo curl https://" " | ( [ $DRY_MODE -eq 1 ] && cat | tr -d '\n'); $aptkey_echo sudo apt-key add -
-#	$wget_echo "echo deb $_architecture  " | ( [ $DRY_MODE -eq 1 ] && cat | tr -d '\n'); $aptkey_echo sudo tee /etc/apt/sources.list.d/vscode.list
-fi
-if [ $Install_Vivaldi -eq 1 ]; then
-	apt_key_dl https://repo.vivaldi.com/stable/linux_signing_key.pub
-	apt_src_add "http://repo.vivaldi.com/stable/deb/ stable main" "vivaldi"
-#	$wget_echo curl http://" " | ( [ $DRY_MODE -eq 1 ] && cat | tr -d '\n'); $aptkey_echo sudo apt-key add -
-#	$wget_echo "echo deb $_architecture  " | ( [ $DRY_MODE -eq 1 ] && cat | tr -d '\n'); $aptkey_echo sudo tee /etc/apt/sources.list.d/vivaldi.list
-fi
-
+## following part is equivalent to:
+# if [ $Install_Docker -eq 1 ]; then
+# 	apt_key_dl https://download.docker.com/linux/ubuntu/gpg
+# 	apt_src_add "https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable " "docker"
+# fi
 #	if [ $Install_R_Version -eq 3.5 ]; then
 #	gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
 ##	gpg -a --export E298A3A825C0D65DFD57CBB651716619E084DAB9 | sudo apt-key add -
@@ -162,25 +108,23 @@ fi
 	# $dry_echo sudo add-apt-repository -y "https://cloud.r-project.org/bin/linux/ubuntu `lsb_release -cs`-cran35/" # &> /dev/null
 	# $dry_echo echo "https://cloud.r-project.org/bin/linux/ubuntu `lsb_release -cs`-cran35/" >> /etc/apt/sources.list
 
+[ $Install_Docker -eq 1 ] && (apt_key_dl https://download.docker.com/linux/ubuntu/gpg; apt_src_add "https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable " "docker";);
+[ $Install_GoogleChrome -eq 1 ] && ( apt_key_dl dl-ssl.google.com/linux/linux_signing_key.pub; apt_src_add "https://dl.google.com/linux/chrome/deb/ stable main" "google-chrome";);
+[ $Install_SublimeText -eq 1 ] && ( apt_key_dl https://download.sublimetext.com/sublimehq-pub.gpg; apt_src_add "https://download.sublimetext.com/ apt/stable/" "sublime-text";);
+[ $Install_VisualStudioCode -eq 1 ] && ( apt_key_dl https://packages.microsoft.com/keys/microsoft.asc; apt_src_add "https://packages.microsoft.com/repos/vscode stable main" "vscode";);
+[ $Install_Vivaldi -eq 1 ] && ( apt_key_dl https://repo.vivaldi.com/stable/linux_signing_key.pub; apt_src_add "http://repo.vivaldi.com/stable/deb/ stable main" "vivaldi";);
+
 ## Update sources
 apt_update
 # First things first: Check Install microcode
 apt_install microcode.ctl intel-microcode amd64-microcode
 
 ## The very first thing to install will be sublime text - Rest of the packages are alphabetical
-if [ $Install_SublimeText -eq 1 ]; then
-	log $INFO "install sublime text"
-	apt_install sublime-text 
-fi
 
-## Installations based on command line checking
-if [ $Install_Audacity -eq 1 ]; then
-	apt_install_recommends audacity
-fi
-if [ $Install_Chromium -eq 1 ]; then
-	log $INFO "install chromium"
-	apt_install chromium-browser
-fi
+[ $Install_SublimeText -eq 1 ] && apt_install sublime-text 
+[ $Install_Audacity -eq 1 ] && apt_install_recommends audacity
+[ $Install_Chromium -eq 1 ] && apt_install chromium-browser 
+
 if [ $Install_Docker -eq 1 ]; then
 	log $INFO "install docker"
 	apt_install apt-transport-https ca-certificates curl software-properties-common
@@ -193,35 +137,6 @@ if [ $Install_Docker -eq 1 ]; then
 		## Docker run won't work on the first-run because you must login/logout, entering a new session, making docker run fine.
 		# docker run hello-world 
 	fi
-fi
-if [ $Install_Emacs -eq 1 ]; then
-	log $INFO "install emacs"
-	apt_install emacs
-fi
-if [ $Install_EXFatUtils -eq 1 ]; then
-	log $INFO "install exfat-utils"
-	apt_install_recommends exfat-fuse exfat-utils
-fi
-if [ $Install_Flatpak -eq 1 ]; then
-	log $INFO "install Flatpak"
-	apt_install flatpak
-	$dry_echo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-fi
-if [ $Install_Flux -eq 1 ]; then
-	log $INFO "install Flux"
-	apt_install fluxgui
-fi
-if [ $Install_GEdit -eq 1 ]; then
-	log $INFO "install gedit"
-	apt_install gedit
-fi
-if [ $Install_GoogleChrome -eq 1 ]; then
-	log $INFO "install google chrome"
-	apt_install google-chrome-stable
-fi
-if [ $Install_GParted -eq 1 ]; then
-	log $INFO "install gparted"
-	apt_install gparted
 fi
 if [ $Install_Grive_GoogleDrive -eq 1 ]; then
 	checkBash="`grep \"alias fetchd=\" ${BF}`"
@@ -236,45 +151,45 @@ alias uploadall=\"grive -u\"" >> ${BF}
 	log $INFO "install grive"
 	apt_install grive
 fi
-if [ $Install_GUFW -eq 1 ]; then
-	apt_install gufw
-fi
-if [ $Install_KeepassPasswordManager -eq 1 ]; then
-	log $INFO "install keypass"
-	apt_install keepassx
-fi
-if [ $Install_MozillaFirefox -eq 1 ]; then
-	log $INFO "install firefox"
-	apt_install firefox
-fi
-if [ $Install_Okular -eq 1 ]; then
-	log $INFO "install okular"
-	apt_install okular
-fi
-if [ $Install_Oracle_Java -eq 1 ]; then 
-	if [ $Purge_OpenJDK -eq 1 ]; then
-		log $INFO "PURGE OpenJDK"
-		$dry_echo sudo apt-get purge -y openjdk-\*
-	fi
-	if [ $Install_Java_Version -eq 7 -o $Install_Java_Version -eq 8 -o $Install_Java_Version -eq 10 ]; then
-		log $INFO "install oracle java version - Installing Java $Install_Java_Version"
-	else
-		echo "You are installing a possibly UNEXPECTED version of Oracle Java! Be careful about purging OpenJDK!"
-		log $INFO "Unexepected oracle java version - Trying Java $Install_Java_Version"
-	fi
-	if [ $DRY_MODE -eq 0 ]; then
-		echo "oracle-java${Install_Java_Version}-installer shared/accepted-oracle-license-v1-1 select true" | sudo /usr/bin/debconf-set-selections
-		echo "oracle-java${Install_Java_Version}-installer shared/accepted-oracle-license-v1-1 seen true" | sudo /usr/bin/debconf-set-selections
-	else
-		echo "echo oracle-java${Install_Java_Version}-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections"
-		echo "echo oracle-java${Install_Java_Version}-installer shared/accepted-oracle-license-v1-1 seen true | sudo /usr/bin/debconf-set-selections"
-	fi
+
+[ $Install_Emacs -eq 1 ] && apt_install emacs;
+[ $Install_EXFatUtils -eq 1 ] && apt_install_recommends exfat-fuse exfat-utils
+[ $Install_Flatpak -eq 1 ] && ( apt_install flatpak; $dry_echo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo; )
+[ $Install_Flux -eq 1 ] &&  apt_install fluxgui;
+[ $Install_GEdit -eq 1 ] &&  apt_install gedit;
+[ $Install_GoogleChrome -eq 1 ] &&  apt_install google-chrome-stable;
+[ $Install_GParted -eq 1 ] &&  apt_install gparted;
+[ $Install_GUFW -eq 1 ] && apt_install gufw;
+[ $Install_KeepassPasswordManager -eq 1 ] && apt_install keepassx;
+[ $Install_MozillaFirefox -eq 1 ] && apt_install firefox;
+[ $Install_Okular -eq 1 ] && apt_install okular;
+[ $Install_P7Zip -eq 1 ] && apt_install_recommends p7zip p7zip-rar p7zip-full;
+
+[ $Install_QBitTorrent -eq 1 ] && apt_install qbittorrent;
+[ $Install_QPDFView -eq 1 ] && apt_install qpdfview;
+[ $Install_Slurm -eq 1 ] && apt_install slurm;
+[ $Install_Thunderbird -eq 1 ] && apt_install thunderbird;
+[ $Install_TildaTmux -eq 1 ] && apt_install tilda tmux;
+[ $Install_UGET -eq 1 ] && apt_install uget;
+[ $Install_VisualStudioCode -eq 1 ] && apt_install code;
+[ $Install_Vivaldi -eq 1 ] && apt_install vivaldi-stable;
+[ $Install_VLCMediaPlayer -eq 1 ] && apt_install_recommends vlc libde265-0; # vlc-plugin-libde265
+[ $Install_WinFF -eq 1 ] && apt_install winff libavcodec-extra;
+[ $Install_ZSH -eq 1 ] && apt_install zsh;
+
+
+
+if [ $Install_Oracle_Java -eq 1 ]; then 	
+	[ $Purge_OpenJDK -eq 1 ] && apt_purge -y openjdk-\*;
+	log $INFO "Java version: " $Install_Java_Version
+	
+	[ $DRY_MODE -eq 0 ] && \
+		( echo "oracle-java${Install_Java_Version}-installer shared/accepted-oracle-license-v1-1 select true" | sudo /usr/bin/debconf-set-selections;
+		echo "oracle-java${Install_Java_Version}-installer shared/accepted-oracle-license-v1-1 seen true" | sudo /usr/bin/debconf-set-selections; ) || \
+		( echo "echo oracle-java${Install_Java_Version}-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections";
+		echo "echo oracle-java${Install_Java_Version}-installer shared/accepted-oracle-license-v1-1 seen true | sudo /usr/bin/debconf-set-selections";);
 	apt_install oracle-java${Install_Java_Version}-installer
 	apt_install oracle-java${Install_Java_Version}-set-default
-fi
-if [ $Install_P7Zip -eq 1 ]; then
-	log $INFO "install p7zip"
-	apt_install_recommends p7zip p7zip-rar p7zip-full
 fi
 if [ $Install_PulseAudioEqualizer -eq 1 ]; then
 	pulse_config_file=/etc/pulse/default.pa
@@ -304,80 +219,19 @@ if [ $Install_PulseAudioEqualizer -eq 1 ]; then
 		fi
 	fi
 fi
-if [ $Install_QBitTorrent -eq 1 ]; then
-	log $INFO "install qbittorrent"
-	apt_install qbittorrent
-fi
-if [ $Install_QPDFView -eq 1 ]; then
-	log $INFO "install qpdfview"
-	apt_install qpdfview
-fi
-if [ $Install_Slurm -eq 1 ]; then
-	log $INFO "install slurm"
-	apt_install slurm
-fi
-if [ $Install_Thunderbird -eq 1 ]; then
-	apt_install thunderbird
-fi
-if [ $Install_TildaTmux -eq 1 ]; then
-	log $INFO "install tilda"
-	apt_install tilda tmux
-fi
-if [ $Install_UGET -eq 1 ]; then
-	apt_install uget
-fi
-if [ $Install_VisualStudioCode -eq 1 ]; then
-	log $INFO "install visual studio code"
-	apt_install code
-fi
-if [ $Install_Vivaldi -eq 1 ]; then
-	log $INFO "install vivaldi"
-	apt_install vivaldi-stable
-fi
-if [ $Install_VLCMediaPlayer -eq 1 ]; then
-	log $INFO "install vlc AND x265 codec"
-	apt_install_recommends vlc libde265-0
-	#apt_install_recommends vlc vlc-plugin-libde265 
-fi
-if [ $Install_WinFF -eq 1 ]; then
-	apt_install winff libavcodec-extra
-fi
-if [ $Install_ZSH -eq 1 ]; then
-	log $INFO "install zsh"
-	apt_install zsh
-fi
 
 ## LARGE installations
 if [ $Install_LibreOffice -eq 1 ]; then
 	log $INFO "install libreoffice-stuff"
 	libre_stuff=""
-	if [ $LibreOffice_Base -eq 1 ]; then
-		log $INFO "install libreoffice-base"
-		libre_stuff="`echo $libre_stuff` libreoffice-base"
-	fi
-	if [ $LibreOffice_Draw -eq 1 ]; then
-		log $INFO "install libreoffice-draw"
-		libre_stuff="`echo $libre_stuff` libreoffice-draw"
-	fi
-	if [ $LibreOffice_Impress -eq 1 ]; then
-		log $INFO "install libreoffice-impress"
-		libre_stuff="`echo $libre_stuff` libreoffice-impress"
-	fi
-	if [ $LibreOffice_Calc -eq 1 ]; then
-		log $INFO "install libreoffice-calc"
-		libre_stuff="`echo $libre_stuff` libreoffice-calc"
-	fi
-	if [ $LibreOffice_Math -eq 1 ]; then
-		log $INFO "install libreoffice-math"
-		libre_stuff="`echo $libre_stuff` libreoffice-math"
-	fi
-	if [ $LibreOffice_Writer -eq 1 ]; then
-		log $INFO "install libreoffice-writer"
-		libre_stuff="`echo $libre_stuff` libreoffice-writer"
-	fi
+	[ $LibreOffice_Base -eq 1 ] && libre_stuff="`echo $libre_stuff` libreoffice-base";
+	[ $LibreOffice_Draw -eq 1 ] && libre_stuff="`echo $libre_stuff` libreoffice-draw";
+	[ $LibreOffice_Impress -eq 1 ] && libre_stuff="`echo $libre_stuff` libreoffice-impress";
+	[ $LibreOffice_Calc -eq 1 ] && libre_stuff="`echo $libre_stuff` libreoffice-calc";
+	[ $LibreOffice_Math -eq 1 ] && libre_stuff="`echo $libre_stuff` libreoffice-math";
+	[ $LibreOffice_Writer -eq 1 ] && libre_stuff="`echo $libre_stuff` libreoffice-writer";
 	pprint "Installing: " $libre_stuff
 	apt_install $libre_stuff
-	apt_install -f
 fi
 if [ $Install_TexStudio -eq 1 ]; then
 	checkBash="`grep \"alias texcleanAuxFiles=\" ${BF}`"
