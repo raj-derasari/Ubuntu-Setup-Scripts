@@ -1,5 +1,5 @@
 # for debugging
-DRY_MODE=1
+DRY_MODE=0
 # important
 UPDATEGRUB=1
 INSTALLGRUB=1
@@ -41,7 +41,7 @@ else
 	Will parse through every distro found
 	Select a mount point in the following steps.
 	Eventually if you haven't selected one, the first one found will be selected by default."
-	for mount in Z; do
+	for mount in $Z; do
 		echo "Would you like to select mount point: " $mount
 		read -p "Please enter y/Y for yes n/N for no" choice
 		if [ "$choice" != "${choice#[Yy]}" ] ;then
@@ -90,10 +90,12 @@ if [ $UPDATEGRUB -eq 1 ]; then
 	#sudo cp /etc/resolv.conf /mnt/etc/
 	
 	for i in /dev /dev/pts /proc /sys; do $dry_echo sudo mount -B $i /mnt$i; done
-	$dry_echo sudo chroot /mnt
+	
+	# probably do it in a subshell
+	`$dry_echo sudo chroot /mnt; $dry_echo sudo update-grub`
 
 	# run update-grub
-	$dry_echo sudo update-grub
+	
 	
 	# this probably logs out of the chroot and not the script, but idk
 	$dry_echo exit
