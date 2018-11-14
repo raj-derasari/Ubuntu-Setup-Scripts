@@ -22,8 +22,8 @@ else
 	echo "=================================================================================="
 	echo "Welcome to the GRUB reinstallaton script."
 	echo "1 or more Linux distros were found, will attempt to:"
-	[ $UPDATEGRUB -eq 1 ] && echo "Update grub with sudo update-grub"
-	[ $INSTALLGRUB -eq 1 ] && echo "Reinstall grub with sudo grub-install --root-directory"
+	[ $UPDATEGRUB -eq 1 ] && echo "Update grub with chroot && update-grub"
+	[ $INSTALLGRUB -eq 1 ] && echo "Reinstall grub with sudo grub-install --root-directory /mnt "
 fi
 echo "=================================================================================="
 # Check if multiple distro were found. If the next command exits with
@@ -92,14 +92,8 @@ if [ $UPDATEGRUB -eq 1 ]; then
 	for i in /dev /dev/pts /proc /sys; do $dry_echo sudo mount -B $i /mnt$i; done
 	
 	# probably do it in a subshell
-	`$dry_echo sudo chroot /mnt; $dry_echo sudo update-grub`
+	`$dry_echo sudo chroot /mnt $dry_echo update-grub`
 
-	# run update-grub
-	
-	
-	# this probably logs out of the chroot and not the script, but idk
-	$dry_echo exit
-	
 	# unmount this stuff
 	for i in /sys /proc /dev/pts /dev; do $dry_echo sudo umount /mnt$i; done
 
@@ -110,9 +104,10 @@ if [ $INSTALLGRUB -eq 1 ]; then
 	echo "=================================================================================="
 	echo "What target device would you like to install GRUB to?"
 	echo "Be sure to enter the prefix and target device alphabet"
-	echo "Enter something like 'sda1' or 'hda1' or 'sdb2' or 'hdb2', without the quotes"
+	echo "Enter something like 'sda', 'sdb' or 'hda','hdb', - without the quotes"
+	echo "You can refer to the list of partitions above!"
 	$dry_echo read TARGET_DEVICE
-	$dry_echo sudo grub-install --root-directory=/mnt $TARGET_DEVICE
+	$dry_echo sudo grub-install --root-directory=/mnt /dev/$TARGET_DEVICE
 	if [ $? -eq 0 ]; then
 		echo "Seems like grub reinstalled successfully!"
 	else
