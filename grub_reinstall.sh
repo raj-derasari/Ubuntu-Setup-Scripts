@@ -122,11 +122,11 @@ fi
 ## if both UPDATEGRUB and INSTALLGRUB are 1 then prompt for reboot
 echo "=================================================================================="
 choice=y
-$dry_echo read -p "Would you like to reboot after 10 seconds? Y/y to continue:" choice
+$dry_echo read -p "Would you like to reboot after 10 seconds? Y/y:continue; N/n:dont reboot: " choice
 if [ "$choice" != "${choice#[Yy]}" ]; then
 	TIMER=10
 	echo "=================================================================================="
 	echo -e "Rebooting in $TIMER seconds, to cancel, enter:\nsudo reboot --halt"
-	$dry_echo sudo shutdown -r TIMER
+	$dry_echo sudo shutdown -r $TIMER
 fi
 $dry_echo exit 0
