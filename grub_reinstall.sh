@@ -123,7 +123,7 @@ fi
 echo "=================================================================================="
 choice=y
 $dry_echo read -p "Would you like to reboot after 10 seconds? Y/y to continue:" choice
-if [ "$choice" != "${choice#[Yy]}" ] ;then
+if [ "$choice" != "${choice#[Yy]}" ]; then
 	TIMER=10
 	echo "=================================================================================="
 	echo -e "Rebooting in $TIMER seconds, to cancel, enter:\nsudo reboot --halt"

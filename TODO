@@ -1,2 +1,33 @@
-documentation (usage, error codes)
-smoothening and optimization
+The default should be made the files one that I originally wrote
+
+Maybe do something about saving successful and failed outputs to files?
+Should I set up a debug mode? What would it do? Dry is enough ye?
+Add pycharm etc. check TODOs
+Document and Define Exit Codes
+Do something about logging errors specifically (is log_errors.txt enough?)
+
+Left todos with lower priority:
+1.	For short code blocks, replace if []; then {} else {} fi -- with [] && {} || {} -- for optimization?
+2.	Replace if choice==y or choice ==Y like this:
+	  Replace
+		if [choice == y] or [choice == Y]; then { a } else { b } fi
+	  with
+		if [ "$choice" != "${choice#[Yy]}" ]; then {a} else {b} fi
+
+3.	Tensorflow does not install virtualenv, hence cannot be executed independently/on-first-run... 
+	Same applies to Python script too, I guess? Don't know, must check!
+
+4.	Octave - Work In Progress - Should be easy to make it Final now, the commands are verified to be working
+	Maybe test it out in VMs
+
+5.	Make it so that every script can write its finished-status onto /tmp/<>
+	So that it is not rerun or something? idk what i'm really thinking but its doable
+
+6.	VPN setup ? Which VPN, why and hows?
+
+7.	Can extract Templates.tar.gz to user's ~/Templates (maybe ask maybe make variable - not sure)
+
+8.	Test out this regex; goal is to replace default DNS with Cloudflare (1.1.1.1) or OpenDNS
+	sed 'a/dns-nameservers.\*/dns-nameservers 1.1.1.1 208.67.222.222 208.67.220.220/g' /etc/network/interfaces
+	Maybe Refer
+	https://unix.stackexchange.com/questions/128220/how-do-i-set-my-dns-when-resolv-conf-is-being-overwritten
