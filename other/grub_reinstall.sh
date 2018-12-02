@@ -26,10 +26,11 @@ else
 	[ $INSTALLGRUB -eq 1 ] && echo "Reinstall grub with sudo grub-install --root-directory /mnt "
 fi
 echo "=================================================================================="
-# Check if multiple distro were found. If the next command exits with
-# 0 status, then everything is fine. Otherwise the if{} block must
-# be able to parse through every Linux distro and ask the user if
-# said Linux distro is to be mounted and used for reinstalling grub.
+# Check if multiple distro were found.
+# if mount -f () exits with 0 status, it'll mount successfully.
+# Else, exit code 1 from mount -f implies more than 1 argument was passed
+# something like mount /dev/sda2 /dev/sda3 /mnt
+# So, the else block must verify which partition to select and then mount it
 $dry_echo sudo mount -f ${linux_distros} /mnt
 if [ $? -eq 0 ]; then
 	## can successfully mount this as the mountpoint
@@ -38,7 +39,7 @@ if [ $? -eq 0 ]; then
 else
 	echo "==================================================================================
 	You have more than one linux distribution installed.
-	Will parse through every distro found
+	Will go through every distro found
 	Select a mount point in the following steps.
 	Eventually if you haven't selected one, the first one found will be selected by default."
 	for mount in $Z; do
@@ -130,3 +131,14 @@ if [ "$choice" != "${choice#[Yy]}" ]; then
 	$dry_echo sudo shutdown -r $TIMER
 fi
 $dry_echo exit 0
+
+
+
+
+######### DOCUMENTATION:
+Script exit codes:
+0	exit successfully with update-grub and grub-install
+10	exit successfully with update-grub
+20	exit successfully with grub-install
+1	no linux distro was found
+2	
