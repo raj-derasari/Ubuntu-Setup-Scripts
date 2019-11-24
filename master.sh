@@ -59,8 +59,10 @@ if [[ -z $CONFIG_FILE ]]; then
 	CONFIG_FILE=./configs/config_recommended.sh
 	read -p "Using the recommended configuration file (./configs/config_recommended.sh) 
 Press (Enter) to continue, and the (Ctrl+C) combination to exit
-" DMMYDMMY
+" dummyvar
 	pprint "Executing with the default Configuration-File: ${CONFIG_FILE}"
+	# Load the recommended config file
+	. "${CONFIG_FILE}"
 elif [ ! -e $CONFIG_FILE ]; then
 	## CFG file does not exist
 	echo "Error - Configuration file does not exist!
