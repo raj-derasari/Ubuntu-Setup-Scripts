@@ -1,6 +1,7 @@
 ###################################################################
 ### CUSTOM ALIASES JUST FOR UBUNTU, JUST FOR YOU
 # -------------------------------------
+alias ll="ls -l" ## in case your distro keeps this disabled by default
 # Stores the bashrc file in this variable
 export BF=~/.bashrc
 # You can later replace nano with a text editor of your choice - gedit, subl, vim, emacs, ...
@@ -50,8 +51,8 @@ sbs() { du -b --max-depth 1 $1 | sort -nr | perl -pe 's{([0-9]+)}{sprintf "%.1f%
 dir_size_list() { du -h --max-depth=1 $1 | sort -hr; }
 # make directory and switch to it
 mcd() { mkdir -p "$1"; cd "$1";}
-# quickly backup a file
-bak() { cp "$1"{,.bak};}
+# quickly backup a file - If '-r' arg passed, delete original file
+bak() { [ "$1" = "-r" ] && mv "$2"{,.bak} || cp "$1"{,.bak};}
 ## extracts any archive
 extract() {
 	if [ -f "$1" ]; then
